@@ -1,0 +1,35 @@
+.button {
+    margin: 7px 0 7px 0;
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    border: none;
+    padding: 12px 0 12px 0;
+    background: none;
+    width: 100%;
+    align-items: left;
+    border-radius: 5px;
+    justify-content: center;
+}
+
+.line {
+    border-bottom: solid 1px rgb(235, 235, 235);
+}
+
+.buttonIcon {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 10px;
+    justify-content: center;
+}
+
+.buttonText {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 15px;
+}
+
+.button:hover {
+    background: rgb(235, 235, 235);
+}

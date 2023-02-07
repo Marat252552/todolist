@@ -1,0 +1,104 @@
+.card {
+    display: grid;
+    grid-template-columns: 40px auto;
+    background: rgb(245, 245, 245);
+    color: black;
+    margin: 0 40px 5px 40px;
+    border-radius: 5px;
+}
+
+.scroll {
+    overflow: auto;
+    height: 65vh;
+}
+
+.scroll::-webkit-scrollbar {
+    display: none
+}
+
+.createCard {
+    display: grid;
+    grid-template-columns: 40px auto;
+    background: rgb(245, 245, 245);
+    color: black;
+    margin: 40px 40px 5px 40px;
+    border-radius: 5px;
+}
+
+.input {
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    padding: 0;
+    border: none;
+    outline: 0;
+    background-color: rgb(245, 245, 245);
+    width: 100%;
+}
+
+.checkbox {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.plusOutlined {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.cardInfo {
+    margin-top: 10px;
+    margin-bottom: 10px
+}
+
+.createNewCard {
+    margin: 5px;
+    padding: 7px 7px 7px 0px
+}
+
+.header {
+    margin: 40px 40px 20px 40px 
+}
+
+h1 {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.groupName {
+    color: gray;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+}
+
+.wallpaper1 {
+    background-image: url('./../../Media/wallpaper1.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    border-radius: 20px 0 0 0
+}
+
+.wallpaper2 {
+    background-image: url('./../../Media/wallpaper2.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    border-radius: 20px 0 0 0
+}
+
+.green {
+    background: rgb(66, 161, 66);
+}
+.orange {
+    background: rgb(192, 154, 85)
+}
+
+.red {
+    background: rgb(197, 64, 64)
+}
+
+.blue {
+    background-color: rgb(60, 171, 231);
+}

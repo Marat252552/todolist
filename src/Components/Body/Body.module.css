@@ -1,0 +1,8 @@
+.body {
+    display: grid;
+    grid-template-columns: 300px auto;
+}
+
+.menu {
+    background: rgb(245, 245, 245);
+}
