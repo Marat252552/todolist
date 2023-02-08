@@ -1,7 +1,9 @@
-const ADD_NEW_CARD = 'ADD_NEW_CARD'
-const DELETE_CARD = 'DELETE_CARD'
-const CHANGE_CARD = 'CHANGE_CARD'
-const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID'
+import { addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType } from "./ReduxTypes"
+
+export const ADD_NEW_CARD = 'ADD_NEW_CARD'
+export const DELETE_CARD = 'DELETE_CARD'
+export const CHANGE_CARD = 'CHANGE_CARD'
+export const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID'
 
 const initialState = {
     currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green', cards: [
@@ -31,7 +33,7 @@ const initialState = {
     ]
 }
 
-const DataReducer = (state = initialState, action: any) => {
+const DataReducer = (state = initialState, action: AllActionsData) => {
     switch (action.type) {
         case ADD_NEW_CARD: {
             // 1.Создаем копию текущей папки allCardGroups
@@ -141,7 +143,7 @@ const DataReducer = (state = initialState, action: any) => {
     }
 }
 
-export const addNewCardAC = (text: any, groupID: any) => {
+export const addNewCardAC = (text: string, groupID: number): addNewCardACType => {
     return {
         type: ADD_NEW_CARD,
         text: text,
@@ -149,7 +151,7 @@ export const addNewCardAC = (text: any, groupID: any) => {
     }
 }
 
-export const changeCardAC = (text: any, cardID: any) => {
+export const changeCardAC = (text: string, cardID: number): changeCardACType => {
     return {
         type: CHANGE_CARD,
         text: text,
@@ -157,14 +159,14 @@ export const changeCardAC = (text: any, cardID: any) => {
     }
 }
 
-export const deleteCardAC = (cardID: any) => {
+export const deleteCardAC = (cardID: number): deleteCardACType => {
     return {
         type: DELETE_CARD,
         cardID: cardID
     }
 }
 
-export const changeCurrentCardGroupID = (groupID: any) => {
+export const changeCurrentCardGroupID = (groupID: number): changeCurrentCardGroupIDType => {
     return {
         type: CHANGE_CURRENT_GROUP_ID,
         groupID: groupID

@@ -3,21 +3,23 @@ import CardsInfo from "./CardsInfo/CardsInfo"
 import MainBox from "./MainInfo/MainBox"
 import styles from './Menu.module.css'
 import {changeCurrentCardGroupID} from '../../Redux/DataReducer'
+import { AppStateType } from "../../Redux/Redux"
+import { MapDispatchType, MapStateType, MenuPropsType } from "./MenuTypes"
 
 
-const Menu = (props: any) => {
+const Menu = (props: MenuPropsType) => {
     return <div className={styles.menu}>
         <MainBox/>
-        <CardsInfo data={props.data} changeCurrentCardGroupID={props.changeCurrentCardGroupID}/>
+        <CardsInfo menuCardGroups={props.menuCardGroups} changeCurrentCardGroupID={props.changeCurrentCardGroupID}/>
     </div>
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AppStateType) => {
     return {
-        data: state.data
+        menuCardGroups: state.data.menuCardGroups
     }
 }
 
-const MenuContainer = connect(mapStateToProps, {changeCurrentCardGroupID})(Menu);
+const MenuContainer = connect<MapStateType, MapDispatchType, void, AppStateType>(mapStateToProps, {changeCurrentCardGroupID})(Menu);
 
 export default MenuContainer

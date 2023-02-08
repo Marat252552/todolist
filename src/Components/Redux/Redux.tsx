@@ -8,5 +8,7 @@ const Reducers = combineReducers({
 })
 
 const store = createStore(Reducers, applyMiddleware(thunkMiddleware))
+type ReducersType = typeof Reducers
+export type AppStateType = ReturnType<ReducersType>
 
 export default store
