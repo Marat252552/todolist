@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import styles from './MainBody.module.css'
 import { Checkbox, Popconfirm, Popover, Button } from "antd";
-import { PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import { addNewCardAC, changeCardAC, deleteCardAC } from "../../Redux/DataReducer";
 import React from "react";
 import { Formik, useFormik } from "formik";
@@ -71,6 +71,13 @@ const MakeCard = (props: MakeCardPropsType) => {
     }).map(groupID => {
         return props.allCardGroups.filter(group => { return groupID === group.groupID })[0].name
     })
+    let isImportantCard = (groupID: Array<number>) => {
+        if(groupID.includes(2)) {
+            return <StarFilled />
+        } else {
+            return <StarOutlined />
+        }
+    }
     return <>
         <Popover
             placement="bottomLeft"
@@ -91,6 +98,9 @@ const MakeCard = (props: MakeCardPropsType) => {
                 <div className={styles.cardInfo}>
                     <ChangeCardForm changeCardAC={props.changeCardAC} text={props.text} cardID={props.cardID}/>
                     <span className={styles.groupName}>{requiredGroupsArray.map(groupName => { return <span key={groupName}>{groupName} </span> })}</span>
+                </div>
+                <div>
+                    <Button className={styles.starButton} shape='circle' icon={isImportantCard(props.groupID)}/>
                 </div>
             </div >
         </Popover>
@@ -134,7 +144,8 @@ const mapStateToProps = (state: AppStateType) => {
     return {
         currentCardGroup: state.data.currentCardGroup,
         allCardGroups: state.data.allCardGroups,
-        background: state.data.currentCardGroup.background
+        background: state.data.currentCardGroup.background,
+        allCards: state.data.allCards
     }
 }
 

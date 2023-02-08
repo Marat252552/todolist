@@ -1,15 +1,14 @@
-import { addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType } from "./ReduxTypes"
+import { addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, updateCurrentCardsType } from "./ReduxTypes"
 
 export const ADD_NEW_CARD = 'ADD_NEW_CARD'
 export const DELETE_CARD = 'DELETE_CARD'
 export const CHANGE_CARD = 'CHANGE_CARD'
 export const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID'
+export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS'
 
 const initialState = {
-    currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green', cards: [
-        {cardID: 1, text: 'Выучить бананы', groupID: [1, 2]},
-        {cardID: 2, text: 'Сьесть пирог', groupID: [1, 2]}
-    ]},
+    currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green', cards: []},
+    currentCards: [],
     menuCardGroups: [
         {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'wallpaper1'},
         {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'wallpaper1'},
@@ -19,17 +18,14 @@ const initialState = {
     ],
     newCardID: 6,
     allCardGroups: [
-        {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red', cards: [
-            {cardID: 1, text: 'Выучить бананы', groupID: [1, 2]},
-            {cardID: 2, text: 'Сьесть пирог', groupID: [1, 2]}
-        ]},
-        {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green', cards: [
-            {cardID: 1, text: 'Выучить бананы', groupID: [1, 2]},
-            {cardID: 2, text: 'Сьесть пирог', groupID: [1, 2]}
-        ]},
-        {groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'orange', cards: []},
-        {groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'blue', cards: []},
-        {groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'blue', cards: []},
+        {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red'},
+        {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
+        {groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'orange'},
+        {groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'blue'},
+        {groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'blue'},
+    ],
+    allCards: [
+        {cardID: 1, text: 'Сделать проект', groupsIDs: [1, 2]}
     ]
 }
 
@@ -39,29 +35,24 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             // 1.Создаем копию текущей папки allCardGroups
             let newAllCardGroups = [...state.allCardGroups]
             // 2.Создаем карточку
-            let card = {cardID: state.newCardID, text: action.text, groupID: [action.groupID]}
-            console.log(card)
-            // 2.Изменяем в этой папке (allCardGroups) нужные группы карт по отдельности путем замены. Для каждой группы отдельный цикл
-            // 2.1.Создаем цикл, в котором:
-            for(let i = 0; i < state.allCardGroups.length; i++) {
-                // 2.1.2.Находим нужную группу по порядковому номеру i
-                let cardGroup = {...newAllCardGroups[i]}
-                // 2.1.3.Получаем groupID этой группы
-                let groupID = cardGroup.groupID
-                // Если groupID равен тому groupID, который указан в action, добавляем туда карточку
-                if(groupID === action.groupID) {
-                    cardGroup.cards = [
-                        ...cardGroup.cards,
-                        card
-                    ]
-                }
-                // 2.1.5.Заменяем старую группу новой в ранее созданной копии allCardGroups
-                newAllCardGroups[i] = cardGroup
-            }
+            let card = {cardID: state.newCardID, text: action.text, groupsIDs: [action.groupID]}
+            // 3.Добавляем в state allCards и меняем newCardID
             return {
                 ...state,
                 newCardID: state.newCardID + 1,
-                allCardGroups: [...newAllCardGroups]
+                allCards: [
+                    ...state.allCards,
+                    card
+                ]
+            }
+        }
+        case UPDATE_CURRENT_CARDS: {
+            let currentCards = state.allCards.filter(card => {
+                return card.groupsIDs.includes(state.currentCardGroup.groupID)
+            })
+            return {
+                ...state,
+                currentCards: currentCards
             }
         }
         case CHANGE_CARD: {
@@ -88,7 +79,7 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             // 4.1.Создаем копию нужной карточки
             let card = cardGroup.cards[getCardOrderNumber(cardGroup) as any]
             // 4.2.Создаем новую карточку на ее основe
-            let newCard = {cardID: card.cardID, text: action.text, groupID: [1, 2]}
+            let newCard = {cardID: card.cardID, text: action.text, groupID: card.groupID}
             // 5.Создаем новую папку allCardGroups
             // 5.1.Создаем копию папки allCardGroups
             let allCardGroups = [...state.allCardGroups]
@@ -101,6 +92,7 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 ]}
             // 5.4.Заменяем старую группу карт на новую в папке allCardGroups
             allCardGroups[getCardGroupOrderNumber() as any] = newCardGroup
+            console.log(allCardGroups)
             return {
                 ...state,
                 allCardGroups: allCardGroups
@@ -140,6 +132,12 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
         default: {
             return state
         }
+    }
+}
+
+export const updateCurrentCards = (): updateCurrentCardsType => {
+    return {
+        type: 'UPDATE_CURRENT_CARDS'
     }
 }
 

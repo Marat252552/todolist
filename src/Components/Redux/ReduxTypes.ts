@@ -1,6 +1,6 @@
-import { ADD_NEW_CARD, CHANGE_CARD, CHANGE_CURRENT_GROUP_ID, DELETE_CARD } from "./DataReducer"
+import { ADD_NEW_CARD, CHANGE_CARD, CHANGE_CURRENT_GROUP_ID, DELETE_CARD, UPDATE_CURRENT_CARDS } from "./DataReducer"
 
-export type AllActionsData = addNewCardACType | changeCardACType | deleteCardACType | changeCurrentCardGroupIDType
+export type AllActionsData = addNewCardACType | changeCardACType | deleteCardACType | changeCurrentCardGroupIDType | updateCurrentCardsType
 
 export type addNewCardACType = {
     type: typeof ADD_NEW_CARD,
@@ -12,6 +12,10 @@ export type changeCardACType = {
     type: typeof CHANGE_CARD,
     text: string,
     cardID: number
+}
+
+export type updateCurrentCardsType = {
+    type: typeof UPDATE_CURRENT_CARDS
 }
 
 export type deleteCardACType = {
