@@ -2,7 +2,8 @@ import { menuCardGroupsType } from './../../../Redux/ReduxTypes';
 
 export type CardsInfoPropsType = {
     changeCurrentCardGroupID: (groupID: number) => void,
-    menuCardGroups: menuCardGroupsType
+    menuCardGroups: menuCardGroupsType,
+    switchCardGroup: (groupID: number) => void
 }
 
 export type MakeMenuCardGroupPropsType = {
@@ -10,5 +11,6 @@ export type MakeMenuCardGroupPropsType = {
     name: string,
     groupID: number,
     icon: string,
-    changeCurrentCardGroupID: (groupID: number) => void
+    changeCurrentCardGroupID: (groupID: number) => void,
+    switchCardGroup: (groupID: number) => void
 }

@@ -5,10 +5,12 @@ export type MapStateType = {
 }
 
 export type MapDispatchType = {
-    changeCurrentCardGroupID: (groupID: number) => changeCurrentCardGroupIDType
+    changeCurrentCardGroupID: (groupID: number) => changeCurrentCardGroupIDType,
+    switchCardGroup: (groupID: number) => void
 }
 
 export type MenuPropsType = {
     menuCardGroups: menuCardGroupsType,
-    changeCurrentCardGroupID: (groupID: number) => void
+    changeCurrentCardGroupID: (groupID: number) => void,
+    switchCardGroup: (groupID: number) => void
 }

@@ -1,9 +1,10 @@
-import { cardGroupType, allCardGroupsType, addNewCardACType, deleteCardACType, changeCardACType } from './../../Redux/ReduxTypes';
+import { allCardGroupsType, addNewCardACType, deleteCardACType, changeCardACType, cardType, currentCardGroupType } from './../../Redux/ReduxTypes';
 
 export type MapStateType = {
-    currentCardGroup: cardGroupType,
+    currentCardGroup: currentCardGroupType,
     allCardGroups: allCardGroupsType,
-    background: string
+    background: string,
+    currentCards: Array<cardType>
 }
 
 export type mapDispatchType = {
@@ -20,9 +21,9 @@ export type MakeCardPropsType = {
     text: string,
     deleteCardAC: (cardID: number) => void,
     changeCardAC: (text: string, cardID: number) => void,
-    groupID: Array<number>,
+    groupsIDs: Array<number>,
     allCardGroups: allCardGroupsType,
-    currentCardGroup: cardGroupType
+    currentCardGroup: currentCardGroupType
 }
 
 export type CreateNewCardPropsType = {

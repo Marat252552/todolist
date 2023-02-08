@@ -1,12 +1,13 @@
 import { connect } from "react-redux";
 import styles from './MainBody.module.css'
 import { Checkbox, Popconfirm, Popover, Button } from "antd";
-import { PlusOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import { addNewCardAC, changeCardAC, deleteCardAC } from "../../Redux/DataReducer";
 import React from "react";
 import { Formik, useFormik } from "formik";
 import { AppStateType } from "../../Redux/Redux";
 import { ChangeCardFormType, CreateNewCardPropsType, MainBodyPropsType, MakeCardPropsType, mapDispatchType, MapStateType, NewCardFormType } from "./MainBodyTypes";
+import { genPreviewOperationsStyle } from "antd/es/image/style";
 
 
 const ChangeCardForm = (props: ChangeCardFormType) => {
@@ -66,18 +67,11 @@ const CreateNewCard = (props: CreateNewCardPropsType) => {
 }
 
 const MakeCard = (props: MakeCardPropsType) => {
-    let requiredGroupsArray = props.groupID.filter(groupID => {
+    let requiredGroupsArray = props.groupsIDs.filter(groupID => {
         return groupID !== props.currentCardGroup.groupID
     }).map(groupID => {
         return props.allCardGroups.filter(group => { return groupID === group.groupID })[0].name
     })
-    let isImportantCard = (groupID: Array<number>) => {
-        if(groupID.includes(2)) {
-            return <StarFilled />
-        } else {
-            return <StarOutlined />
-        }
-    }
     return <>
         <Popover
             placement="bottomLeft"
@@ -99,9 +93,6 @@ const MakeCard = (props: MakeCardPropsType) => {
                     <ChangeCardForm changeCardAC={props.changeCardAC} text={props.text} cardID={props.cardID}/>
                     <span className={styles.groupName}>{requiredGroupsArray.map(groupName => { return <span key={groupName}>{groupName} </span> })}</span>
                 </div>
-                <div>
-                    <Button className={styles.starButton} shape='circle' icon={isImportantCard(props.groupID)}/>
-                </div>
             </div >
         </Popover>
     </>
@@ -121,7 +112,6 @@ const MainBody = (props: MainBodyPropsType) => {
         return cardGroup.groupID === props.currentCardGroup.groupID
     })[0]
     // Массив в котором лежат нужные карточки
-    let requiredCardsArray = requiredCardGroupArray.cards
 
     return <div className={wallpaper(props.background)}>
         <div style={{ height: '80vh' }}>
@@ -129,8 +119,8 @@ const MainBody = (props: MainBodyPropsType) => {
                 <h1>{props.currentCardGroup.name}</h1>
             </div>
             <div className={styles.scroll}>
-                {requiredCardsArray.map(card => {
-                    return <MakeCard key={card.cardID} changeCardAC={props.changeCardAC} deleteCardAC={props.deleteCardAC} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupID={card.groupID} allCardGroups={props.allCardGroups} />
+                {props.currentCards.map(card => {
+                    return <MakeCard key={card.cardID} changeCardAC={props.changeCardAC} deleteCardAC={props.deleteCardAC} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} />
                 })}
             </div>
         </div>
@@ -145,7 +135,7 @@ const mapStateToProps = (state: AppStateType) => {
         currentCardGroup: state.data.currentCardGroup,
         allCardGroups: state.data.allCardGroups,
         background: state.data.currentCardGroup.background,
-        allCards: state.data.allCards
+        currentCards: state.data.currentCards
     }
 }
 
