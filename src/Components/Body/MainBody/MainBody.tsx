@@ -5,13 +5,11 @@ import { PlusOutlined } from '@ant-design/icons'
 import { addNewCardAC, changeCardAC, deleteCardAC } from "../../Redux/DataReducer";
 import React from "react";
 import { Formik, useFormik } from "formik";
+import { AppStateType } from "../../Redux/Redux";
+import { ChangeCardFormType, CreateNewCardPropsType, MainBodyPropsType, MakeCardPropsType, mapDispatchType, MapStateType, NewCardFormType } from "./MainBodyTypes";
 
 
-window.addEventListener('contextmenu', (event) => {
-    console.log('buttom ')
-})
-
-const ChangeCardForm = (props: any) => {
+const ChangeCardForm = (props: ChangeCardFormType) => {
     const formik = useFormik({
         initialValues: {
             card: props.text
@@ -21,8 +19,7 @@ const ChangeCardForm = (props: any) => {
             props.changeCardAC(values.card, props.cardID)
         }
     })
-    return <Formik>
-        <form onSubmit={formik.handleSubmit}>
+    return <form onSubmit={formik.handleSubmit}>
             <input 
             value={formik.values.card}
             id='card'
@@ -32,10 +29,9 @@ const ChangeCardForm = (props: any) => {
             className={styles.input}
             />
         </form>
-    </Formik>
 }
 
-const NewCardForm = (props: any) => {
+const NewCardForm = (props: NewCardFormType) => {
     const formik = useFormik({
         initialValues: {
             card: '',
@@ -45,8 +41,7 @@ const NewCardForm = (props: any) => {
             resetForm({ values: '' })
         },
     })
-    return <Formik>
-        <form onSubmit={formik.handleSubmit}>
+    return <form onSubmit={formik.handleSubmit}>
             <input
                 className={styles.input}
                 placeholder='Добавить карточку'
@@ -57,24 +52,20 @@ const NewCardForm = (props: any) => {
                 value={formik.values.card}
             />
         </form>
-    </Formik>
 }
 
-const CreateNewCard = (props: any) => {
-    let TextInput = React.createRef()
+const CreateNewCard = (props: CreateNewCardPropsType) => {
     return <div className={styles.createCard}>
         <div className={styles.plusOutlined}>
             <PlusOutlined />
         </div>
         <div className={styles.createNewCard}>
             <NewCardForm groupID={props.groupID} addNewCardAC={props.addNewCardAC} />
-
         </div>
     </div>
 }
 
-const MakeCard = (props: any) => {
-    let TextInput = React.createRef()
+const MakeCard = (props: MakeCardPropsType) => {
     let requiredGroupsArray = props.groupID.filter(groupID => {
         return groupID !== props.currentCardGroup.groupID
     }).map(groupID => {
@@ -106,14 +97,14 @@ const MakeCard = (props: any) => {
     </>
 }
 
-const MainBody = (props: any) => {
-    const wallpaper = (background: any) => {
+const MainBody = (props: MainBodyPropsType) => {
+    const wallpaper = (background: string) => {
         return (background === 'wallpaper1') ? styles.wallpaper1 :
             (background === 'wallpaper2') ? styles.wallpaper2 :
                 (background === 'green') ? styles.green :
                     (background === 'orange') ? styles.orange :
                         (background === 'red') ? styles.red :
-                            (background === 'blue') ? styles.blue : null
+                            (background === 'blue') ? styles.blue : undefined
     }
     // Нужная группа карточек
     let requiredCardGroupArray = props.allCardGroups.filter(cardGroup => {
@@ -139,16 +130,14 @@ const MainBody = (props: any) => {
     </div>
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AppStateType) => {
     return {
-        reminders: state.data.currentCardGroup.reminders,
         currentCardGroup: state.data.currentCardGroup,
-        allCards: state.data.allCards,
         allCardGroups: state.data.allCardGroups,
         background: state.data.currentCardGroup.background
     }
 }
 
-const MainBodyContainer = connect(mapStateToProps, { addNewCardAC, deleteCardAC, changeCardAC })(MainBody)
+const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, { addNewCardAC, deleteCardAC, changeCardAC })(MainBody)
 
 export default MainBodyContainer

@@ -30,6 +30,7 @@ export type cardGroupType = {
     groupID: number,
     name: string,
     background: string,
+    icon: string,
     cards: Array<cardType>
 }
 
@@ -37,6 +38,7 @@ export type menuCardGroupType = {
     groupID: number,
     name: string,
     background: string,
+    icon: string
 }
 
 export type allCardGroupsType = Array<cardGroupType>
