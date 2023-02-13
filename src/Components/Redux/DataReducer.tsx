@@ -1,12 +1,14 @@
 import { Dispatch } from "react"
 import { AppStateType } from "./Redux"
-import { addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, updateCurrentCardsType } from "./ReduxTypes"
+import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, updateCurrentCardsType } from "./ReduxTypes"
 
 export const ADD_NEW_CARD = 'ADD_NEW_CARD'
 export const DELETE_CARD = 'DELETE_CARD'
 export const CHANGE_CARD = 'CHANGE_CARD'
 export const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID'
 export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS'
+export const ADD_GROUP_ID = 'ADD_GROUP_ID'
+export const DELETE_GROUP_ID = 'DELETE_GROUP_ID'
 
 const initialState = {
     currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
@@ -67,6 +69,33 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             return {
                 ...state,
                 currentCards: [...newCurrentCards]
+            }
+        }
+        case ADD_GROUP_ID: {
+            let cardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
+            let card = state.allCards[cardIndex]
+            card.groupsIDs = [
+                ...card.groupsIDs,
+                action.groupID
+            ]
+            let newAllCards = [...state.allCards]
+            newAllCards[cardIndex] = card
+            return {
+                ...state,
+                allCards: newAllCards
+            }
+        }
+        case DELETE_GROUP_ID: {
+            let cardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
+            let card = state.allCards[cardIndex]
+            card.groupsIDs = card.groupsIDs.filter(groupID => {
+                return groupID !== action.groupID
+            })
+            let newAllCards = [...state.allCards]
+            newAllCards[cardIndex] = card
+            return {
+                ...state,
+                allCards: newAllCards
             }
         }
         case CHANGE_CARD: {
@@ -140,6 +169,22 @@ export const changeCurrentCardGroupID = (groupID: number): changeCurrentCardGrou
     }
 }
 
+export const addGroupID = (groupID: number, cardID: number): addGroupIDType => {
+    return {
+        type: ADD_GROUP_ID,
+        groupID: groupID,
+        cardID: cardID
+    }
+}
+
+export const deleteGroupID = (groupID: number, cardID: number): deleteGroupIDType => {
+    return {
+        type: DELETE_GROUP_ID,
+        groupID: groupID,
+        cardID: cardID
+    }
+}
+
 export const addNewCardThunk = (text: string, groupID: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
         dispatch(addNewCardAC(text, groupID))
@@ -160,5 +205,19 @@ export const switchCardGroup = (groupID: number) => {
         dispatch(updateCurrentCards())
     }
 }
+
+export const addGroupIDThunk = (groupID: number, cardID: number) => {
+    return (dispatch: Dispatch<AllActionsData>) => {
+        dispatch(addGroupID(groupID, cardID))
+        dispatch(updateCurrentCards())
+    }
+}
+
+export const deleteGroupIDThunk = (groupID: number, cardID: number) => {
+    return (dispatch: Dispatch<AllActionsData>) => {
+        dispatch(deleteGroupID(groupID, cardID))
+        dispatch(updateCurrentCards())
+    }
+} 
 
 export default DataReducer
