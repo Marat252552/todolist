@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import styles from './MainBody.module.css'
 import { Checkbox, Popconfirm, Popover, Button } from "antd";
 import { PlusOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { addGroupIDThunk, addNewCardAC, addNewCardThunk, changeCardAC, deleteCardAC, deleteCardThunk, deleteGroupIDThunk } from "../../Redux/DataReducer";
+import { addGroupIDThunk, addNewCardAC, addNewCardThunk, changeCardAC, changeCardThunk, deleteCardAC, deleteCardThunk, deleteGroupIDThunk } from "../../Redux/DataReducer";
 import React from "react";
 import { Formik, useFormik } from "formik";
 import { AppStateType } from "../../Redux/Redux";
@@ -16,7 +16,7 @@ const ChangeCardForm = (props: ChangeCardFormType) => {
         },
         onSubmit: (values: any) => {
             console.log(values.card)
-            props.changeCardAC(values.card, props.cardID)
+            props.changeCardThunk(values.card, props.cardID)
         }
     })
     return <form onSubmit={formik.handleSubmit}>
@@ -60,7 +60,7 @@ const CreateNewCard = (props: CreateNewCardPropsType) => {
             <PlusOutlined />
         </div>
         <div className={styles.createNewCard}>
-            <NewCardForm groupID={props.groupID} addNewCardAC={props.addNewCardAC} addNewCardThunk={props.addNewCardThunk}/>
+            <NewCardForm groupID={props.groupID} addNewCardThunk={props.addNewCardThunk}/>
         </div>
     </div>
 }
@@ -89,7 +89,7 @@ const MakeCard = (props: MakeCardPropsType) => {
                     <Checkbox style={{ marginTop: '8px' }} />
                 </div>
                 <div className={styles.cardInfo}>
-                    <ChangeCardForm changeCardAC={props.changeCardAC} text={props.text} cardID={props.cardID}/>
+                    <ChangeCardForm changeCardThunk={props.changeCardThunk} text={props.text} cardID={props.cardID}/>
                     <span className={styles.groupName}>{requiredGroupsArray.map(groupName => { return <span key={groupName}>{groupName} </span> })}</span>
                 </div>
                 <div>
@@ -102,8 +102,6 @@ const MakeCard = (props: MakeCardPropsType) => {
                         <StarOutlined />
                         </Button>
                 }
-                    
-                    
                 </div>
             </div>
         </Popover>
@@ -132,12 +130,12 @@ const MainBody = (props: MainBodyPropsType) => {
             </div>
             <div className={styles.scroll}>
                 {props.currentCards.map(card => {
-                    return <MakeCard deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} changeCardAC={props.changeCardAC} deleteCardAC={props.deleteCardAC} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} />
+                    return <MakeCard changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} />
                 })}
             </div>
         </div>
         <div>
-            <CreateNewCard addNewCardThunk={props.addNewCardThunk} groupID={props.currentCardGroup.groupID} addNewCardAC={props.addNewCardAC} />
+            <CreateNewCard addNewCardThunk={props.addNewCardThunk} groupID={props.currentCardGroup.groupID} />
         </div>
     </div>
 }
@@ -151,6 +149,6 @@ const mapStateToProps = (state: AppStateType) => {
     }
 }
 
-const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, { addNewCardAC, deleteCardAC, changeCardAC, addNewCardThunk, deleteCardThunk, addGroupIDThunk, deleteGroupIDThunk })(MainBody)
+const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, { addNewCardThunk, deleteCardThunk, addGroupIDThunk, deleteGroupIDThunk, changeCardThunk })(MainBody)
 
 export default MainBodyContainer

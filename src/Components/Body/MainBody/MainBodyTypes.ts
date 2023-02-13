@@ -8,10 +8,11 @@ export type MapStateType = {
 }
 
 export type mapDispatchType = {
-    addNewCardAC: (text: string, groupID: number) => addNewCardACType,
-    deleteCardAC: (cardID: number) => deleteCardACType,
-    changeCardAC: (text: string, cardID: number) => changeCardACType,
-    addNewCardThunk: (text: string, groupID: number) => any
+    addNewCardThunk: (text: string, groupID: number) => any,
+    addGroupIDThunk: (groupID: number, cardID: number) => any,
+    deleteGroupIDThunk: (groupID: number, cardID: number) => any,
+    deleteCardThunk: (cardID: number) => any,
+    changeCardThunk: (text: string, cardID: number) => any
 }
 
 export type MainBodyPropsType = MapStateType & mapDispatchType
@@ -20,25 +21,27 @@ export type MakeCardPropsType = {
     key: number,
     cardID: number,
     text: string,
-    deleteCardAC: (cardID: number) => void,
-    changeCardAC: (text: string, cardID: number) => void,
     groupsIDs: Array<number>,
     allCardGroups: allCardGroupsType,
-    currentCardGroup: currentCardGroupType
+    currentCardGroup: currentCardGroupType,
+    deleteGroupIDThunk: (groupID: number, cardID: number) => any,
+    deleteCardThunk: (cardID: number) => any,
+    addGroupIDThunk: (groupID: number, cardID: number) => any,
+    changeCardThunk: (text: string, cardID: number) => any
 }
 
 export type CreateNewCardPropsType = {
-    addNewCardAC: (text: string, groupID: number) => void,
-    groupID: number
+    groupID: number,
+    addNewCardThunk: (text: string, groupID: number) => any,
 }
 
 export type NewCardFormType = {
-    addNewCardAC: (text: string, groupID: number) => void,
-    groupID: number
+    groupID: number,
+    addNewCardThunk: (text: string, groupID: number) => any,
 }
 
 export type ChangeCardFormType = {
     text: string,
     cardID: number,
-    changeCardAC: (text: string, cardID: number) => void
+    changeCardThunk: (text: string, cardID: number) => any
 }

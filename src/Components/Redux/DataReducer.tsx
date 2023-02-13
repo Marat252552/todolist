@@ -199,6 +199,13 @@ export const deleteCardThunk = (cardID: number) => {
     }
 }
 
+export const changeCardThunk = (text: string, cardID: number) => {
+    return (dispatch: Dispatch<AllActionsData>) => {
+        dispatch(changeCardAC(text, cardID))
+        dispatch(updateCurrentCards())
+    }
+}
+
 export const switchCardGroup = (groupID: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
         dispatch(changeCurrentCardGroupID(groupID))
