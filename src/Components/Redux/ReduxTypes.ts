@@ -42,7 +42,7 @@ export type deleteGroupIDType = {
 
 
 
-export type cardType = {cardID: number, text: string, groupsIDs: Array<number>}
+export type cardType = {cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean}
 
 export type cardGroupType = {
     groupID: number,

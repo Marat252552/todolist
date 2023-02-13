@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import styles from './MainBody.module.css'
 import { Checkbox, Popconfirm, Popover, Button } from "antd";
 import { PlusOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { addGroupIDThunk, addNewCardAC, addNewCardThunk, changeCardAC, changeCardThunk, deleteCardAC, deleteCardThunk, deleteGroupIDThunk } from "../../Redux/DataReducer";
+import { addGroupIDThunk, addNewCardThunk, changeCardThunk, deleteCardThunk, deleteGroupIDThunk } from "../../Redux/DataReducer";
 import React from "react";
 import { Formik, useFormik } from "formik";
 import { AppStateType } from "../../Redux/Redux";
@@ -117,19 +117,23 @@ const MainBody = (props: MainBodyPropsType) => {
                         (background === 'red') ? styles.red :
                             (background === 'blue') ? styles.blue : undefined
     }
-    // Нужная группа карточек
-    let requiredCardGroupArray = props.allCardGroups.filter(cardGroup => {
-        return cardGroup.groupID === props.currentCardGroup.groupID
-    })[0]
-    // Массив в котором лежат нужные карточки
-
+    let incompletedCards = props.currentCards.filter(card => {
+        return card.isCompleted === false
+    })
+    let completedCards = props.currentCards.filter(card => {
+        return card.isCompleted === true
+    })
     return <div className={wallpaper(props.background)}>
         <div style={{ height: '80vh' }}>
             <div className={styles.header}>
                 <h1>{props.currentCardGroup.name}</h1>
             </div>
             <div className={styles.scroll}>
-                {props.currentCards.map(card => {
+                {incompletedCards.map(card => {
+                    return <MakeCard changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} />
+                })}
+                <p>Выполненные задач</p>
+                {completedCards.map(card => {
                     return <MakeCard changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} />
                 })}
             </div>

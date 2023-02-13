@@ -23,8 +23,8 @@ const initialState = {
     ],
     newCardID: 6 as number,
     allCards: [
-        {cardID: 1, text: 'Выучить бананы', groupsIDs: [1, 2]},
-        {cardID: 2, text: 'Выучить бананы', groupsIDs: [1, 2]}
+        {cardID: 1, text: 'Выучить бананы', groupsIDs: [1, 2], isCompleted: false},
+        {cardID: 2, text: 'Выучить бананы', groupsIDs: [1, 2], isCompleted: true}
     ],
     allCardGroups: [
         {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red'},
@@ -39,7 +39,7 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
     switch (action.type) {
         case ADD_NEW_CARD: {
             // 2.Создаем карточку
-            let card = {cardID: state.newCardID, text: action.text, groupsIDs: [action.groupID]}
+            let card = {cardID: state.newCardID, text: action.text, groupsIDs: [action.groupID], isCompleted: false}
             // 3.Добавляем в state allCards и меняем newCardID
             return {
                 ...state,
@@ -109,7 +109,7 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 return index
             }
             let cardIndex = findIndex()
-            let newCard = {cardID: action.cardID, text: action.text, groupsIDs: state.allCards[cardIndex].groupsIDs}
+            let newCard = {cardID: action.cardID, text: action.text, groupsIDs: state.allCards[cardIndex].groupsIDs, isCompleted: state.allCards[cardIndex].isCompleted}
             let newAllCards = state.allCards
             newAllCards[cardIndex] = newCard
             return {
