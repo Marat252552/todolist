@@ -10,7 +10,8 @@ export type MapStateType = {
 export type mapDispatchType = {
     addNewCardAC: (text: string, groupID: number) => addNewCardACType,
     deleteCardAC: (cardID: number) => deleteCardACType,
-    changeCardAC: (text: string, cardID: number) => changeCardACType
+    changeCardAC: (text: string, cardID: number) => changeCardACType,
+    addNewCardThunk: (text: string, groupID: number) => any
 }
 
 export type MainBodyPropsType = MapStateType & mapDispatchType

@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import styles from './MainBody.module.css'
 import { Checkbox, Popconfirm, Popover, Button } from "antd";
 import { PlusOutlined } from '@ant-design/icons'
-import { addNewCardAC, changeCardAC, deleteCardAC } from "../../Redux/DataReducer";
+import { addNewCardAC, addNewCardThunk, changeCardAC, deleteCardAC, deleteCardThunk } from "../../Redux/DataReducer";
 import React from "react";
 import { Formik, useFormik } from "formik";
 import { AppStateType } from "../../Redux/Redux";
@@ -38,7 +38,7 @@ const NewCardForm = (props: NewCardFormType) => {
             card: '',
         },
         onSubmit: (values: any, { resetForm }: any) => {
-            props.addNewCardAC(values.card, props.groupID)
+            props.addNewCardThunk(values.card, props.groupID)
             resetForm({ values: '' })
         },
     })
@@ -61,7 +61,7 @@ const CreateNewCard = (props: CreateNewCardPropsType) => {
             <PlusOutlined />
         </div>
         <div className={styles.createNewCard}>
-            <NewCardForm groupID={props.groupID} addNewCardAC={props.addNewCardAC} />
+            <NewCardForm groupID={props.groupID} addNewCardAC={props.addNewCardAC} addNewCardThunk={props.addNewCardThunk}/>
         </div>
     </div>
 }
@@ -80,7 +80,7 @@ const MakeCard = (props: MakeCardPropsType) => {
                 danger
                 type='primary'
                 style={{ width: '100%' }}
-                onClick={() => { props.deleteCardAC(props.cardID) }}>
+                onClick={() => { props.deleteCardThunk(props.cardID) }}>
                 Delete
             </Button>
             }
@@ -120,12 +120,12 @@ const MainBody = (props: MainBodyPropsType) => {
             </div>
             <div className={styles.scroll}>
                 {props.currentCards.map(card => {
-                    return <MakeCard key={card.cardID} changeCardAC={props.changeCardAC} deleteCardAC={props.deleteCardAC} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} />
+                    return <MakeCard deleteCardThunk={props.deleteCardThunk} key={card.cardID} changeCardAC={props.changeCardAC} deleteCardAC={props.deleteCardAC} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} />
                 })}
             </div>
         </div>
         <div>
-            <CreateNewCard groupID={props.currentCardGroup.groupID} addNewCardAC={props.addNewCardAC} />
+            <CreateNewCard addNewCardThunk={props.addNewCardThunk} groupID={props.currentCardGroup.groupID} addNewCardAC={props.addNewCardAC} />
         </div>
     </div>
 }
@@ -139,6 +139,6 @@ const mapStateToProps = (state: AppStateType) => {
     }
 }
 
-const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, { addNewCardAC, deleteCardAC, changeCardAC })(MainBody)
+const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, { addNewCardAC, deleteCardAC, changeCardAC, addNewCardThunk, deleteCardThunk })(MainBody)
 
 export default MainBodyContainer

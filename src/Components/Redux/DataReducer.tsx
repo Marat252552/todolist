@@ -11,8 +11,7 @@ export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS'
 const initialState = {
     currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
     currentCards: [
-        {cardID: 1, text: 'Выучить бананы', groupsIDs: [1, 2]}
-    ],
+    ] as any,
     menuCardGroups: [
         {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'wallpaper1'},
         {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'wallpaper1'},
@@ -20,7 +19,7 @@ const initialState = {
         {groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'wallpaper1'},
         {groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'wallpaper1'},
     ],
-    newCardID: 6,
+    newCardID: 6 as number,
     allCards: [
         {cardID: 1, text: 'Выучить бананы', groupsIDs: [1, 2]},
         {cardID: 2, text: 'Выучить бананы', groupsIDs: [1, 2]}
@@ -37,8 +36,6 @@ const initialState = {
 const DataReducer = (state = initialState, action: AllActionsData) => {
     switch (action.type) {
         case ADD_NEW_CARD: {
-            // 1.Создаем копию текущей папки allCardGroups
-            let newAllCardGroups = [...state.allCardGroups]
             // 2.Создаем карточку
             let card = {cardID: state.newCardID, text: action.text, groupsIDs: [action.groupID]}
             // 3.Добавляем в state allCards и меняем newCardID
@@ -51,13 +48,25 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 ]
             }
         }
+        case DELETE_CARD: {
+            let newAllCards = [
+                ...state.allCards
+            ]
+            newAllCards = newAllCards.filter(card => {
+                return card.cardID !== action.cardID
+            })
+            return {
+                ...state,
+                allCards: newAllCards
+            }
+        }
         case UPDATE_CURRENT_CARDS: {
-            let currentCards = state.allCards.filter(card => {
+            let newCurrentCards = state.allCards.filter(card => {
                 return card.groupsIDs.includes(state.currentCardGroup.groupID)
             })
             return {
                 ...state,
-                currentCards: currentCards
+                currentCards: [...newCurrentCards]
             }
         }
         case CHANGE_CARD: {
@@ -131,10 +140,24 @@ export const changeCurrentCardGroupID = (groupID: number): changeCurrentCardGrou
     }
 }
 
+export const addNewCardThunk = (text: string, groupID: number) => {
+    return (dispatch: Dispatch<AllActionsData>) => {
+        dispatch(addNewCardAC(text, groupID))
+        dispatch(updateCurrentCards())
+    }
+}
+
+export const deleteCardThunk = (cardID: number) => {
+    return (dispatch: Dispatch<AllActionsData>) => {
+        dispatch(deleteCardAC(cardID))
+        dispatch(updateCurrentCards())
+    }
+}
+
 export const switchCardGroup = (groupID: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(updateCurrentCards())
         dispatch(changeCurrentCardGroupID(groupID))
+        dispatch(updateCurrentCards())
     }
 }
 
