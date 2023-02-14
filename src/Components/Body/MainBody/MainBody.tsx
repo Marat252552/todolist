@@ -124,7 +124,14 @@ const MainBody = (props: MainBodyPropsType) => {
     let completedCards = props.currentCards.filter(card => {
         return card.isCompleted === true
     })
-    return <div className={wallpaper(props.background)}>
+    if(props.isSearchOn) {
+        return <div>{props.allCards.filter(card => {
+            return card.text.includes(props.searchInputValue)
+        }).map(card => {
+            return <MakeCard switchCompleteCardThunk={props.switchCompleteCardThunk} changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
+        })}</div>
+    } else {
+        return <div className={wallpaper(props.background)}>
         <div style={{ height: '80vh' }}>
             <div className={styles.header}>
                 <h1>{props.currentCardGroup.name}</h1>
@@ -143,6 +150,8 @@ const MainBody = (props: MainBodyPropsType) => {
             <CreateNewCard addNewCardThunk={props.addNewCardThunk} groupID={props.currentCardGroup.groupID} />
         </div>
     </div>
+    }
+    
 }
 
 const mapStateToProps = (state: AppStateType) => {
@@ -150,10 +159,13 @@ const mapStateToProps = (state: AppStateType) => {
         currentCardGroup: state.data.currentCardGroup,
         allCardGroups: state.data.allCardGroups,
         background: state.data.currentCardGroup.background,
-        currentCards: state.data.currentCards
+        currentCards: state.data.currentCards,
+        isSearchOn: state.data.isSearchOn,
+        allCards: state.data.allCards,
+        searchInputValue: state.data.searchInputValue
     }
 }
-switchCompleteCardThunk
+
 const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, { addNewCardThunk, deleteCardThunk, addGroupIDThunk, deleteGroupIDThunk, changeCardThunk, switchCompleteCardThunk })(MainBody)
 
 export default MainBodyContainer

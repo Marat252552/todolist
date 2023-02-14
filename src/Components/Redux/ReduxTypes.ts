@@ -1,6 +1,6 @@
-import { ADD_GROUP_ID, ADD_NEW_CARD, CHANGE_CARD, CHANGE_CURRENT_GROUP_ID, DELETE_CARD, DELETE_GROUP_ID, SWITCH_COMPLETE_CARD, TOGGLE_SEARCH, UPDATE_CURRENT_CARDS } from "./DataReducer"
+import { ADD_GROUP_ID, ADD_NEW_CARD, CHANGE_CARD, CHANGE_CURRENT_GROUP_ID, DELETE_CARD, DELETE_GROUP_ID, SWITCH_COMPLETE_CARD, TOGGLE_SEARCH, UPDATE_CURRENT_CARDS, UPDATE_SEARCH_INPUT_VALUE } from "./DataReducer"
 
-export type AllActionsData = switchCompleteCard | addNewCardACType | changeCardACType | deleteCardACType | changeCurrentCardGroupIDType | updateCurrentCardsType | addGroupIDType | deleteGroupIDType | switchCompleteCardType | toggleSearchType
+export type AllActionsData = switchCompleteCard | addNewCardACType | changeCardACType | deleteCardACType | changeCurrentCardGroupIDType | updateCurrentCardsType | addGroupIDType | deleteGroupIDType | switchCompleteCardType | toggleSearchType | updateSearchInputValue
 
 export type addNewCardACType = {
     type: typeof ADD_NEW_CARD,
@@ -53,6 +53,11 @@ export type deleteGroupIDType = {
 export type switchCompleteCard = {
     type: typeof SWITCH_COMPLETE_CARD,
     cardID: number
+}
+
+export type updateSearchInputValue = {
+    type: typeof UPDATE_SEARCH_INPUT_VALUE,
+    text: string
 }
 
 

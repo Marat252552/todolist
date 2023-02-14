@@ -1,10 +1,13 @@
-import { allCardGroupsType, addNewCardACType, deleteCardACType, changeCardACType, cardType, currentCardGroupType } from './../../Redux/ReduxTypes';
+import { allCardGroupsType, cardType, currentCardGroupType } from './../../Redux/ReduxTypes';
 
 export type MapStateType = {
     currentCardGroup: currentCardGroupType,
     allCardGroups: allCardGroupsType,
     background: string,
-    currentCards: Array<cardType>
+    currentCards: Array<cardType>,
+    isSearchOn: boolean,
+    allCards: Array<cardType>,
+    searchInputValue: string
 }
 
 export type mapDispatchType = {

@@ -11,6 +11,7 @@ export const ADD_GROUP_ID = 'ADD_GROUP_ID'
 export const DELETE_GROUP_ID = 'DELETE_GROUP_ID'
 export const SWITCH_COMPLETE_CARD = 'SWITCH_COMPLETE_CARD'
 export const TOGGLE_SEARCH = 'TOGGLE_SEARCH'
+export const UPDATE_SEARCH_INPUT_VALUE = 'SEARCH_INPUT_VALUE'
 
 const initialState = {
     currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
@@ -23,6 +24,7 @@ const initialState = {
         {groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'wallpaper1'},
         {groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'wallpaper1'},
     ],
+    searchInputValue: '',
     isSearchOn: false,
     newCardID: 6 as number,
     allCards: [
@@ -57,7 +59,6 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             let updatedCardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
             let updatedCard = state.allCards[updatedCardIndex]
             let updatedAllCards = state.allCards
-            console.log(state.allCards[updatedCardIndex].isCompleted)
             if(state.allCards[updatedCardIndex].isCompleted === true) {
                 updatedCard.isCompleted = false
             } else {
@@ -150,6 +151,12 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             return {
                 ...state,
                 currentCardGroup: cardGroup
+            }
+        }
+        case UPDATE_SEARCH_INPUT_VALUE: {
+            return {
+                ...state,
+                searchInputValue: action.text
             }
         }
         default: {
@@ -270,6 +277,13 @@ export const switchCompleteCardThunk = (cardID: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
         dispatch(switchCompleteCard(cardID))
         dispatch(updateCurrentCards())
+    }
+}
+
+export const updateSearchInputValue = (text: string) => {
+    return {
+        type: UPDATE_SEARCH_INPUT_VALUE,
+        text: text
     }
 }
 
