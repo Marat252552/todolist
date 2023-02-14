@@ -9,6 +9,7 @@ export const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID'
 export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS'
 export const ADD_GROUP_ID = 'ADD_GROUP_ID'
 export const DELETE_GROUP_ID = 'DELETE_GROUP_ID'
+export const SWITCH_COMPLETE_CARD = 'SWITCH_COMPLETE_CARD'
 
 const initialState = {
     currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
@@ -48,6 +49,21 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                     ...state.allCards,
                     card
                 ]
+            }
+        }
+        case SWITCH_COMPLETE_CARD: {
+            let updatedCardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
+            let updatedCard = state.allCards[updatedCardIndex]
+            let updatedAllCards = state.allCards
+            if(state.allCards[updatedCardIndex].isCompleted === true) {
+                updatedCard.isCompleted === false
+            } else {
+                updatedCard.isCompleted === true
+            }
+            updatedAllCards[updatedCardIndex] = updatedCard
+            return {
+                ...state,
+                allCards: updatedAllCards
             }
         }
         case DELETE_CARD: {
@@ -158,6 +174,13 @@ export const changeCardAC = (text: string, cardID: number): changeCardACType => 
 export const deleteCardAC = (cardID: number): deleteCardACType => {
     return {
         type: DELETE_CARD,
+        cardID: cardID
+    }
+}
+
+export const switchCompleteCard = (cardID: number) => {
+    return {
+        type: SWITCH_COMPLETE_CARD,
         cardID: cardID
     }
 }

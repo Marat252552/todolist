@@ -22,6 +22,7 @@ export type MakeCardPropsType = {
     cardID: number,
     text: string,
     groupsIDs: Array<number>,
+    isCompleted: boolean,
     allCardGroups: allCardGroupsType,
     currentCardGroup: currentCardGroupType,
     deleteGroupIDThunk: (groupID: number, cardID: number) => any,
@@ -43,5 +44,6 @@ export type NewCardFormType = {
 export type ChangeCardFormType = {
     text: string,
     cardID: number,
+    isCompleted: boolean,
     changeCardThunk: (text: string, cardID: number) => any
 }

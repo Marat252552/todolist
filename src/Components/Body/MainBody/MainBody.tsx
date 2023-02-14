@@ -26,7 +26,7 @@ const ChangeCardForm = (props: ChangeCardFormType) => {
             type='text'
             name='card'
             onChange={formik.handleChange}
-            className={styles.input}
+            className={(props.isCompleted)? styles.inputCompleted : styles.input}
             />
         </form>
 }
@@ -89,7 +89,7 @@ const MakeCard = (props: MakeCardPropsType) => {
                     <Checkbox style={{ marginTop: '8px' }} />
                 </div>
                 <div className={styles.cardInfo}>
-                    <ChangeCardForm changeCardThunk={props.changeCardThunk} text={props.text} cardID={props.cardID}/>
+                    <ChangeCardForm changeCardThunk={props.changeCardThunk} text={props.text} cardID={props.cardID} isCompleted={props.isCompleted}/>
                     <span className={styles.groupName}>{requiredGroupsArray.map(groupName => { return <span key={groupName}>{groupName} </span> })}</span>
                 </div>
                 <div>
@@ -134,7 +134,7 @@ const MainBody = (props: MainBodyPropsType) => {
                 })}
                 <p>Выполненные задач</p>
                 {completedCards.map(card => {
-                    return <MakeCard changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} />
+                    return <MakeCard changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
                 })}
             </div>
         </div>
