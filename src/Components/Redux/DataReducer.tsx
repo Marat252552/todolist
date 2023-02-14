@@ -1,6 +1,6 @@
 import { Dispatch } from "react"
 import { AppStateType } from "./Redux"
-import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, updateCurrentCardsType } from "./ReduxTypes"
+import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType } from "./ReduxTypes"
 
 export const ADD_NEW_CARD = 'ADD_NEW_CARD'
 export const DELETE_CARD = 'DELETE_CARD'
@@ -10,6 +10,7 @@ export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS'
 export const ADD_GROUP_ID = 'ADD_GROUP_ID'
 export const DELETE_GROUP_ID = 'DELETE_GROUP_ID'
 export const SWITCH_COMPLETE_CARD = 'SWITCH_COMPLETE_CARD'
+export const TOGGLE_SEARCH = 'TOGGLE_SEARCH'
 
 const initialState = {
     currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
@@ -22,10 +23,11 @@ const initialState = {
         {groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'wallpaper1'},
         {groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'wallpaper1'},
     ],
+    isSearchOn: false,
     newCardID: 6 as number,
     allCards: [
         {cardID: 1, text: 'Выучить бананы', groupsIDs: [1, 2], isCompleted: false},
-        {cardID: 2, text: 'Выучить бананы', groupsIDs: [1, 2], isCompleted: true}
+        {cardID: 2, text: 'Выучить бананы', groupsIDs: [1, 2], isCompleted: false}
     ],
     allCardGroups: [
         {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red'},
@@ -55,15 +57,22 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             let updatedCardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
             let updatedCard = state.allCards[updatedCardIndex]
             let updatedAllCards = state.allCards
+            console.log(state.allCards[updatedCardIndex].isCompleted)
             if(state.allCards[updatedCardIndex].isCompleted === true) {
-                updatedCard.isCompleted === false
+                updatedCard.isCompleted = false
             } else {
-                updatedCard.isCompleted === true
+                updatedCard.isCompleted = true
             }
             updatedAllCards[updatedCardIndex] = updatedCard
             return {
                 ...state,
                 allCards: updatedAllCards
+            }
+        }
+        case TOGGLE_SEARCH: {
+            return {
+                ...state,
+                isSearchOn: action.isSearchOn
             }
         }
         case DELETE_CARD: {
@@ -178,7 +187,7 @@ export const deleteCardAC = (cardID: number): deleteCardACType => {
     }
 }
 
-export const switchCompleteCard = (cardID: number) => {
+export const switchCompleteCard = (cardID: number): switchCompleteCardType => {
     return {
         type: SWITCH_COMPLETE_CARD,
         cardID: cardID
@@ -189,6 +198,13 @@ export const changeCurrentCardGroupID = (groupID: number): changeCurrentCardGrou
     return {
         type: CHANGE_CURRENT_GROUP_ID,
         groupID: groupID
+    }
+}
+
+export const toggleSearch = (isSearchOn: boolean): toggleSearchType => {
+    return {
+        type: TOGGLE_SEARCH,
+        isSearchOn: isSearchOn
     }
 }
 
@@ -249,5 +265,12 @@ export const deleteGroupIDThunk = (groupID: number, cardID: number) => {
         dispatch(updateCurrentCards())
     }
 } 
+
+export const switchCompleteCardThunk = (cardID: number) => {
+    return (dispatch: Dispatch<AllActionsData>) => {
+        dispatch(switchCompleteCard(cardID))
+        dispatch(updateCurrentCards())
+    }
+}
 
 export default DataReducer

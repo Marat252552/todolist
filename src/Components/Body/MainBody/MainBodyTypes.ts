@@ -12,7 +12,8 @@ export type mapDispatchType = {
     addGroupIDThunk: (groupID: number, cardID: number) => any,
     deleteGroupIDThunk: (groupID: number, cardID: number) => any,
     deleteCardThunk: (cardID: number) => any,
-    changeCardThunk: (text: string, cardID: number) => any
+    changeCardThunk: (text: string, cardID: number) => any,
+    switchCompleteCardThunk: (cardID: number) => any
 }
 
 export type MainBodyPropsType = MapStateType & mapDispatchType
@@ -28,7 +29,8 @@ export type MakeCardPropsType = {
     deleteGroupIDThunk: (groupID: number, cardID: number) => any,
     deleteCardThunk: (cardID: number) => any,
     addGroupIDThunk: (groupID: number, cardID: number) => any,
-    changeCardThunk: (text: string, cardID: number) => any
+    changeCardThunk: (text: string, cardID: number) => any,
+    switchCompleteCardThunk: (cardID: number) => any
 }
 
 export type CreateNewCardPropsType = {

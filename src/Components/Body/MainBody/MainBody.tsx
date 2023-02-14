@@ -2,11 +2,12 @@ import { connect } from "react-redux";
 import styles from './MainBody.module.css'
 import { Checkbox, Popconfirm, Popover, Button } from "antd";
 import { PlusOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import { addGroupIDThunk, addNewCardThunk, changeCardThunk, deleteCardThunk, deleteGroupIDThunk } from "../../Redux/DataReducer";
+import { addGroupIDThunk, addNewCardThunk, changeCardThunk, deleteCardThunk, deleteGroupIDThunk, switchCompleteCard, switchCompleteCardThunk } from "../../Redux/DataReducer";
 import React from "react";
 import { Formik, useFormik } from "formik";
 import { AppStateType } from "../../Redux/Redux";
 import { ChangeCardFormType, CreateNewCardPropsType, MainBodyPropsType, MakeCardPropsType, mapDispatchType, MapStateType, NewCardFormType } from "./MainBodyTypes";
+
 
 
 const ChangeCardForm = (props: ChangeCardFormType) => {
@@ -86,7 +87,7 @@ const MakeCard = (props: MakeCardPropsType) => {
             trigger="contextMenu">
             <div className={styles.card}>
                 <div className={styles.checkbox}>
-                    <Checkbox style={{ marginTop: '8px' }} />
+                    <input style={{margin: '12px'}} type='checkbox' checked={props.isCompleted} id='chbox' onChange={() => {props.switchCompleteCardThunk(props.cardID)}} />
                 </div>
                 <div className={styles.cardInfo}>
                     <ChangeCardForm changeCardThunk={props.changeCardThunk} text={props.text} cardID={props.cardID} isCompleted={props.isCompleted}/>
@@ -130,11 +131,11 @@ const MainBody = (props: MainBodyPropsType) => {
             </div>
             <div className={styles.scroll}>
                 {incompletedCards.map(card => {
-                    return <MakeCard changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} />
+                    return <MakeCard switchCompleteCardThunk={props.switchCompleteCardThunk} changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
                 })}
                 <p>Выполненные задач</p>
                 {completedCards.map(card => {
-                    return <MakeCard changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
+                    return <MakeCard switchCompleteCardThunk={props.switchCompleteCardThunk} changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
                 })}
             </div>
         </div>
@@ -152,7 +153,7 @@ const mapStateToProps = (state: AppStateType) => {
         currentCards: state.data.currentCards
     }
 }
-
-const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, { addNewCardThunk, deleteCardThunk, addGroupIDThunk, deleteGroupIDThunk, changeCardThunk })(MainBody)
+switchCompleteCardThunk
+const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, { addNewCardThunk, deleteCardThunk, addGroupIDThunk, deleteGroupIDThunk, changeCardThunk, switchCompleteCardThunk })(MainBody)
 
 export default MainBodyContainer
