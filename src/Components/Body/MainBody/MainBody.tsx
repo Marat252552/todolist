@@ -67,6 +67,7 @@ const CreateNewCard = (props: CreateNewCardPropsType) => {
 }
 
 const MakeCard = (props: MakeCardPropsType) => {
+    // Массив со всеми группами карточки
     let requiredGroupsArray = props.groupsIDs.filter(groupID => {
         return groupID !== props.currentCardGroup.groupID
     }).map(groupID => {
@@ -76,13 +77,19 @@ const MakeCard = (props: MakeCardPropsType) => {
         <Popover
             placement="bottomLeft"
             style={{ padding: '0' }}
-            content={<Button
+            content={<div>
+            <Button
                 danger
                 type='primary'
                 style={{ width: '100%' }}
                 onClick={() => { props.deleteCardThunk(props.cardID) }}>
                 Delete
             </Button>
+            {(props.groupsIDs.find(el => el === 1))? 
+            <Button type="default" onClick={() => {props.deleteGroupIDThunk(1, props.cardID)}}>Убрать из представления Мой день</Button>
+            :
+            <Button type="default" onClick={() => {props.addGroupIDThunk(1, props.cardID)}}>Добавить в представление мой день</Button>}
+            </div>
             }
             trigger="contextMenu">
             <div className={styles.card}>
@@ -110,6 +117,7 @@ const MakeCard = (props: MakeCardPropsType) => {
 }
 
 const MainBody = (props: MainBodyPropsType) => {
+    // Функция для выбора обоев
     const wallpaper = (background: string) => {
         return (background === 'wallpaper1') ? styles.wallpaper1 :
             (background === 'wallpaper2') ? styles.wallpaper2 :
@@ -118,12 +126,15 @@ const MainBody = (props: MainBodyPropsType) => {
                         (background === 'red') ? styles.red :
                             (background === 'blue') ? styles.blue : undefined
     }
+    // Массив с невыполненным карточками
     let incompletedCards = props.currentCards.filter(card => {
         return card.isCompleted === false
     })
+    // Массив с выполненным карточками
     let completedCards = props.currentCards.filter(card => {
         return card.isCompleted === true
     })
+    // Условие, которое показывает либо поиск либо выбранную колоду карточек
     if(props.isSearchOn) {
         return <div>{props.allCards.filter(card => {
             return card.text.includes(props.searchInputValue)
@@ -133,25 +144,29 @@ const MainBody = (props: MainBodyPropsType) => {
     } else {
         return <div className={wallpaper(props.background)}>
         <div style={{ height: '80vh' }}>
+            {/* Название выбранной группы */}
             <div className={styles.header}>
                 <h1>{props.currentCardGroup.name}</h1>
             </div>
+            {/* Карточки */}
             <div className={styles.scroll}>
+                {/* Невыполненные карточки */}
                 {incompletedCards.map(card => {
                     return <MakeCard switchCompleteCardThunk={props.switchCompleteCardThunk} changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
                 })}
+                {/* Выполненные карточки */}
                 <p>Выполненные задач</p>
                 {completedCards.map(card => {
                     return <MakeCard switchCompleteCardThunk={props.switchCompleteCardThunk} changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
                 })}
             </div>
         </div>
+        {/* Окно создания новой карточки */}
         <div>
             <CreateNewCard addNewCardThunk={props.addNewCardThunk} groupID={props.currentCardGroup.groupID} />
         </div>
     </div>
     }
-    
 }
 
 const mapStateToProps = (state: AppStateType) => {

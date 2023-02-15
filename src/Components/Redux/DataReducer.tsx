@@ -1,6 +1,6 @@
 import { Dispatch } from "react"
 import { AppStateType } from "./Redux"
-import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType } from "./ReduxTypes"
+import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
 
 export const ADD_NEW_CARD = 'ADD_NEW_CARD'
 export const DELETE_CARD = 'DELETE_CARD'
@@ -280,7 +280,7 @@ export const switchCompleteCardThunk = (cardID: number) => {
     }
 }
 
-export const updateSearchInputValue = (text: string) => {
+export const updateSearchInputValue = (text: string): updateSearchInputValueType => {
     return {
         type: UPDATE_SEARCH_INPUT_VALUE,
         text: text
