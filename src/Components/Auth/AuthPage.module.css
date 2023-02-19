@@ -1,0 +1,31 @@
+.auth_page {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth_form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 1px black;
+    flex-direction: column;
+}
+
+.login_form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 1px black;
+    flex-direction: column;
+    margin: 20px;
+    padding: 20px;
+    gap: 20px;
+}
+
+.login_input {
+    
+}

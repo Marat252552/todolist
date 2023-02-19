@@ -7,6 +7,7 @@ import React from "react";
 import { Formik, useFormik } from "formik";
 import { AppStateType } from "../../Redux/Redux";
 import { ChangeCardFormType, CreateNewCardPropsType, MainBodyPropsType, MakeCardPropsType, mapDispatchType, MapStateType, NewCardFormType } from "./MainBodyTypes";
+import { MainPageAPI } from "../../../Api/Api";
 
 
 

@@ -1,19 +1,25 @@
 import { Dispatch } from "react"
+import { LoginAPI, LogoutAPI } from "../../Api/Api"
 import { AppStateType } from "./Redux"
-import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
+import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, loginType, logoutType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
 
-export const ADD_NEW_CARD = 'ADD_NEW_CARD'
-export const DELETE_CARD = 'DELETE_CARD'
-export const CHANGE_CARD = 'CHANGE_CARD'
-export const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID'
-export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS'
-export const ADD_GROUP_ID = 'ADD_GROUP_ID'
-export const DELETE_GROUP_ID = 'DELETE_GROUP_ID'
-export const SWITCH_COMPLETE_CARD = 'SWITCH_COMPLETE_CARD'
-export const TOGGLE_SEARCH = 'TOGGLE_SEARCH'
-export const UPDATE_SEARCH_INPUT_VALUE = 'SEARCH_INPUT_VALUE'
+export const ADD_NEW_CARD = 'ADD_NEW_CARD';
+export const DELETE_CARD = 'DELETE_CARD';
+export const CHANGE_CARD = 'CHANGE_CARD';
+export const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID';
+export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS';
+export const ADD_GROUP_ID = 'ADD_GROUP_ID';
+export const DELETE_GROUP_ID = 'DELETE_GROUP_ID';
+export const SWITCH_COMPLETE_CARD = 'SWITCH_COMPLETE_CARD';
+export const TOGGLE_SEARCH = 'TOGGLE_SEARCH';
+export const UPDATE_SEARCH_INPUT_VALUE = 'SEARCH_INPUT_VALUE';
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
 
 const initialState = {
+    isAuthorized: false,
+    email: '',
+    login: '',
     currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
     currentCards: [
     ] as any,
@@ -159,6 +165,22 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 searchInputValue: action.text
             }
         }
+        case LOGIN: {
+            return {
+                ...state,
+                isAuthorized: true,
+                login: action.login,
+                email: action.email
+            }
+        }
+        case LOGOUT: {
+            return {
+                ...state,
+                isAuthorized: false,
+                login: '',
+                email: ''
+            }
+        }
         default: {
             return state
         }
@@ -251,39 +273,72 @@ export const changeCardThunk = (text: string, cardID: number) => {
         dispatch(updateCurrentCards())
     }
 }
-
 export const switchCardGroup = (groupID: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
         dispatch(changeCurrentCardGroupID(groupID))
         dispatch(updateCurrentCards())
     }
 }
-
 export const addGroupIDThunk = (groupID: number, cardID: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
         dispatch(addGroupID(groupID, cardID))
         dispatch(updateCurrentCards())
     }
 }
-
 export const deleteGroupIDThunk = (groupID: number, cardID: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
         dispatch(deleteGroupID(groupID, cardID))
         dispatch(updateCurrentCards())
     }
 } 
-
 export const switchCompleteCardThunk = (cardID: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
         dispatch(switchCompleteCard(cardID))
         dispatch(updateCurrentCards())
     }
 }
-
 export const updateSearchInputValue = (text: string): updateSearchInputValueType => {
     return {
         type: UPDATE_SEARCH_INPUT_VALUE,
         text: text
+    }
+}
+export const Login = (login: string, email: string): loginType => {
+    return {
+        type: LOGIN,
+        login: login,
+        email: email
+    }
+}
+export const loginThunk = (login: string, password: string) => {
+    return async (dispatch: Dispatch<AllActionsData>) => {
+        try{
+            let res = await LoginAPI(login, password)
+            dispatch(Login(res.data.login, res.data.email))
+        } catch(e: any) {
+            alert(e.response.status)
+        }
+    }
+}
+
+const Logout = (): logoutType => {
+    return {
+        type: LOGOUT
+    }
+}
+
+export const logoutThunk = () => {
+    return async (dispatch: Dispatch<AllActionsData>) => {
+        try{
+            let res = await LogoutAPI()
+            if(res.status === 200) {
+                dispatch(Logout())
+            } else {
+                alert('some error')
+            }
+        } catch(e: any) {
+            alert('error' + e.response.status)
+        }
     }
 }
 
