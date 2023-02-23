@@ -303,6 +303,7 @@ export const updateSearchInputValue = (text: string): updateSearchInputValueType
         text: text
     }
 }
+
 export const Login = (login: string, email: string): loginType => {
     return {
         type: LOGIN,
@@ -326,12 +327,11 @@ const Logout = (): logoutType => {
         type: LOGOUT
     }
 }
-
 export const logoutThunk = () => {
     return async (dispatch: Dispatch<AllActionsData>) => {
         try{
             let res = await LogoutAPI()
-            if(res.status === 200) {
+            if(res.status === 201) {
                 dispatch(Logout())
             } else {
                 alert('some error')

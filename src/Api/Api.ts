@@ -1,12 +1,13 @@
 import axios from "axios";
 
 const instanse = axios.create({
-    baseURL: 'http://localhost:3000/'
+    baseURL: 'http://localhost:3000/',
+    headers: {
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": "*"
+    }
 })
 
-export const MainPageAPI = () => {
-    return instanse.get('/cards/2')
-}
 export const MakeNewCardAPI = (text: string, groupID: number) => {
     return instanse.post('/cards', 
     {
@@ -22,12 +23,10 @@ export const MakeNewCardAPI = (text: string, groupID: number) => {
 }
 
 export const LoginAPI = async (login: string, password: string) => {
-    return await instanse.post('/login', {login: login, password: password}, {headers: {
-        'Content-Type': 'application/json'
-    }})
+    return await instanse.post('/login', {login: login, password: password})
 }
 export const LogoutAPI = async () => {
-    return await instanse.delete('/login')
+    return await instanse.delete('/logout')
 }
 
 
