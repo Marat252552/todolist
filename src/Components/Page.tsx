@@ -1,5 +1,4 @@
 import { connect } from "react-redux"
-import { MainPageAPI, MakeNewCardAPI } from "../Api/Api"
 import AuthPage from "./Auth/AuthPage"
 import Body from "./Body/Body"
 import { loginThunk } from "./Redux/DataReducer"

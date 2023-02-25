@@ -1,5 +1,5 @@
 import { Dispatch } from "react"
-import { LoginAPI, LogoutAPI } from "../../Api/Api"
+import { LoginAPI, LogoutAPI, TestAPI } from "../../Api/Api"
 import { AppStateType } from "./Redux"
 import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, loginType, logoutType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
 
@@ -290,7 +290,7 @@ export const deleteGroupIDThunk = (groupID: number, cardID: number) => {
         dispatch(deleteGroupID(groupID, cardID))
         dispatch(updateCurrentCards())
     }
-} 
+}
 export const switchCompleteCardThunk = (cardID: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
         dispatch(switchCompleteCard(cardID))
@@ -313,12 +313,16 @@ export const Login = (login: string, email: string): loginType => {
 }
 export const loginThunk = (login: string, password: string) => {
     return async (dispatch: Dispatch<AllActionsData>) => {
-        try{
-            let res = await LoginAPI(login, password)
-            dispatch(Login(res.data.login, res.data.email))
-        } catch(e: any) {
-            alert(e.response.status)
-        }
+        let res = await LoginAPI(login, password)
+        console.log(res)
+        dispatch(Login(res.data.login, res.data.email))
+        // try{
+        //     let res = await LoginAPI(login, password)
+        //     dispatch(Login(res.data.login, res.data.email))
+        //     console.log('ok')
+        // } catch(e: any) {
+        //     alert(e.response.status)
+        // }
     }
 }
 

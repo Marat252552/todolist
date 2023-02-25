@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const instanse = axios.create({
+    withCredentials: true,
     baseURL: 'http://localhost:3000/',
-    headers: {
-        'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin": "*"
-    }
+    // headers: {
+    //     'Content-Type': 'application/json'
+    // }
 })
 
 export const MakeNewCardAPI = (text: string, groupID: number) => {
@@ -17,16 +17,20 @@ export const MakeNewCardAPI = (text: string, groupID: number) => {
     {
         headers: {
         'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
         },
     })
 }
 
-export const LoginAPI = async (login: string, password: string) => {
-    return await instanse.post('/login', {login: login, password: password})
+export const LoginAPI = (login: string, password: string) => {
+    return instanse.post('/login', {email: login, password: password})
 }
+export const TestAPI = () => {
+    return instanse.get('/testing')
+}
+
 export const LogoutAPI = async () => {
-    return await instanse.delete('/logout')
+    return await instanse.post('/logout')
 }
 
 

@@ -12,7 +12,6 @@ const AuthPage = (props: any) => {
                 password: ''
             },
             onSubmit: (values: any, { resetForm }: any) => {
-                console.log('submit')
                 props.loginThunk(values.login, values.password)
             },
         })
