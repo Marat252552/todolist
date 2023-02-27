@@ -1,6 +1,7 @@
 import { Button, Input } from "antd"
 import { useFormik } from "formik"
-import React from "react"
+import React, { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import styles from './AuthPage.module.css'
 
 

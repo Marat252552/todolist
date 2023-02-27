@@ -1,5 +1,5 @@
 import { Dispatch } from "react"
-import { LoginAPI, LogoutAPI, TestAPI } from "../../Api/Api"
+import { LoggedAPI, LoginAPI, LogoutAPI, TestAPI } from "../../Api/Api"
 import { AppStateType } from "./Redux"
 import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, loginType, logoutType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
 
@@ -312,6 +312,7 @@ export const Login = (login: string, email: string): loginType => {
     }
 }
 export const loginThunk = (login: string, password: string) => {
+    console.log(1)
     return async (dispatch: Dispatch<AllActionsData>) => {
         let res = await LoginAPI(login, password)
         console.log(res)
@@ -332,6 +333,7 @@ const Logout = (): logoutType => {
     }
 }
 export const logoutThunk = () => {
+    console.log(1)
     return async (dispatch: Dispatch<AllActionsData>) => {
         try{
             let res = await LogoutAPI()
@@ -342,6 +344,19 @@ export const logoutThunk = () => {
             }
         } catch(e: any) {
             alert('error' + e.response.status)
+        }
+    }
+}
+
+export const authThunk = () => {
+    return async (dispatch: any) => {
+        try {
+            let res = await LoggedAPI()
+            if(+res === 200) {
+                loginThunk('fea', 'dwa')
+            }
+        } catch(e) {
+            console.log(e)
         }
     }
 }

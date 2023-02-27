@@ -7,9 +7,7 @@ import {BrowserRouter} from 'react-router-dom'
 const Body = () => {
     return <div className={styles.body}>
         <Menu />        
-        <BrowserRouter>
             <MainBody />
-        </BrowserRouter>
     </div>
 }
 

@@ -3,9 +3,9 @@ import axios from "axios";
 const instanse = axios.create({
     withCredentials: true,
     baseURL: 'http://localhost:3000/',
-    // headers: {
-    //     'Content-Type': 'application/json'
-    // }
+    headers: {
+        'Content-Type': 'application/json'
+    }
 })
 
 export const MakeNewCardAPI = (text: string, groupID: number) => {
@@ -23,7 +23,11 @@ export const MakeNewCardAPI = (text: string, groupID: number) => {
 }
 
 export const LoginAPI = (login: string, password: string) => {
-    return instanse.post('/login', {email: login, password: password})
+    return instanse.post('/login', {login: login, password: password})
+}
+export const LoggedAPI = () => {
+    return instanse.get('/login')
+
 }
 export const TestAPI = () => {
     return instanse.get('/testing')
@@ -32,6 +36,7 @@ export const TestAPI = () => {
 export const LogoutAPI = async () => {
     return await instanse.post('/logout')
 }
+
 
 
 
