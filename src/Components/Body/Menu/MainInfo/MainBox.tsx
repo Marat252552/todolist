@@ -3,7 +3,7 @@ import { App, Avatar, Button, Modal, Popover } from 'antd'
 import { Input } from 'antd'
 import { DownOutlined, SearchOutlined, SettingOutlined, SmileOutlined, SyncOutlined, UserDeleteOutlined } from '@ant-design/icons'
 import { AppStateType } from '../../../Redux/Redux'
-import { loginThunk, logoutThunk, toggleSearch, updateSearchInputValue } from '../../../Redux/DataReducer'
+import { logoutThunk, toggleSearch, updateSearchInputValue } from '../../../Redux/DataReducer'
 import { connect } from 'react-redux'
 import { InfoBoxPropsType, MainBoxPropsType, MapDispatchType, MapStateType, SearchBoxPropsType } from './MainBoxTypes'
 import React, { useState } from 'react'
@@ -16,8 +16,8 @@ const InfoBox = (props: InfoBoxPropsType) => {
     return <div className={styles.mainBoxInfo}>
         <Avatar className={styles.avatar} />
         <div className={styles.mainBoxInfoText}>
-            <span>Name</span>
-            <span>Name</span>
+            <span>{props.name} {props.lastName}</span>
+            <span>{props.email}</span>
         </div>
     </div>
 }
@@ -72,7 +72,7 @@ const MainBox = (props: MainBoxPropsType) => {
         <Dropdown menu={{ items }} trigger={['click']}>
             <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                    <InfoBox isAuthorized={props.isAuthorized} loginThunk={props.loginThunk} logoutThunk={props.logoutThunk}/>
+                    <InfoBox email={props.email} name={props.name} lastName={props.lastName} isAuthorized={props.isAuthorized} logoutThunk={props.logoutThunk}/>
                 </Space>
             </a>
         </Dropdown>
@@ -87,10 +87,13 @@ let mapStateToProps = (state: AppStateType) => {
     return {
         isSearchOn: state.data.isSearchOn,
         searchInputValue: state.data.searchInputValue,
-        isAuthorized: state.data.isAuthorized
+        isAuthorized: state.data.isAuthorized,
+        name: state.data.name,
+        lastName: state.data.lastName,
+        email: state.data.email
     }
 }
 
-const MainBoxContainer = connect<MapStateType, MapDispatchType, unknown, AppStateType>(mapStateToProps, { toggleSearch, updateSearchInputValue, loginThunk, logoutThunk })(MainBox)
+const MainBoxContainer = connect<MapStateType, MapDispatchType, unknown, AppStateType>(mapStateToProps, { toggleSearch, updateSearchInputValue, logoutThunk })(MainBox)
 
 export default MainBoxContainer

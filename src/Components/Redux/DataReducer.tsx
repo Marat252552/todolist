@@ -1,7 +1,7 @@
 import { Dispatch } from "react"
-import { LoggedAPI, LoginAPI, LogoutAPI, TestAPI } from "../../Api/Api"
+import { LoggedAPI, LoginAPI, LogoutAPI } from "../../Api/Api"
 import { AppStateType } from "./Redux"
-import { addGroupIDType, addNewCardACType, AllActionsData, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, loginType, logoutType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
+import { addGroupIDType, addNewCardACType, AllActionsData, cardType, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, loginType, logoutType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
 
 export const ADD_NEW_CARD = 'ADD_NEW_CARD';
 export const DELETE_CARD = 'DELETE_CARD';
@@ -20,6 +20,8 @@ const initialState = {
     isAuthorized: false,
     email: '',
     login: '',
+    name: '',
+    lastName: '',
     currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
     currentCards: [
     ] as any,
@@ -33,10 +35,7 @@ const initialState = {
     searchInputValue: '',
     isSearchOn: false,
     newCardID: 6 as number,
-    allCards: [
-        {cardID: 1, text: 'Выучить бананы', groupsIDs: [1, 2], isCompleted: false},
-        {cardID: 2, text: 'Выучить бананы', groupsIDs: [1, 2], isCompleted: false}
-    ],
+    allCards: [] as Array<cardType>,
     allCardGroups: [
         {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red'},
         {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
@@ -170,6 +169,8 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 ...state,
                 isAuthorized: true,
                 login: action.login,
+                name: action.name,
+                lastName: action.lastName,
                 email: action.email
             }
         }
@@ -304,28 +305,29 @@ export const updateSearchInputValue = (text: string): updateSearchInputValueType
     }
 }
 
-export const Login = (login: string, email: string): loginType => {
+export const Login = (login: string, email: string, name: string, lastName: string): loginType => {
     return {
         type: LOGIN,
         login: login,
-        email: email
+        email: email,
+        name: name,
+        lastName: lastName
     }
 }
-export const loginThunk = (login: string, password: string) => {
-    console.log(1)
-    return async (dispatch: Dispatch<AllActionsData>) => {
-        let res = await LoginAPI(login, password)
-        console.log(res)
-        dispatch(Login(res.data.login, res.data.email))
-        // try{
-        //     let res = await LoginAPI(login, password)
-        //     dispatch(Login(res.data.login, res.data.email))
-        //     console.log('ok')
-        // } catch(e: any) {
-        //     alert(e.response.status)
-        // }
-    }
-}
+// export const loginThunk = (login: string, password: string) => {
+    
+//     return async (dispatch: Dispatch<AllActionsData>) => {
+//         try{
+//             let res:{} = await LoginAPI(login, password)
+//             console
+//             if(res.status === 200) {
+//                 dispatch(Login(res.data.login, res.data.email, res.data.))
+//             }
+//         } catch(e: any) {
+//             alert(e.response.status)
+//         }
+//     }
+// }
 
 const Logout = (): logoutType => {
     return {
@@ -333,30 +335,14 @@ const Logout = (): logoutType => {
     }
 }
 export const logoutThunk = () => {
-    console.log(1)
     return async (dispatch: Dispatch<AllActionsData>) => {
         try{
             let res = await LogoutAPI()
-            if(res.status === 201) {
+            if(res.status === 200) {
                 dispatch(Logout())
-            } else {
-                alert('some error')
             }
         } catch(e: any) {
             alert('error' + e.response.status)
-        }
-    }
-}
-
-export const authThunk = () => {
-    return async (dispatch: any) => {
-        try {
-            let res = await LoggedAPI()
-            if(+res === 200) {
-                loginThunk('fea', 'dwa')
-            }
-        } catch(e) {
-            console.log(e)
         }
     }
 }

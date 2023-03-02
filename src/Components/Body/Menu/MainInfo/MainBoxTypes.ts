@@ -1,13 +1,15 @@
 export type MapStateType = {
     isSearchOn: boolean,
     searchInputValue: string,
-    isAuthorized: boolean
+    isAuthorized: boolean,
+    name: string,
+    lastName: string,
+    email: string
 }
 
 export type MapDispatchType = {
     toggleSearch: (isSearchOn: boolean) => any,
     updateSearchInputValue: (text: string) => any,
-    loginThunk: (login: string, password: string) => void,
     logoutThunk: () => void
 }
 
@@ -19,8 +21,10 @@ export type SearchBoxPropsType = {
 
 export type InfoBoxPropsType = {
     isAuthorized: boolean,
-    loginThunk: (login: string, password: string) => void,
-    logoutThunk: () => void
+    logoutThunk: () => void,
+    name: string,
+    lastName: string,
+    email: string
 }
 
 export type MainBoxPropsType = MapStateType & MapDispatchType

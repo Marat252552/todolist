@@ -63,7 +63,9 @@ export type updateSearchInputValueType = {
 export type loginType = {
     type: typeof LOGIN,
     login: string,
-    email: string
+    email: string,
+    name: string,
+    lastName: string
 }
 
 export type logoutType = {
