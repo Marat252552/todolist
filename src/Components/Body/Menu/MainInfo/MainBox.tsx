@@ -10,6 +10,7 @@ import React, { useState } from 'react'
 import { useFormik } from 'formik';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
+import { GetUsersAPI } from '../../../../Api/Api'
 
 
 const InfoBox = (props: InfoBoxPropsType) => {
@@ -43,6 +44,10 @@ const SearchBox = (props: SearchBoxPropsType) => {
 }
 
 const MainBox = (props: MainBoxPropsType) => {
+    let showUsers = async () => {
+        let res = await GetUsersAPI()
+        console.log(res)
+    }
     const items: MenuProps['items'] = [
         {
             key: '1',
@@ -54,7 +59,7 @@ const MainBox = (props: MainBoxPropsType) => {
         {
             key: '2',
             label: (
-                <div>Синхронизировать</div>
+                <div onClick={showUsers}>Получить юзеров</div>
             ),
             icon: <SyncOutlined />
         },

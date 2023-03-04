@@ -5,46 +5,16 @@ import { LoggedAPI, PullCardsAPI } from "../Api/Api"
 import FirstGate from "../FirstGate"
 import AuthPage from "./Auth/AuthPage"
 import Body from "./Body/Body"
-import { Login } from "./Redux/DataReducer"
+import { Login, setToken } from "./Redux/DataReducer"
 import { AppStateType } from "./Redux/Redux"
+import { loginType } from "./Redux/ReduxTypes"
 import Register from "./Register/Register"
 
-const Page =  (props: {loginThunk: (login: string, password: string) => void, isAuthorized: boolean, Login: any}) => {
-    let navigate = useNavigate()
-    useEffect(() => {
-        let a = async () => { 
-            try {
-                let res = await LoggedAPI()
-                console.log(res)
-                if(+res.status === 200) {
-                    console.log(res)
-                    props.Login('fea', 'dwa')
-                }
-            } catch(e) {
-                console.log(e)
-            }
-        }
-        let b = async () => {
-            try {
-                let a = await PullCardsAPI('25')
-            } catch(e) {
-                console.log(e)
-            }
-        }
-        a()
-        b()
-    }, [])
-    useEffect(() => {
-        if(props.isAuthorized === true) {
-            navigate('/home')
-        } else {
-            navigate('/login')
-        }
-    }, [props.isAuthorized])
+const Page =  (props: {loginThunk: (login: string, password: string) => void, isAuthorized: boolean, Login: (login: string, email: string, name: string, lastName: string) => loginType}) => {
     return <Routes>
             <Route path="/" element={<FirstGate isAuthorized={props.isAuthorized}/>}/>
             <Route path="/login" element={<AuthPage Login={props.Login} isAuthorized={props.isAuthorized}/>}/>
-            <Route path="/home" element={<Body />}/>
+            <Route path="/home" element={<Body Login={props.Login} isAuthorized={props.isAuthorized} />}/>
             <Route path="/register" element={<Register Login={props.Login}/>} />
         </Routes>
 }
@@ -55,6 +25,6 @@ const mapStateToProps = (state: AppStateType) => {
     }
 }
 
-const PageContainer = connect(mapStateToProps, {Login})(Page)
+const PageContainer = connect(mapStateToProps, {Login, setToken})(Page)
 
 export default PageContainer

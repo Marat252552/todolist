@@ -27,7 +27,7 @@ let Errors = {
         if (!value) {
             error = 'Не введен пароль'
         }
-        if(value !== password2) {
+        if (value !== password2) {
             error = 'Пароли не совпадают'
         }
         return error;
@@ -42,10 +42,12 @@ const Register = (props: any) => {
                 password: '',
                 password2: '',
                 email: '',
-                age: ''
+                age: '',
+                name: '',
+                lastName: ''
             },
             onSubmit: async (values: any, { resetForm }: any) => {
-                let res = await SignInAPI(values.login, values.password, values.email, values.age)
+                let res = await SignInAPI(values.login, values.password, values.email, values.age, values.name, values.lastName)
                 if (res.status === 201) {
                     let res = await LoggedAPI()
                     console.log(res)
@@ -59,7 +61,25 @@ const Register = (props: any) => {
         return <FormikProvider value={formik}>
             <form onSubmit={formik.handleSubmit}>
                 <div className={styles.login_form}>
-                    {(formik.errors.login && formik.touched.login)? <span>{formik.errors.login}</span> : <span></span>}
+                    {(formik.errors.login && formik.touched.login) ? <span>{formik.errors.login}</span> : <span></span>}
+                    <Field
+                        className={styles.input}
+                        placeholder='Введите имя'
+                        id="name"
+                        name='name'
+                        type='text'
+                        onChange={formik.handleChange}
+                        value={formik.values.name}
+                    ></Field>
+                    <Field
+                        className={styles.input}
+                        placeholder='Введите фамилию'
+                        id="lastName"
+                        name='lastName'
+                        type='text'
+                        onChange={formik.handleChange}
+                        value={formik.values.lastName}
+                    ></Field>
                     <Field
                         className={styles.input}
                         placeholder='Введите логин'
@@ -70,7 +90,7 @@ const Register = (props: any) => {
                         value={formik.values.login}
                         validate={Errors.login}
                     />
-                   {(formik.errors.password && formik.touched.password)? <span>{formik.errors.password}</span> : <span></span>}
+                    {(formik.errors.password && formik.touched.password) ? <span>{formik.errors.password}</span> : <span></span>}
                     <Field
                         className={styles.input}
                         placeholder='Введите пароль'
@@ -79,9 +99,9 @@ const Register = (props: any) => {
                         type='text'
                         onChange={formik.handleChange}
                         value={formik.values.password}
-                        validate={(value: any) =>Errors.password(value, formik.values.password2)}
+                        validate={(value: any) => Errors.password(value, formik.values.password2)}
                     />
-                    {(formik.errors.password && formik.touched.password)? <span>{formik.errors.password}</span> : <span></span>}
+                    {(formik.errors.password && formik.touched.password) ? <span>{formik.errors.password}</span> : <span></span>}
                     <Field
                         className={styles.input}
                         placeholder='Повторите пароль'
@@ -91,18 +111,18 @@ const Register = (props: any) => {
                         onChange={formik.handleChange}
                         value={formik.values.password2}
                     />
-                   {(formik.errors.email && formik.touched.email)? <span>{formik.errors.email}</span> : <span></span>}
-                        <Field
-                            className={styles.input}
-                            placeholder='Введите email'
-                            id="email"
-                            name='email'
-                            type='text'
-                            onChange={formik.handleChange}
-                            value={formik.values.email}
-                            validate={Errors.email}
-                        />
-                    
+                    {(formik.errors.email && formik.touched.email) ? <span>{formik.errors.email}</span> : <span></span>}
+                    <Field
+                        className={styles.input}
+                        placeholder='Введите email'
+                        id="email"
+                        name='email'
+                        type='text'
+                        onChange={formik.handleChange}
+                        value={formik.values.email}
+                        validate={Errors.email}
+                    />
+
                     <Field
                         className={styles.input}
                         placeholder='Введите возраст'

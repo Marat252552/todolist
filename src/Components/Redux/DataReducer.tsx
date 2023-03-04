@@ -1,7 +1,7 @@
 import { Dispatch } from "react"
 import { LoggedAPI, LoginAPI, LogoutAPI } from "../../Api/Api"
 import { AppStateType } from "./Redux"
-import { addGroupIDType, addNewCardACType, AllActionsData, cardType, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, loginType, logoutType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
+import { addGroupIDType, addNewCardACType, AllActionsData, cardType, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, loginType, logoutType, setTokenType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
 
 export const ADD_NEW_CARD = 'ADD_NEW_CARD';
 export const DELETE_CARD = 'DELETE_CARD';
@@ -15,6 +15,7 @@ export const TOGGLE_SEARCH = 'TOGGLE_SEARCH';
 export const UPDATE_SEARCH_INPUT_VALUE = 'SEARCH_INPUT_VALUE';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
+export const SET_TOKEN = 'SET_TOKEN'
 
 const initialState = {
     isAuthorized: false,
@@ -36,6 +37,7 @@ const initialState = {
     isSearchOn: false,
     newCardID: 6 as number,
     allCards: [] as Array<cardType>,
+    token: '',
     allCardGroups: [
         {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red'},
         {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
@@ -182,6 +184,12 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 email: ''
             }
         }
+        case SET_TOKEN: {
+            return {
+                ...state,
+                token: action.token
+            }
+        }
         default: {
             return state
         }
@@ -199,6 +207,13 @@ export const addNewCardAC = (text: string, groupID: number): addNewCardACType =>
         type: ADD_NEW_CARD,
         text: text,
         groupID: groupID
+    }
+}
+
+export const setToken = (token: any): setTokenType => {
+    return {
+        type: SET_TOKEN,
+        token: token
     }
 }
 
@@ -341,6 +356,7 @@ export const logoutThunk = () => {
             if(res.status === 200) {
                 dispatch(Logout())
             }
+            console.log(res)
         } catch(e: any) {
             alert('error' + e.response.status)
         }
