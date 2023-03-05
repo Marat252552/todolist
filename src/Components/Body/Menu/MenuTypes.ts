@@ -1,16 +1,12 @@
-import { changeCurrentCardGroupIDType, menuCardGroupsType } from "../../Redux/ReduxTypes"
+import { AC_cT, T_cT, U_T } from "../../Redux/ReduxTypes"
 
 export type MapStateType = {
-    menuCardGroups: menuCardGroupsType
+    menuCardGroups: U_T["menuCardGroups_T"]
 }
 
 export type MapDispatchType = {
-    changeCurrentCardGroupID: (groupID: number) => changeCurrentCardGroupIDType,
-    switchCardGroup: (groupID: number) => void
+    changeCurrentCardGroupID_AC: AC_cT["changeCurrentCardGroupIDAC_cT"],
+    switchCardGroup_Thunk: T_cT["switchCardGroupThunk_cT"]
 }
 
-export type MenuPropsType = {
-    menuCardGroups: menuCardGroupsType,
-    changeCurrentCardGroupID: (groupID: number) => void,
-    switchCardGroup: (groupID: number) => void
-}
+export type MenuPropsType = MapStateType & MapDispatchType

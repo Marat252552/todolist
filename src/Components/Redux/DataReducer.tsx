@@ -1,21 +1,19 @@
-import { Dispatch } from "react"
-import { LoggedAPI, LoginAPI, LogoutAPI } from "../../Api/Api"
-import { AppStateType } from "./Redux"
-import { addGroupIDType, addNewCardACType, AllActionsData, cardType, changeCardACType, changeCurrentCardGroupIDType, deleteCardACType, deleteGroupIDType, loginType, logoutType, setTokenType, switchCompleteCardType, toggleSearchType, updateCurrentCardsType, updateSearchInputValueType } from "./ReduxTypes"
+import { AllActionsData, U_T } from "./ReduxTypes"
 
-export const ADD_NEW_CARD = 'ADD_NEW_CARD';
-export const DELETE_CARD = 'DELETE_CARD';
-export const CHANGE_CARD = 'CHANGE_CARD';
-export const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID';
-export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS';
-export const ADD_GROUP_ID = 'ADD_GROUP_ID';
-export const DELETE_GROUP_ID = 'DELETE_GROUP_ID';
-export const SWITCH_COMPLETE_CARD = 'SWITCH_COMPLETE_CARD';
-export const TOGGLE_SEARCH = 'TOGGLE_SEARCH';
-export const UPDATE_SEARCH_INPUT_VALUE = 'SEARCH_INPUT_VALUE';
-export const LOGIN = 'LOGIN';
-export const LOGOUT = 'LOGOUT';
-export const SET_TOKEN = 'SET_TOKEN'
+export const ADD_NEW_CARD = 'ADD_NEW_CARD'
+export const CLEAR_ALL_CARDS = 'CLEAR_ALL_CARDS'
+export const DELETE_CARD = 'DELETE_CARD'
+export const CHANGE_CARD = 'CHANGE_CARD'
+export const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID'
+export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS'
+export const ADD_GROUP_ID = 'ADD_GROUP_ID'
+export const DELETE_GROUP_ID = 'DELETE_GROUP_ID'
+export const SWITCH_COMPLETE_CARD = 'SWITCH_COMPLETE_CARD'
+export const TOGGLE_SEARCH = 'TOGGLE_SEARCH'
+export const UPDATE_SEARCH_INPUT_VALUE = 'SEARCH_INPUT_VALUE'
+export const LOGIN = 'LOGIN'
+export const LOGOUT = 'LOGOUT'
+
 
 const initialState = {
     isAuthorized: false,
@@ -23,27 +21,27 @@ const initialState = {
     login: '',
     name: '',
     lastName: '',
-    currentCardGroup: {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
+    currentCardGroup: { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
     currentCards: [
     ] as any,
     menuCardGroups: [
-        {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'wallpaper1'},
-        {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'wallpaper1'},
-        {groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'wallpaper1'},
-        {groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'wallpaper1'},
-        {groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'wallpaper1'},
+        { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'wallpaper1' },
+        { groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'wallpaper1' },
+        { groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'wallpaper1' },
+        { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'wallpaper1' },
+        { groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'wallpaper1' },
     ],
     searchInputValue: '',
     isSearchOn: false,
     newCardID: 6 as number,
-    allCards: [] as Array<cardType>,
+    allCards: [] as Array<U_T["cardType"]>,
     token: '',
     allCardGroups: [
-        {groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red'},
-        {groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green'},
-        {groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'orange'},
-        {groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'blue'},
-        {groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'blue'},
+        { groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red' },
+        { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
+        { groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'orange' },
+        { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'blue' },
+        { groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'blue' },
     ]
 }
 
@@ -51,22 +49,28 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
     switch (action.type) {
         case ADD_NEW_CARD: {
             // 2.Создаем карточку
-            let card = {cardID: state.newCardID, text: action.text, groupsIDs: [action.groupID], isCompleted: false}
-            // 3.Добавляем в state allCards и меняем newCardID
+            let card = { cardID: action.id, text: action.text, groupsIDs: action.groupsIDs, isCompleted: action.isCompleted }
+            // 3.Добавляем в state allCards
             return {
                 ...state,
-                newCardID: state.newCardID + 1,
                 allCards: [
                     ...state.allCards,
                     card
                 ]
             }
         }
+        case CLEAR_ALL_CARDS: {
+            return {
+                ...state,
+                allCards: [],
+                currentCards: []
+            }
+        }
         case SWITCH_COMPLETE_CARD: {
             let updatedCardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
             let updatedCard = state.allCards[updatedCardIndex]
             let updatedAllCards = state.allCards
-            if(state.allCards[updatedCardIndex].isCompleted === true) {
+            if (state.allCards[updatedCardIndex].isCompleted === true) {
                 updatedCard.isCompleted = false
             } else {
                 updatedCard.isCompleted = true
@@ -134,15 +138,15 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
         case CHANGE_CARD: {
             let findIndex = () => {
                 let index = 0
-                for(let i = 0; i<state.allCards.length; i++) {
-                    if(state.allCards[i].cardID === action.cardID) {
+                for (let i = 0; i < state.allCards.length; i++) {
+                    if (state.allCards[i].cardID === action.cardID) {
                         index = i
                     }
                 }
                 return index
             }
             let cardIndex = findIndex()
-            let newCard = {cardID: action.cardID, text: action.text, groupsIDs: state.allCards[cardIndex].groupsIDs, isCompleted: state.allCards[cardIndex].isCompleted}
+            let newCard = { cardID: action.cardID, text: action.text, groupsIDs: state.allCards[cardIndex].groupsIDs, isCompleted: state.allCards[cardIndex].isCompleted }
             let newAllCards = state.allCards
             newAllCards[cardIndex] = newCard
             return {
@@ -170,7 +174,6 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             return {
                 ...state,
                 isAuthorized: true,
-                login: action.login,
                 name: action.name,
                 lastName: action.lastName,
                 email: action.email
@@ -181,184 +184,13 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 ...state,
                 isAuthorized: false,
                 login: '',
-                email: ''
-            }
-        }
-        case SET_TOKEN: {
-            return {
-                ...state,
-                token: action.token
+                email: '',
+                allCards: [],
+                currentCards: []
             }
         }
         default: {
             return state
-        }
-    }
-}
-
-export const updateCurrentCards = (): updateCurrentCardsType => {
-    return {
-        type: UPDATE_CURRENT_CARDS
-    }
-}
-
-export const addNewCardAC = (text: string, groupID: number): addNewCardACType => {
-    return {
-        type: ADD_NEW_CARD,
-        text: text,
-        groupID: groupID
-    }
-}
-
-export const setToken = (token: any): setTokenType => {
-    return {
-        type: SET_TOKEN,
-        token: token
-    }
-}
-
-export const changeCardAC = (text: string, cardID: number): changeCardACType => {
-    return {
-        type: CHANGE_CARD,
-        text: text,
-        cardID: cardID
-    }
-}
-
-export const deleteCardAC = (cardID: number): deleteCardACType => {
-    return {
-        type: DELETE_CARD,
-        cardID: cardID
-    }
-}
-
-export const switchCompleteCard = (cardID: number): switchCompleteCardType => {
-    return {
-        type: SWITCH_COMPLETE_CARD,
-        cardID: cardID
-    }
-}
-
-export const changeCurrentCardGroupID = (groupID: number): changeCurrentCardGroupIDType => {
-    return {
-        type: CHANGE_CURRENT_GROUP_ID,
-        groupID: groupID
-    }
-}
-
-export const toggleSearch = (isSearchOn: boolean): toggleSearchType => {
-    return {
-        type: TOGGLE_SEARCH,
-        isSearchOn: isSearchOn
-    }
-}
-
-export const addGroupID = (groupID: number, cardID: number): addGroupIDType => {
-    return {
-        type: ADD_GROUP_ID,
-        groupID: groupID,
-        cardID: cardID
-    }
-}
-
-export const deleteGroupID = (groupID: number, cardID: number): deleteGroupIDType => {
-    return {
-        type: DELETE_GROUP_ID,
-        groupID: groupID,
-        cardID: cardID
-    }
-}
-
-export const addNewCardThunk = (text: string, groupID: number) => {
-    return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(addNewCardAC(text, groupID))
-        dispatch(updateCurrentCards())
-    }
-}
-
-export const deleteCardThunk = (cardID: number) => {
-    return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(deleteCardAC(cardID))
-        dispatch(updateCurrentCards())
-    }
-}
-
-export const changeCardThunk = (text: string, cardID: number) => {
-    return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(changeCardAC(text, cardID))
-        dispatch(updateCurrentCards())
-    }
-}
-export const switchCardGroup = (groupID: number) => {
-    return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(changeCurrentCardGroupID(groupID))
-        dispatch(updateCurrentCards())
-    }
-}
-export const addGroupIDThunk = (groupID: number, cardID: number) => {
-    return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(addGroupID(groupID, cardID))
-        dispatch(updateCurrentCards())
-    }
-}
-export const deleteGroupIDThunk = (groupID: number, cardID: number) => {
-    return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(deleteGroupID(groupID, cardID))
-        dispatch(updateCurrentCards())
-    }
-}
-export const switchCompleteCardThunk = (cardID: number) => {
-    return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(switchCompleteCard(cardID))
-        dispatch(updateCurrentCards())
-    }
-}
-export const updateSearchInputValue = (text: string): updateSearchInputValueType => {
-    return {
-        type: UPDATE_SEARCH_INPUT_VALUE,
-        text: text
-    }
-}
-
-export const Login = (login: string, email: string, name: string, lastName: string): loginType => {
-    return {
-        type: LOGIN,
-        login: login,
-        email: email,
-        name: name,
-        lastName: lastName
-    }
-}
-// export const loginThunk = (login: string, password: string) => {
-    
-//     return async (dispatch: Dispatch<AllActionsData>) => {
-//         try{
-//             let res:{} = await LoginAPI(login, password)
-//             console
-//             if(res.status === 200) {
-//                 dispatch(Login(res.data.login, res.data.email, res.data.))
-//             }
-//         } catch(e: any) {
-//             alert(e.response.status)
-//         }
-//     }
-// }
-
-const Logout = (): logoutType => {
-    return {
-        type: LOGOUT
-    }
-}
-export const logoutThunk = () => {
-    return async (dispatch: Dispatch<AllActionsData>) => {
-        try{
-            let res = await LogoutAPI()
-            if(res.status === 200) {
-                dispatch(Logout())
-            }
-            console.log(res)
-        } catch(e: any) {
-            alert('error' + e.response.status)
         }
     }
 }

@@ -4,6 +4,7 @@ import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { LoggedAPI, SignInAPI } from "../../Api/Api"
 import styles from './Register.module.css'
+import { RegisterProps_T } from "./types"
 
 let Errors = {
     email: (value: string) => {
@@ -34,7 +35,13 @@ let Errors = {
     }
 }
 
-const Register = (props: any) => {
+const Register = (props: RegisterProps_T) => {
+    let navigate = useNavigate()
+    useEffect(() => {
+        if(props.isAuthorized === true) {
+            navigate('/home')
+        }
+    }, [props.isAuthorized])
     const RegisterForm = () => {
         const formik = useFormik({
             initialValues: {
@@ -53,7 +60,7 @@ const Register = (props: any) => {
                     console.log(res)
                     if (+res.status === 200) {
                         console.log(res)
-                        props.Login('fea', 'dwa')
+                        props.Login_AC(res.data.email, res.data.name, res.data.lastName)
                     }
                 }
             },

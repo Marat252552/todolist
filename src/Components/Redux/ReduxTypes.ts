@@ -1,104 +1,126 @@
-import { ADD_GROUP_ID, ADD_NEW_CARD, CHANGE_CARD, CHANGE_CURRENT_GROUP_ID, DELETE_CARD, DELETE_GROUP_ID, LOGIN, LOGOUT, SET_TOKEN, SWITCH_COMPLETE_CARD, TOGGLE_SEARCH, UPDATE_CURRENT_CARDS, UPDATE_SEARCH_INPUT_VALUE } from "./DataReducer"
+import { Dispatch } from 'react';
+import { ADD_GROUP_ID, ADD_NEW_CARD, CHANGE_CARD, CHANGE_CURRENT_GROUP_ID, CLEAR_ALL_CARDS, DELETE_CARD, DELETE_GROUP_ID, LOGIN, LOGOUT, SWITCH_COMPLETE_CARD, TOGGLE_SEARCH, UPDATE_CURRENT_CARDS, UPDATE_SEARCH_INPUT_VALUE } from "./DataReducer"
 
-export type AllActionsData = logoutType | switchCompleteCard | addNewCardACType | changeCardACType | deleteCardACType | changeCurrentCardGroupIDType | updateCurrentCardsType | addGroupIDType | deleteGroupIDType | switchCompleteCardType | toggleSearchType | updateSearchInputValueType | loginType | setTokenType
-
-export type addNewCardACType = {
-    type: typeof ADD_NEW_CARD,
-    text: string,
-    groupID: number
+//action creators' types
+export type AC_T = {
+    addNewCardAC_T: (id: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) => {
+        type: typeof ADD_NEW_CARD,
+        id: number,
+        text: string,
+        groupsIDs: Array<number>,
+        isCompleted: boolean
+    },
+    clearAllCardsAC_T: () => {
+        type: typeof CLEAR_ALL_CARDS
+    },
+    changeCardAC_T: (text: string, cardID: number) => {
+        type: typeof CHANGE_CARD,
+        text: string,
+        cardID: number
+    },
+    toggleSearchAC_T: (isSearchOn: boolean) => {
+        type: typeof TOGGLE_SEARCH,
+        isSearchOn: boolean
+    },
+    updateCurrentCardsAC_T: () => {
+        type: typeof UPDATE_CURRENT_CARDS
+    },
+    deleteCardAC_T: (cardID: number) => {
+        type: typeof DELETE_CARD,
+        cardID: number
+    },
+    changeCurrentCardGroupIDAC_T: (groupID: number) => {
+        type: typeof CHANGE_CURRENT_GROUP_ID,
+        groupID: number
+    },
+    switchCompleteCardAC_T: (cardID: number) => {
+        type: typeof SWITCH_COMPLETE_CARD,
+        cardID: number
+    },
+    addGroupIDAC_T: (groupID: number, cardID: number) => {
+        type: typeof ADD_GROUP_ID,
+        groupID: number,
+        cardID: number
+    },
+    deleteCardGroupID_T: (groupID: number, cardID: number) => {
+        type: typeof DELETE_GROUP_ID,
+        groupID: number,
+        cardID: number
+    },
+    updateSearchInputValueTypeAC_T: (text: string) => {
+        type: typeof UPDATE_SEARCH_INPUT_VALUE,
+        text: string
+    },
+    loginAC_T: (email: string, name: string, lastName: string) => {
+        type: typeof LOGIN,
+        email: string,
+        name: string,
+        lastName: string
+    },
+    logoutAC_T: () => {
+        type: typeof LOGOUT
+    }
+}
+// action creators connected types
+export type AC_cT = {
+    LoginAC_cT: (email: string, name: string, lastName: string) => void,
+    changeCurrentCardGroupIDAC_cT: (groupID: number) => void,
+    toggleSearchAC_cT: (isSearchOn: boolean) => void,
+    updateSearchInputValueTypeAC_cT: (text: string) => void
+}
+// thunks connected types
+export type T_cT = {
+    PullAllCardsThunk_cT: () => void,
+    loginThunk_cT: (login: string, password: string) => void,
+    switchCardGroupThunk_cT: (groupID: number) => void,
+    logoutThunk_cT: () => void
+}
+//thunk types
+export type T_T = {
+    addNewCardThunk_T: (id: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) => (dispatch: Dispatch<AllActionsData>) => void,
+    deleteCardThunk_T: (cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    changeCardThunk_T: (text: string, cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    switchCardGroupThunk_T: (groupID: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    addGroupIDThunk_T: (groupID: number, cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    PullAllCardsThunk_T: () => (dispatch: Dispatch<AllActionsData>) => Promise<void>,
+    deleteGroupIDThunk_T: (groupID: number, cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    switchCompleteCardThunk_T: (cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    logoutThunk_T: () => (dispatch: Dispatch<AllActionsData>) => Promise<void>,
+    loginThunk_T: (login: string, password: string) => (dispatch: Dispatch<AllActionsData>) => Promise<void>
+}
+// useful types
+export type U_T = {
+    cardGroupType: {
+        groupID: number,
+        name: string,
+        background: string,
+        icon: string
+    },
+    menuCardGroupType: {
+        groupID: number,
+        name: string,
+        background: string,
+        icon: string
+    },
+    currentCardGroup_T: U_T["menuCardGroupType"],
+    allCardGroups_T: Array<U_T["cardGroupType"]>
+    menuCardGroups_T: Array<U_T["menuCardGroupType"]>,
+    cardType: {cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean}
 }
 
-export type setTokenType = {
-    type: typeof SET_TOKEN,
-    token: any
-}
 
-export type changeCardACType = {
-    type: typeof CHANGE_CARD,
-    text: string,
-    cardID: number
-}
-
-export type toggleSearchType = {
-    type: typeof TOGGLE_SEARCH,
-    isSearchOn: boolean
-}
-
-export type updateCurrentCardsType = {
-    type: typeof UPDATE_CURRENT_CARDS
-}
-
-export type deleteCardACType = {
-    type: typeof DELETE_CARD,
-    cardID: number
-}
-
-export type changeCurrentCardGroupIDType = {
-    type: typeof CHANGE_CURRENT_GROUP_ID,
-    groupID: number
-}
-
-export type switchCompleteCardType = {
-    type: typeof SWITCH_COMPLETE_CARD,
-    cardID: number
-}
-
-export type addGroupIDType = {
-    type: typeof ADD_GROUP_ID,
-    groupID: number,
-    cardID: number
-}
-
-export type deleteGroupIDType = {
-    type: typeof DELETE_GROUP_ID,
-    groupID: number,
-    cardID: number
-}
-
-export type switchCompleteCard = {
-    type: typeof SWITCH_COMPLETE_CARD,
-    cardID: number
-}
-
-export type updateSearchInputValueType = {
-    type: typeof UPDATE_SEARCH_INPUT_VALUE,
-    text: string
-}
-
-export type loginType = {
-    type: typeof LOGIN,
-    login: string,
-    email: string,
-    name: string,
-    lastName: string
-}
-
-export type logoutType = {
-    type: typeof LOGOUT
-}
-
-
-
-export type cardType = {cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean}
-
-export type cardGroupType = {
-    groupID: number,
-    name: string,
-    background: string,
-    icon: string
-}
-
-export type menuCardGroupType = {
-    groupID: number,
-    name: string,
-    background: string,
-    icon: string
-}
-
-
-
-export type currentCardGroupType = menuCardGroupType
-
-export type allCardGroupsType = Array<cardGroupType>
-
-export type menuCardGroupsType = Array<menuCardGroupType>
+export type AllActionsData = 
+ReturnType<AC_T["logoutAC_T"]> | 
+ReturnType<AC_T["switchCompleteCardAC_T"]> | 
+ReturnType<AC_T["addNewCardAC_T"]> | 
+ReturnType<AC_T["changeCardAC_T"]> | 
+ReturnType<AC_T["deleteCardAC_T"]> | 
+ReturnType<AC_T["changeCurrentCardGroupIDAC_T"]> | 
+ReturnType<AC_T["updateCurrentCardsAC_T"]> | 
+ReturnType<AC_T["addGroupIDAC_T"]> | 
+ReturnType<AC_T["deleteCardGroupID_T"]> | 
+ReturnType<AC_T["switchCompleteCardAC_T"]> | 
+ReturnType<AC_T["toggleSearchAC_T"]> | 
+ReturnType<AC_T["updateSearchInputValueTypeAC_T"]> | 
+ReturnType<AC_T["loginAC_T"]> | 
+ReturnType<AC_T["clearAllCardsAC_T"]>

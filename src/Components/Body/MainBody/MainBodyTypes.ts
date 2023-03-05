@@ -1,22 +1,24 @@
-import { allCardGroupsType, cardType, currentCardGroupType } from './../../Redux/ReduxTypes';
+import { U_T } from "../../Redux/ReduxTypes"
+
 
 export type MapStateType = {
-    currentCardGroup: currentCardGroupType,
-    allCardGroups: allCardGroupsType,
+    currentCardGroup: U_T["currentCardGroupType"] ,
+    allCardGroups: U_T["allCardGroupsType"] ,
     background: string,
-    currentCards: Array<cardType>,
+    currentCards: Array<U_T["cardType"]>,
     isSearchOn: boolean,
-    allCards: Array<cardType>,
+    allCards: Array<U_T["cardType"]>,
     searchInputValue: string
 }
 
 export type mapDispatchType = {
-    addNewCardThunk: (text: string, groupID: number) => any,
+    addNewCardThunk: (id: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) => any,
     addGroupIDThunk: (groupID: number, cardID: number) => any,
     deleteGroupIDThunk: (groupID: number, cardID: number) => any,
     deleteCardThunk: (cardID: number) => any,
     changeCardThunk: (text: string, cardID: number) => any,
-    switchCompleteCardThunk: (cardID: number) => any
+    switchCompleteCardThunk: (cardID: number) => any,
+    PullAllCardsThunk: () => any
 }
 
 export type MainBodyPropsType = MapStateType & mapDispatchType
@@ -27,23 +29,28 @@ export type MakeCardPropsType = {
     text: string,
     groupsIDs: Array<number>,
     isCompleted: boolean,
-    allCardGroups: allCardGroupsType,
-    currentCardGroup: currentCardGroupType,
+    allCardGroups: U_T["allCardGroupsType"],
+    currentCardGroup: U_T["currentCardGroupType"],
     deleteGroupIDThunk: (groupID: number, cardID: number) => any,
     deleteCardThunk: (cardID: number) => any,
     addGroupIDThunk: (groupID: number, cardID: number) => any,
     changeCardThunk: (text: string, cardID: number) => any,
-    switchCompleteCardThunk: (cardID: number) => any
+    switchCompleteCardThunk: (cardID: number) => any,
+    PullAllCardsThunk: () => any
 }
 
 export type CreateNewCardPropsType = {
     groupID: number,
-    addNewCardThunk: (text: string, groupID: number) => any,
+    currentCardGroup: U_T["currentCardGroupType"],
+    addNewCardThunk: (id: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) => any,
+    PullAllCardsThunk: () => any
 }
 
 export type NewCardFormType = {
     groupID: number,
-    addNewCardThunk: (text: string, groupID: number) => any,
+    currentCardGroup: U_T["currentCardGroupType"],
+    addNewCardThunk: (id: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) => any,
+    PullAllCardsThunk: () => any
 }
 
 export type ChangeCardFormType = {

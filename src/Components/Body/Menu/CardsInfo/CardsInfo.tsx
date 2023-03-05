@@ -15,7 +15,7 @@ const iconConditions = (icon: string) => {
 const MakeMenuCardGroup = (props: MakeMenuCardGroupPropsType) => {
     return <div>
         <button onClick={() => {
-            props.switchCardGroup(props.groupID)
+            props.switchCardGroup_Thunk(props.groupID)
             }} className={styles.button}>
             <div className={styles.buttonIcon}>{iconConditions(props.icon)}</div>
             <div className={styles.buttonText}>{props.name}</div>
@@ -26,7 +26,7 @@ const MakeMenuCardGroup = (props: MakeMenuCardGroupPropsType) => {
 const CardsInfo = (props: CardsInfoPropsType) => {
     return <div>
         {props.menuCardGroups.map(group => {
-            return <MakeMenuCardGroup switchCardGroup={props.switchCardGroup} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} changeCurrentCardGroupID={props.changeCurrentCardGroupID}/>
+            return <MakeMenuCardGroup switchCardGroup_Thunk={props.switchCardGroup_Thunk} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} changeCurrentCardGroupID_AC={props.changeCurrentCardGroupID_AC}/>
         })}
         <div className={styles.line}></div>
     </div>

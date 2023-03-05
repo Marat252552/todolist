@@ -9,7 +9,6 @@ import { AuthPagePropsType } from "./types"
 
 const AuthPage = (props: AuthPagePropsType) => {
     let navigate = useNavigate()
-    
     useEffect(() => {
         if(props.isAuthorized === true) {
             navigate('/home')
@@ -25,15 +24,7 @@ const AuthPage = (props: AuthPagePropsType) => {
                 lastName: ''
             },
             onSubmit: async (values: any) => {
-                try {
-                    let res = await LoginAPI(values.login, values.password)
-                    if(res.status === 200) {
-                    props.Login(res.data.login, res.data.email, res.data.name, res.data.lastName)
-                    }
-                } catch(e) {
-                    console.log(e)
-                    setError('Invalid login or password')
-                }
+                props.login_Thunk(values.login, values.password)
             },
         })
         return <form onSubmit={formik.handleSubmit}>

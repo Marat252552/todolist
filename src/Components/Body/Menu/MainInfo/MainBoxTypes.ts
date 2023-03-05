@@ -1,3 +1,5 @@
+import { AC_cT, T_cT } from "../../../Redux/ReduxTypes"
+
 export type MapStateType = {
     isSearchOn: boolean,
     searchInputValue: string,
@@ -8,20 +10,20 @@ export type MapStateType = {
 }
 
 export type MapDispatchType = {
-    toggleSearch: (isSearchOn: boolean) => any,
-    updateSearchInputValue: (text: string) => any,
-    logoutThunk: () => void
+    toggleSearch_AC: AC_cT["toggleSearchAC_cT"],
+    updateSearchInputValue_AC: AC_cT["updateSearchInputValueTypeAC_cT"],
+    logout_Thunk: T_cT["logoutThunk_cT"],
 }
 
 export type SearchBoxPropsType = {
-    toggleSearch: (isSearchOn: boolean) => any,
+    toggleSearch_AC: AC_cT["toggleSearchAC_cT"],
     searchInputValue: string,
-    updateSearchInputValue: (text: string) => any
+    updateSearchInputValue_AC: AC_cT["updateSearchInputValueTypeAC_cT"]
 }
 
 export type InfoBoxPropsType = {
     isAuthorized: boolean,
-    logoutThunk: () => void,
+    logout_Thunk: T_cT["logoutThunk_cT"],
     name: string,
     lastName: string,
     email: string

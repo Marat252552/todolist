@@ -1,5 +1,6 @@
-import { loginType } from './../Redux/ReduxTypes';
+import { AC_cT, AC_T, T_cT } from './../Redux/ReduxTypes';
 export type AuthPagePropsType = {
     isAuthorized: boolean,
-    Login: (login: string, email: string, name: string, lastName: string) => loginType
+    Login_AC: AC_cT["LoginAC_cT"],
+    login_Thunk: T_cT["login_Thunk"]
 }

@@ -3,7 +3,6 @@ import { App, Avatar, Button, Modal, Popover } from 'antd'
 import { Input } from 'antd'
 import { DownOutlined, SearchOutlined, SettingOutlined, SmileOutlined, SyncOutlined, UserDeleteOutlined } from '@ant-design/icons'
 import { AppStateType } from '../../../Redux/Redux'
-import { logoutThunk, toggleSearch, updateSearchInputValue } from '../../../Redux/DataReducer'
 import { connect } from 'react-redux'
 import { InfoBoxPropsType, MainBoxPropsType, MapDispatchType, MapStateType, SearchBoxPropsType } from './MainBoxTypes'
 import React, { useState } from 'react'
@@ -11,6 +10,8 @@ import { useFormik } from 'formik';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { GetUsersAPI } from '../../../../Api/Api'
+import { toggleSearch_AC, updateSearchInputValue_AC } from '../../../Redux/ActionCreators'
+import { logout_Thunk } from '../../../Redux/Thunks'
 
 
 const InfoBox = (props: InfoBoxPropsType) => {
@@ -29,14 +30,14 @@ const SearchBox = (props: SearchBoxPropsType) => {
             card: '',
         },
         onSubmit: (values: any, { resetForm }: any) => {
-            props.updateSearchInputValue(values.searchInput)
+            props.updateSearchInputValue_AC(values.searchInput)
             resetForm({ values: '' })
         },
     })
     return <div className={styles.searchBoxContainer}>
         <div className={styles.searchBox}>
             <form onChange={formik.handleSubmit} onSubmit={formik.handleSubmit}>
-                <Input onChange={formik.handleChange} id="searchInput" name='searchInput' className={styles.input} placeholder="Search" bordered={false} onFocus={() => { props.toggleSearch(true) }} onBlur={() => { props.toggleSearch(false) }} value={props.searchInputValue} />
+                <Input onChange={formik.handleChange} id="searchInput" name='searchInput' className={styles.input} placeholder="Search" bordered={false} onFocus={() => { props.toggleSearch_AC(true) }} onBlur={() => { props.toggleSearch_AC(false) }} value={props.searchInputValue} />
             </form>
             <button className={styles.searchButton}><SearchOutlined className={styles.searchIcon} /></button>
         </div>
@@ -44,6 +45,7 @@ const SearchBox = (props: SearchBoxPropsType) => {
 }
 
 const MainBox = (props: MainBoxPropsType) => {
+    console.log(props)
     let showUsers = async () => {
         let res = await GetUsersAPI()
         console.log(res)
@@ -66,7 +68,7 @@ const MainBox = (props: MainBoxPropsType) => {
         {
             key: '3',
             label: (
-                <div onClick={props.logoutThunk}>Выйти</div>
+                <div onClick={props.logout_Thunk}>Выйти</div>
             ),
             danger: true,
             icon: <UserDeleteOutlined />
@@ -77,13 +79,13 @@ const MainBox = (props: MainBoxPropsType) => {
         <Dropdown menu={{ items }} trigger={['click']}>
             <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                    <InfoBox email={props.email} name={props.name} lastName={props.lastName} isAuthorized={props.isAuthorized} logoutThunk={props.logoutThunk}/>
+                    <InfoBox email={props.email} name={props.name} lastName={props.lastName} isAuthorized={props.isAuthorized} logout_Thunk={props.logout_Thunk}/>
                 </Space>
             </a>
         </Dropdown>
         <SearchBox
-            updateSearchInputValue={props.updateSearchInputValue}
-            toggleSearch={props.toggleSearch}
+            updateSearchInputValue_AC={props.updateSearchInputValue_AC}
+            toggleSearch_AC={props.toggleSearch_AC}
             searchInputValue={props.searchInputValue} />
     </div>
 }
@@ -99,6 +101,6 @@ let mapStateToProps = (state: AppStateType) => {
     }
 }
 
-const MainBoxContainer = connect<MapStateType, MapDispatchType, unknown, AppStateType>(mapStateToProps, { toggleSearch, updateSearchInputValue, logoutThunk })(MainBox)
+const MainBoxContainer = connect<MapStateType, MapDispatchType, unknown, AppStateType>(mapStateToProps, { toggleSearch_AC, updateSearchInputValue_AC, logout_Thunk })(MainBox)
 
 export default MainBoxContainer
