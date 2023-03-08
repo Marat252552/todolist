@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { LoggedAPI_T, LoginAPI_T } from "./types";
+import { U_T } from "../Components/Redux/ReduxTypes";
+import { addCardAPI_T, LoggedAPI_T, LoginAPI_T, LogoutAPI_T, PullCardsAPI_T, SignInAPI_T } from "./types";
 
 let token
 
@@ -26,36 +27,55 @@ export const MakeNewCardAPI = (text: string, groupID: number) => {
 }
 export const LoginAPI: LoginAPI_T = async (login, password) => {
     let response = await instanse.post('/auth/login', {login: login, password: password})
-    let data = response.data
     let result = {
         status: response.status,
-        data: data
+        data: response.data
     }
     return result
 }
 export const LoggedAPI: LoggedAPI_T = async () => {
     let response = await instanse.get('/auth')
-    let data = response.data
     let result = {
         status: response.status,
-        data: data
+        data: response.data
     }
     return result
 }
-export const SignInAPI = (login: string, password: string, email: string, age: number, name: string, lastName: string) => {
-    return instanse.post('/auth/signin', {login: login, password: password, email: email, age: age, name: name, lastName: lastName})
+export const SignInAPI: SignInAPI_T = async (login, password, email, age, name, lastName) => {
+    let response = await instanse.post('/auth/signin', {login: login, password: password, email: email, age: age, name: name, lastName: lastName})
+    let result = {
+        status: response.status,
+        data: response.data
+    }
+    return result
 }
-export const LogoutAPI = async () => {
-    return await instanse.post('/auth/logout')
+export const LogoutAPI: LogoutAPI_T = async () => {
+    let response = await instanse.post('/auth/logout')
+    let result = {
+        status: response.status
+    }
+    return result
 }
-export const PullCardsAPI = () => {
-    return instanse.get(`/cards`)
+export const PullCardsAPI: PullCardsAPI_T = async () => {
+    let response = await instanse.get(`/cards`)
+    let result = {
+        status: response.status,
+        data: response.data
+    }
+    return result
 }
-export const addCardAPI = (text: string, groupID: string) => {
-    return instanse.post(`/cards`, {text: text, groupID: groupID})
+export const addCardAPI: addCardAPI_T = async (text, groupID) => {
+    let response = await instanse.post(`/cards`, {text: text, groupID: groupID})
+    let result = {
+        status: response.status
+    }
+    return result
 }
 export const deleteCardAPI = (cardID: string) => {
     return instanse.delete(`/cards/${cardID}`)
+}
+export const updateCardAPI = (card: U_T["cardType"]) => {
+    return instanse.put(`/cards/${card.cardID}`, {card})
 }
 
 export const GetUsersAPI = () => {

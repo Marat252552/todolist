@@ -1,3 +1,4 @@
+import { updateCardAPI } from './../../Api/Api';
 import { Dispatch } from "react"
 import { PullCardsAPI, LogoutAPI, LoginAPI } from "../../Api/Api"
 import { clearAllCards_AC, addNewCard_AC, updateCurrentCards_AC, deleteCard_AC, changeCard_AC, changeCurrentCardGroupID_AC, addGroupID_AC, deleteGroupID_AC, switchCompleteCard_AC, Logout_AC, Login_AC } from "./ActionCreators"
@@ -7,11 +8,17 @@ export const pullAllCards_Thunk: T_T["PullAllCardsThunk_T"] = () => {
     return async (dispatch: Dispatch<AllActionsData>) => {
         dispatch(clearAllCards_AC())
         let response = await PullCardsAPI()
-        let cards: Array<U_T["cardType"]> = response.data as Array<U_T["cardType"]>
-        cards.forEach(card => {
-            dispatch(addNewCard_AC(card.cardID, card.text, card.groupsIDs, card.isCompleted))
-        })
-        dispatch(updateCurrentCards_AC())
+        console.log(response)
+        if(response.status === 200) {
+            let cards: Array<U_T["cardType"]> = response.data as Array<U_T["cardType"]>
+            cards.forEach(card => {
+                dispatch(addNewCard_AC(card.cardID, card.text, card.groupsIDs, card.isCompleted))
+            })
+            dispatch(updateCurrentCards_AC())
+        } else {
+            console.log(response.status)
+        }
+        
     }
 }
 export const addNewCard_Thunk: T_T["addNewCardThunk_T"] = (id, text, groupsIDs, isCompleted) => {
@@ -33,6 +40,43 @@ export const login_Thunk: T_T["loginThunk_T"] = (login, password) => {
             if(res.status === 200) {
                 dispatch(Login_AC(res.data.email, res.data.name, res.data.lastName))
             }
+        } catch(e) {
+            console.log(e)
+        }
+    }
+}
+export const updateCard_Thunk = (card: U_T["cardType"]) => {
+    return async (dispatch: Dispatch<AllActionsData>) => {
+        try {
+            let res = await updateCardAPI(card)
+            if(res.status === 200) {
+                dispatch(pullAllCards_Thunk() as any)
+            }
+        } catch(e) {
+            console.log(e)
+        }
+    }
+}
+
+export const addGroupID_Thunk2 = (groupID: number, card: U_T["cardType"]) => {
+    return async (dispatch: Dispatch<AllActionsData>) => {
+        try {
+            let updatedCard = card
+            updatedCard.groupsIDs.push(groupID)
+            updateCard_Thunk(updatedCard) as any
+        } catch(e) {
+            console.log(e)
+        }
+    }
+}
+export const deleteGroupID_Thunk2 = (DgroupID: number, card: U_T["cardType"]) => {
+    return async (dispatch: Dispatch<AllActionsData>) => {
+        try {
+            let updatedCard = card
+            updatedCard.groupsIDs.filter(groupID => {
+                return groupID !== DgroupID
+            })
+            dispatch(updateCard_Thunk(updatedCard) as any)
         } catch(e) {
             console.log(e)
         }
@@ -80,7 +124,6 @@ export const logout_Thunk: T_T["logoutThunk_T"] = () => {
             if (res.status === 200) {
                 dispatch(Logout_AC())
             }
-            console.log(res)
         } catch (e) {
             console.log(e)
         }

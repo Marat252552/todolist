@@ -45,7 +45,6 @@ const SearchBox = (props: SearchBoxPropsType) => {
 }
 
 const MainBox = (props: MainBoxPropsType) => {
-    console.log(props)
     let showUsers = async () => {
         let res = await GetUsersAPI()
         console.log(res)
