@@ -5,13 +5,12 @@ import { DownOutlined, SearchOutlined, SettingOutlined, SmileOutlined, SyncOutli
 import { AppStateType } from '../../../Redux/Redux'
 import { connect } from 'react-redux'
 import { InfoBoxPropsType, MainBoxPropsType, MapDispatchType, MapStateType, SearchBoxPropsType } from './MainBoxTypes'
-import React, { useState } from 'react'
 import { useFormik } from 'formik';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { GetUsersAPI } from '../../../../Api/Api'
 import { toggleSearch_AC, updateSearchInputValue_AC } from '../../../Redux/ActionCreators'
-import { logout_Thunk } from '../../../Redux/Thunks'
+import { ControllerThunks } from '../../../Redux/Thunks'
 
 
 const InfoBox = (props: InfoBoxPropsType) => {
@@ -53,14 +52,17 @@ const MainBox = (props: MainBoxPropsType) => {
         {
             key: '1',
             label: (
-                <div>Параметры</div>
+                <div>Push all cards</div>
             ),
-            icon: <SettingOutlined />
+            icon: <SyncOutlined />
+            // <SettingOutlined />
         },
         {
             key: '2',
             label: (
-                <div onClick={showUsers}>Получить юзеров</div>
+                <div onClick={() => {
+                    props.PushData_Thunk(props.state)
+                }}>Pull added cards</div>
             ),
             icon: <SyncOutlined />
         },
@@ -96,10 +98,19 @@ let mapStateToProps = (state: AppStateType) => {
         isAuthorized: state.data.isAuthorized,
         name: state.data.name,
         lastName: state.data.lastName,
-        email: state.data.email
+        email: state.data.email,
+        state: state
     }
 }
 
-const MainBoxContainer = connect<MapStateType, MapDispatchType, unknown, AppStateType>(mapStateToProps, { toggleSearch_AC, updateSearchInputValue_AC, logout_Thunk })(MainBox)
+let mapDispatchToProps = () => {
+    return {
+        PushData_Thunk: ControllerThunks.PushData_Thunk, 
+        toggleSearch_AC, updateSearchInputValue_AC, 
+        logout_Thunk: ControllerThunks.logout_Thunk, 
+        pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk }
+}
+
+const MainBoxContainer = connect<MapStateType, MapDispatchType, unknown, AppStateType>(mapStateToProps, mapDispatchToProps())(MainBox)
 
 export default MainBoxContainer

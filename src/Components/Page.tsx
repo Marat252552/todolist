@@ -1,13 +1,11 @@
-import { memo, useEffect, useMemo } from "react"
 import { connect } from "react-redux"
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom"
-import { LoggedAPI, PullCardsAPI } from "../Api/Api"
 import FirstGate from "../FirstGate"
 import AuthPage from "./Auth/AuthPage"
 import Body from "./Body/Body"
 import { Login_AC } from "./Redux/ActionCreators"
 import { AppStateType } from "./Redux/Redux"
-import { login_Thunk, pullAllCards_Thunk } from "./Redux/Thunks"
+import { ControllerThunks } from "./Redux/Thunks"
 import Register from "./Register/Register"
 import { mapDispatch_T, mapState_T, PageProps_T } from "./types"
 
@@ -26,6 +24,16 @@ const mapStateToProps = (state: AppStateType) => {
     }
 }
 
-const PageContainer = connect<mapState_T, mapDispatch_T, unknown, AppStateType>(mapStateToProps, {Login_AC, pullAllCards_Thunk, login_Thunk})(Page)
+const mapDispatchToProps = () => {
+    return {
+        Login_AC, 
+        pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk, 
+        login_Thunk: ControllerThunks.login_Thunk}
+}
+
+const PageContainer = connect<mapState_T, mapDispatch_T, unknown, AppStateType>(mapStateToProps, {
+    Login_AC, 
+    pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk, 
+    login_Thunk: ControllerThunks.login_Thunk})(Page)
 
 export default PageContainer

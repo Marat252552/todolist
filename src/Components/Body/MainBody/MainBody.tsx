@@ -6,8 +6,7 @@ import React from "react";
 import { Formik, useFormik } from "formik";
 import { AppStateType } from "../../Redux/Redux";
 import { ChangeCardFormType, CreateNewCardPropsType, MainBodyPropsType, MakeCardPropsType, mapDispatchType, MapStateType, NewCardFormType } from "./MainBodyTypes";
-import { addCardAPI, deleteCardAPI } from "../../../Api/Api";
-import { addNewCard_Thunk, deleteCard_Thunk, addGroupID_Thunk, deleteGroupID_Thunk, changeCardThunk, switchCompleteCard_Thunk, pullAllCards_Thunk, addGroupID_Thunk2, deleteGroupID_Thunk2, updateCard_Thunk } from "../../Redux/Thunks";
+import { StateControllerThunks, addGroupID_Thunk, deleteGroupID_Thunk, switchCompleteCard_Thunk, ControllerThunks } from "../../Redux/Thunks";
 import { U_T } from "../../Redux/ReduxTypes";
 
 
@@ -18,7 +17,6 @@ const ChangeCardForm = (props: ChangeCardFormType) => {
         },
         onSubmit: (values: any) => {
             console.log(values.card)
-            props.changeCardThunk(values.card, props.cardID)
         }
     })
     return <form onSubmit={formik.handleSubmit}>
@@ -39,8 +37,7 @@ const NewCardForm = (props: NewCardFormType) => {
             card: '',
         },
         onSubmit: async (values: any, { resetForm }: any) => {
-            await addCardAPI(values.card, props.currentCardGroup.groupID.toString())
-            props.PullAllCardsThunk()
+            props.addCard_Thunk(Date.now(), values.card, [5, props.currentCardGroup.groupID], false)
             resetForm({ values: '' })
         },
     })
@@ -63,7 +60,7 @@ const CreateNewCard = (props: CreateNewCardPropsType) => {
             <PlusOutlined />
         </div>
         <div className={styles.createNewCard}>
-            <NewCardForm PullAllCardsThunk={props.PullAllCardsThunk} currentCardGroup={props.currentCardGroup} groupID={props.groupID} addNewCardThunk={props.addNewCardThunk}/>
+            <NewCardForm addCard_Thunk={props.addCard_Thunk} PullAllCardsThunk={props.PullAllCardsThunk} currentCardGroup={props.currentCardGroup} groupID={props.groupID}/>
         </div>
     </div>
 }
@@ -72,26 +69,20 @@ const MakeCard = (props: MakeCardPropsType) => {
     let addGroup = async (groupID: number, card: U_T["cardType"]) => {
         let updatedCard = card
         updatedCard.groupsIDs.push(groupID)
-        props.updateCard_Thunk(updatedCard)
+        props.changeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted)
     }
     let deleteGroup = async (groupID: number, card: U_T["cardType"]) => {
         let updatedCard = card
         updatedCard.groupsIDs = updatedCard.groupsIDs.filter(ID => {return ID !== groupID})
-        props.updateCard_Thunk(updatedCard)
+        props.changeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted)
     }
     let completeCard = async (card: U_T["cardType"]) => {
         let updatedCard = card
         updatedCard.isCompleted = true
-        props.updateCard_Thunk(updatedCard)
     }
     let incompleteCard = async (card: U_T["cardType"]) => {
         let updatedCard = card
         updatedCard.isCompleted = false
-        props.updateCard_Thunk(updatedCard)
-    }
-    let deleteCard = async () => {
-        await deleteCardAPI(props.cardID.toString())
-        props.PullAllCardsThunk()
     }
     // Массив со всеми группами карточки
     let requiredGroupsArray = props.groupsIDs.filter(groupID => {
@@ -109,10 +100,10 @@ const MakeCard = (props: MakeCardPropsType) => {
                 danger
                 type='primary'
                 style={{ width: '100%' }}
-                onClick={deleteCard}>
+                onClick={() => {props.deleteCard_Thunk(props.cardID)}}>
                 Delete
             </Button>
-            {(props.groupsIDs.find(el => el === 1))? 
+            {(props.groupsIDs.find(el => el === 1))?
             <Button type="default" onClick={() => {deleteGroup(1, props.card)}}>Убрать из представления Мой день</Button>
             :
             <Button type="default" onClick={() => {addGroup(1, props.card)}}>Добавить в представление мой день</Button>}
@@ -126,7 +117,7 @@ const MakeCard = (props: MakeCardPropsType) => {
                         }} />
                 </div>
                 <div className={styles.cardInfo}>
-                    <ChangeCardForm changeCardThunk={props.changeCardThunk} text={props.text} cardID={props.cardID} isCompleted={props.isCompleted}/>
+                    <ChangeCardForm text={props.text} cardID={props.cardID} isCompleted={props.isCompleted}/>
                     <span className={styles.groupName}>{requiredGroupsArray.map(groupName => { 
                         if(groupName !== 'Важно') {
                             return <span key={groupName}>{groupName} </span> }
@@ -172,7 +163,7 @@ const MainBody = (props: MainBodyPropsType) => {
         return <div>{props.allCards.filter(card => {
             return card.text.includes(props.searchInputValue)
         }).map(card => {
-            return <MakeCard updateCard_Thunk={props.updateCard_Thunk} deleteGroupID_Thunk2={props.deleteGroupID_Thunk2} addGroupID_Thunk2={props.addGroupID_Thunk2} PullAllCardsThunk={props.PullAllCardsThunk} switchCompleteCardThunk={props.switchCompleteCardThunk} changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} card={card} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
+            return <MakeCard changeCard_Thunk={props.changeCard_Thunk} deleteCard_Thunk={props.deleteCard_Thunk} PullAllCardsThunk={props.PullAllCardsThunk} switchCompleteCardThunk={props.switchCompleteCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} card={card} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
         })}</div>
     } else {
         return <div className={wallpaper(props.background)}>
@@ -185,18 +176,18 @@ const MainBody = (props: MainBodyPropsType) => {
             <div className={styles.scroll}>
                 {/* Невыполненные карточки */}
                 {incompletedCards.map(card => {
-                    return <MakeCard updateCard_Thunk={props.updateCard_Thunk} deleteGroupID_Thunk2={props.deleteGroupID_Thunk2} addGroupID_Thunk2={props.addGroupID_Thunk2} card={card} PullAllCardsThunk={props.PullAllCardsThunk} switchCompleteCardThunk={props.switchCompleteCardThunk} changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
+                    return <MakeCard changeCard_Thunk={props.changeCard_Thunk} deleteCard_Thunk={props.deleteCard_Thunk}  card={card} PullAllCardsThunk={props.PullAllCardsThunk} switchCompleteCardThunk={props.switchCompleteCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
                 })}
                 {/* Выполненные карточки */}
                 <p>Выполненные задач</p>
                 {completedCards.map(card => {
-                    return <MakeCard updateCard_Thunk={props.updateCard_Thunk} deleteGroupID_Thunk2={props.deleteGroupID_Thunk2} addGroupID_Thunk2={props.addGroupID_Thunk2} card={card} PullAllCardsThunk={props.PullAllCardsThunk} switchCompleteCardThunk={props.switchCompleteCardThunk} changeCardThunk={props.changeCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
+                    return <MakeCard changeCard_Thunk={props.changeCard_Thunk} deleteCard_Thunk={props.deleteCard_Thunk} card={card} PullAllCardsThunk={props.PullAllCardsThunk} switchCompleteCardThunk={props.switchCompleteCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
                 })}
             </div>
         </div>
         {/* Окно создания новой карточки */}
         <div>
-            <CreateNewCard PullAllCardsThunk={props.PullAllCardsThunk} currentCardGroup={props.currentCardGroup} addNewCardThunk={props.addNewCardThunk} groupID={props.currentCardGroup.groupID} />
+            <CreateNewCard addCard_Thunk={props.addCard_Thunk} PullAllCardsThunk={props.PullAllCardsThunk} currentCardGroup={props.currentCardGroup} groupID={props.currentCardGroup.groupID} />
         </div>
     </div>
     }
@@ -213,7 +204,17 @@ const mapStateToProps = (state: AppStateType) => {
         searchInputValue: state.data.searchInputValue
     }
 }
-
-const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, { addNewCardThunk: addNewCard_Thunk, deleteCardThunk: deleteCard_Thunk, addGroupIDThunk: addGroupID_Thunk, deleteGroupIDThunk: deleteGroupID_Thunk, changeCardThunk, updateCard_Thunk, switchCompleteCardThunk: switchCompleteCard_Thunk, PullAllCardsThunk: pullAllCards_Thunk, addGroupID_Thunk2, deleteGroupID_Thunk2 })(MainBody)
+const mapDispatchToProps = () => {
+    return { 
+        changeCard_Thunk: StateControllerThunks.changeCard_Thunk, 
+        deleteCard_Thunk: StateControllerThunks.deleteCard_Thunk, 
+        deleteCardThunk: StateControllerThunks.deleteCard_Thunk, 
+        addGroupIDThunk: addGroupID_Thunk, 
+        deleteGroupIDThunk: deleteGroupID_Thunk, 
+        switchCompleteCardThunk: switchCompleteCard_Thunk, 
+        PullAllCardsThunk: ControllerThunks.pullAllCards_Thunk, 
+        addCard_Thunk: StateControllerThunks.addCard_Thunk }
+}
+const MainBodyContainer = connect<MapStateType, mapDispatchType, void, AppStateType>(mapStateToProps, mapDispatchToProps())(MainBody)
 
 export default MainBodyContainer

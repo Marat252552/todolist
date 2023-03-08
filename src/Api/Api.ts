@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { U_T } from "../Components/Redux/ReduxTypes";
-import { addCardAPI_T, LoggedAPI_T, LoginAPI_T, LogoutAPI_T, PullCardsAPI_T, SignInAPI_T } from "./types";
+import { addCardsAPI_T, LoggedAPI_T, LoginAPI_T, LogoutAPI_T, PullCardsAPI_T, SignInAPI_T } from "./types";
 
 let token
 
@@ -64,18 +64,20 @@ export const PullCardsAPI: PullCardsAPI_T = async () => {
     }
     return result
 }
-export const addCardAPI: addCardAPI_T = async (text, groupID) => {
-    let response = await instanse.post(`/cards`, {text: text, groupID: groupID})
+export const addCardsAPI: addCardsAPI_T = async (cards) => {
+    let response = await instanse.post(`/cards`, {cards})
     let result = {
-        status: response.status
+        status: response.status,
+        data: response.data
     }
     return result
 }
-export const deleteCardAPI = (cardID: string) => {
-    return instanse.delete(`/cards/${cardID}`)
+export const deleteCardsAPI = (cards: Array<U_T["cardType"]>) => {
+    console.log(1111)
+    return instanse.post(`/cards/delete`, {cards})
 }
-export const updateCardAPI = (card: U_T["cardType"]) => {
-    return instanse.put(`/cards/${card.cardID}`, {card})
+export const updateCardAPI = (cards: Array<U_T["cardType"]>) => {
+    return instanse.put(`/cards`, {cards})
 }
 
 export const GetUsersAPI = () => {

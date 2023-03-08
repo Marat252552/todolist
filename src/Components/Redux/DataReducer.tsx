@@ -3,7 +3,7 @@ import { AllActionsData, U_T } from "./ReduxTypes"
 export const ADD_NEW_CARD = 'ADD_NEW_CARD'
 export const CLEAR_ALL_CARDS = 'CLEAR_ALL_CARDS'
 export const DELETE_CARD = 'DELETE_CARD'
-export const CHANGE_CARD = 'CHANGE_CARD'
+export const CHANGE_TEXT_CARD = 'CHANGE_TEXT_CARD'
 export const CHANGE_CURRENT_GROUP_ID = 'CHANGE_CURRENT_CARD_GROUP_ID'
 export const UPDATE_CURRENT_CARDS = 'UPDATE_CURRENT_CARDS'
 export const ADD_GROUP_ID = 'ADD_GROUP_ID'
@@ -13,6 +13,9 @@ export const TOGGLE_SEARCH = 'TOGGLE_SEARCH'
 export const UPDATE_SEARCH_INPUT_VALUE = 'SEARCH_INPUT_VALUE'
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
+export const CLEAR_CONTROLLERS = 'CLEAR_CONTROLLERS'
+export const PULL_CARDS = 'PULL_CARDS'
+export const CHANGE_CARD = 'CHANGE_CARD'
 
 
 const initialState = {
@@ -31,6 +34,9 @@ const initialState = {
         { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'wallpaper1' },
         { groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'wallpaper1' },
     ],
+    addedCards: [] as Array<U_T["cardType"]>,
+    changedCards: [] as Array<U_T["cardType"]>,
+    deletedCards: [] as Array<U_T["cardType"]>,
     searchInputValue: '',
     isSearchOn: false,
     newCardID: 6 as number,
@@ -56,8 +62,29 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 allCards: [
                     ...state.allCards,
                     card
+                ],
+                addedCards: [
+                    ...state.addedCards,
+                    card
                 ]
             }
+        }
+        case PULL_CARDS: {
+            // 2.Создаем карточку
+            let card = { cardID: action.id, text: action.text, groupsIDs: action.groupsIDs, isCompleted: action.isCompleted }
+            // 3.Добавляем в state allCards
+            return {
+                ...state,
+                allCards: [
+                    ...state.allCards,
+                    card
+                ]
+            }
+        }
+        case CLEAR_CONTROLLERS: {
+            if(action.controller === 1) { return {...state, addedCards: []} }
+            if(action.controller === 2) { return {...state, changedCards: []} }
+            if(action.controller === 3) { return {...state, deletedCards: []} }
         }
         case CLEAR_ALL_CARDS: {
             return {
@@ -91,13 +118,23 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             let newAllCards = [
                 ...state.allCards
             ]
+            let deletedCard = state.allCards.find(card => card.cardID === action.cardID) as any
             newAllCards = newAllCards.filter(card => {
-                return card.cardID !== action.cardID
+                return card.cardID !== deletedCard.cardID 
             })
+            let newAddedCards = state.addedCards.filter(card => card.cardID !== action.cardID)
+            let newChangedCards = state.changedCards.filter(card => card.cardID !== action.cardID)
             return {
                 ...state,
-                allCards: newAllCards
+                allCards: newAllCards,
+                deletedCards: [
+                    ...state.deletedCards,
+                    deletedCard
+                ],
+                addedCards: newAddedCards,
+                changedCards: newChangedCards
             }
+            
         }
         case UPDATE_CURRENT_CARDS: {
             let newCurrentCards = state.allCards.filter(card => {
@@ -135,7 +172,7 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 allCards: newAllCards
             }
         }
-        case CHANGE_CARD: {
+        case CHANGE_TEXT_CARD: {
             let findIndex = () => {
                 let index = 0
                 for (let i = 0; i < state.allCards.length; i++) {
@@ -168,6 +205,16 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             return {
                 ...state,
                 searchInputValue: action.text
+            }
+        }
+        case CHANGE_CARD: {
+            let card = { cardID: action.id, text: action.text, groupsIDs: action.groupsIDs, isCompleted: action.isCompleted }
+            return {
+                ...state,
+                changedCards: [
+                    ...state.changedCards,
+                    card
+                ]
             }
         }
         case LOGIN: {
