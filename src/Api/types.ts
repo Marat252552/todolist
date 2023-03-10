@@ -6,7 +6,8 @@ type Result_T = {
     data: {
         name: string,
         lastName: string,
-        email: string
+        email: string,
+        AccessToken: string
     }
 }
 

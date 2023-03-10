@@ -3,6 +3,8 @@ import { useFormik } from "formik"
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { LoggedAPI, LoginAPI } from "../../Api/Api"
+import { withAuthRedirect } from "../hoc/withRouter"
+import LocalStorage from "../LocalStorage"
 import styles from './AuthPage.module.css'
 import { AuthPagePropsType } from "./types"
 
@@ -10,8 +12,18 @@ import { AuthPagePropsType } from "./types"
 const AuthPage = (props: AuthPagePropsType) => {
     let navigate = useNavigate()
     useEffect(() => {
-        if(props.isAuthorized === true) {
-            navigate('/home')
+        let a = async () => {
+            let response = await LoggedAPI()
+            if(response.status === 200) {
+                props.Login_AC(response.data.email, response.data.name, response.data.lastName)
+                LocalStorage.setToken(response.data.AccessToken)
+            }
+        }
+        a()
+    }, [])
+    useEffect(() => {
+        if (props.isAuthorized === true) {
+            navigate('/')
         }
     }, [props.isAuthorized])
     const LoginForm = () => {
@@ -59,5 +71,7 @@ const AuthPage = (props: AuthPagePropsType) => {
         </div>
     </div>
 }
+
+// const AuthPage2 = withAuthRedirect(AuthPage)
 
 export default AuthPage

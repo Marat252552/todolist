@@ -1,4 +1,4 @@
-import { UPDATE_CURRENT_CARDS, ADD_NEW_CARD, CLEAR_ALL_CARDS, CHANGE_TEXT_CARD, DELETE_CARD, SWITCH_COMPLETE_CARD, CHANGE_CURRENT_GROUP_ID, TOGGLE_SEARCH, ADD_GROUP_ID, DELETE_GROUP_ID, LOGOUT, LOGIN, UPDATE_SEARCH_INPUT_VALUE, CLEAR_CONTROLLERS, PULL_CARDS, CHANGE_CARD } from "./DataReducer"
+import { UPDATE_CURRENT_CARDS, ADD_NEW_CARD, CLEAR_ALL_CARDS, CHANGE_TEXT_CARD, DELETE_CARD, SWITCH_COMPLETE_CARD, CHANGE_CURRENT_GROUP_ID, TOGGLE_SEARCH, ADD_GROUP_ID, DELETE_GROUP_ID, LOGOUT, LOGIN, UPDATE_SEARCH_INPUT_VALUE, CLEAR_CONTROLLERS, PULL_CARDS, CHANGE_CARD, TOGGLE_LOADING } from "./DataReducer"
 import { AC_T } from "./ReduxTypes"
 
 
@@ -33,6 +33,7 @@ export const clearControllers: AC_T["clearControllersAC_T"] = (controller: numbe
         controller: controller
     }
 }
+
 
 // Action creators that save data about authorization of user on client side
 export const Login_AC: AC_T["loginAC_T"] = (email, name, lastName) => {
@@ -112,6 +113,12 @@ export const updateSearchInputValue_AC: AC_T["updateSearchInputValueTypeAC_T"] =
     return {
         type: UPDATE_SEARCH_INPUT_VALUE,
         text: text
+    }
+}
+export const toggleLoading_AC: AC_T["toggleLoadingAC_T"] = (value) => {
+    return {
+        type: TOGGLE_LOADING,
+        value: value
     }
 }
 

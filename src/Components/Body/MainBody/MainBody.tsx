@@ -3,7 +3,7 @@ import styles from './MainBody.module.css'
 import { Checkbox, Popconfirm, Popover, Button } from "antd";
 import { PlusOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
 import React from "react";
-import { Formik, useFormik } from "formik";
+import { Field, Formik, FormikProvider, useFormik } from "formik";
 import { AppStateType } from "../../Redux/Redux";
 import { ChangeCardFormType, CreateNewCardPropsType, MainBodyPropsType, MakeCardPropsType, mapDispatchType, MapStateType, NewCardFormType } from "./MainBodyTypes";
 import { StateControllerThunks, addGroupID_Thunk, deleteGroupID_Thunk, switchCompleteCard_Thunk, ControllerThunks } from "../../Redux/Thunks";
@@ -31,6 +31,12 @@ const ChangeCardForm = (props: ChangeCardFormType) => {
         </form>
 }
 
+let emptyField = (value: string) => {
+    if(!value) {
+        return 'Поле не может быть пустым'
+    }
+}
+
 const NewCardForm = (props: NewCardFormType) => {
     const formik = useFormik({
         initialValues: {
@@ -41,8 +47,9 @@ const NewCardForm = (props: NewCardFormType) => {
             resetForm({ values: '' })
         },
     })
-    return <form onSubmit={formik.handleSubmit}>
-            <input
+    return <FormikProvider value={formik}>
+    <form onSubmit={formik.handleSubmit}>
+            <Field
                 className={styles.input}
                 placeholder='Добавить карточку'
                 id="card"
@@ -50,8 +57,10 @@ const NewCardForm = (props: NewCardFormType) => {
                 type='text'
                 onChange={formik.handleChange}
                 value={formik.values.card}
+                validate={emptyField}
             />
         </form>
+        </FormikProvider>
 }
 
 const CreateNewCard = (props: CreateNewCardPropsType) => {
@@ -77,12 +86,12 @@ const MakeCard = (props: MakeCardPropsType) => {
         props.changeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted)
     }
     let completeCard = async (card: U_T["cardType"]) => {
-        let updatedCard = card
-        updatedCard.isCompleted = true
+        props.switchCompleteCardThunk(props.cardID)
+        props.changeCard_Thunk(card.cardID, card.text, card.groupsIDs, card.isCompleted)
     }
     let incompleteCard = async (card: U_T["cardType"]) => {
-        let updatedCard = card
-        updatedCard.isCompleted = false
+        props.switchCompleteCardThunk(props.cardID)
+        props.changeCard_Thunk(card.cardID, card.text, card.groupsIDs, card.isCompleted)
     }
     // Массив со всеми группами карточки
     let requiredGroupsArray = props.groupsIDs.filter(groupID => {

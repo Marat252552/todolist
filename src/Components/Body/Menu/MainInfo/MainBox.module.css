@@ -1,11 +1,23 @@
 .mainBoxInfo {
     display: grid;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: 2fr 10fr 1fr;
 }
 .searchIcon {
     font-size: 15px;
     color: rgb(102, 102, 102);
 }
+
+.imgDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%
+}
+
+img {
+    width: 100%;
+}
+
 .mainBoxInfoText {
     display: flex;
     flex-direction: column;
@@ -53,6 +65,37 @@
     width: 100%;
     height: 100%;
 }
-
-
+/* -------------------------------------------------------------------- */
+@keyframes ldioAqq6nx8vg0n {
+  0% { transform: translate(-50%,-50%) rotate(0deg); }
+  100% { transform: translate(-50%,-50%) rotate(360deg); }
+}
+.ldioAqq6nx8vg0n div {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #e15b64;
+  border-top-color: transparent;
+  border-radius: 50%;
+}
+.ldioAqq6nx8vg0n div {
+  animation: ldioAqq6nx8vg0n 1s linear infinite;
+  top: 10px;
+  left: 10px
+}
+.loadingioSpinnerRollingAjhtd6xnhrc {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  overflow: hidden;
+}
+.ldioAqq6nx8vg0n {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0; /* see note above */
+}
+.ldioAqq6nx8vg0n div { box-sizing: content-box; }
 

@@ -16,6 +16,7 @@ export const LOGOUT = 'LOGOUT'
 export const CLEAR_CONTROLLERS = 'CLEAR_CONTROLLERS'
 export const PULL_CARDS = 'PULL_CARDS'
 export const CHANGE_CARD = 'CHANGE_CARD'
+export const TOGGLE_LOADING = 'TOGGLE_LOADING'
 
 
 const initialState = {
@@ -34,6 +35,7 @@ const initialState = {
         { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'wallpaper1' },
         { groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'wallpaper1' },
     ],
+    loading: false,
     addedCards: [] as Array<U_T["cardType"]>,
     changedCards: [] as Array<U_T["cardType"]>,
     deletedCards: [] as Array<U_T["cardType"]>,
@@ -234,6 +236,12 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 email: '',
                 allCards: [],
                 currentCards: []
+            }
+        }
+        case TOGGLE_LOADING: {
+            return {
+                ...state,
+                loading: action.value
             }
         }
         default: {

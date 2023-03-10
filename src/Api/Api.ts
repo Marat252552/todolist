@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import LocalStorage from "../Components/LocalStorage";
 import { U_T } from "../Components/Redux/ReduxTypes";
 import { addCardsAPI_T, LoggedAPI_T, LoginAPI_T, LogoutAPI_T, PullCardsAPI_T, SignInAPI_T } from "./types";
 
@@ -12,21 +13,43 @@ const instanse = axios.create({
     }
 })
 
+instanse.interceptors.request.use((config: any) => {
+    console.log(LocalStorage)
+    config.headers.Authorization = `Bearer ${LocalStorage.AccessToken}`
+    return config
+})
+instanse.interceptors.response.use((config: any) => {
+    return config;
+}, async (error) => {
+    const OriginalRequest = error.config
+    if (error.response.status === 401 && error.config && !error.config._isRetry) {
+        OriginalRequest._isRetry = true
+        try {
+            let response = await instanse.get('/auth/refresh')
+            LocalStorage.setToken(response.data.AccessToken)
+            return instanse.request(OriginalRequest)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    throw error;
+})
+
 export const MakeNewCardAPI = (text: string, groupID: number) => {
-    return instanse.post('/cards', 
-    {
-        text: text,
-        groupsIDs: [groupID]
-    },
-    {
-        headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
+    return instanse.post('/cards',
+        {
+            text: text,
+            groupsIDs: [groupID]
         },
-    })
+        {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+        })
 }
 export const LoginAPI: LoginAPI_T = async (login, password) => {
-    let response = await instanse.post('/auth/login', {login: login, password: password})
+    let response = await instanse.post('/auth/login', { login: login, password: password })
     let result = {
         status: response.status,
         data: response.data
@@ -42,7 +65,7 @@ export const LoggedAPI: LoggedAPI_T = async () => {
     return result
 }
 export const SignInAPI: SignInAPI_T = async (login, password, email, age, name, lastName) => {
-    let response = await instanse.post('/auth/signin', {login: login, password: password, email: email, age: age, name: name, lastName: lastName})
+    let response = await instanse.post('/auth/signin', { login: login, password: password, email: email, age: age, name: name, lastName: lastName })
     let result = {
         status: response.status,
         data: response.data
@@ -65,7 +88,7 @@ export const PullCardsAPI: PullCardsAPI_T = async () => {
     return result
 }
 export const addCardsAPI: addCardsAPI_T = async (cards) => {
-    let response = await instanse.post(`/cards`, {cards})
+    let response = await instanse.post(`/cards`, { cards })
     let result = {
         status: response.status,
         data: response.data
@@ -73,13 +96,11 @@ export const addCardsAPI: addCardsAPI_T = async (cards) => {
     return result
 }
 export const deleteCardsAPI = (cards: Array<U_T["cardType"]>) => {
-    console.log(1111)
-    return instanse.post(`/cards/delete`, {cards})
+    return instanse.post(`/cards/delete`, { cards })
 }
 export const updateCardAPI = (cards: Array<U_T["cardType"]>) => {
-    return instanse.put(`/cards`, {cards})
+    return instanse.put(`/cards`, { cards })
 }
-
 export const GetUsersAPI = () => {
     return instanse.get('/auth/users')
 }

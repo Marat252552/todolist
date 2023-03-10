@@ -1,5 +1,5 @@
 import { Dispatch } from 'react';
-import { ADD_GROUP_ID, ADD_NEW_CARD, CHANGE_TEXT_CARD, CHANGE_CURRENT_GROUP_ID, CLEAR_ALL_CARDS, CLEAR_CONTROLLERS, DELETE_CARD, DELETE_GROUP_ID, LOGIN, LOGOUT, PULL_CARDS, SWITCH_COMPLETE_CARD, TOGGLE_SEARCH, UPDATE_CURRENT_CARDS, UPDATE_SEARCH_INPUT_VALUE, CHANGE_CARD } from "./DataReducer"
+import { ADD_GROUP_ID, ADD_NEW_CARD, CHANGE_TEXT_CARD, CHANGE_CURRENT_GROUP_ID, CLEAR_ALL_CARDS, CLEAR_CONTROLLERS, DELETE_CARD, DELETE_GROUP_ID, LOGIN, LOGOUT, PULL_CARDS, SWITCH_COMPLETE_CARD, TOGGLE_SEARCH, UPDATE_CURRENT_CARDS, UPDATE_SEARCH_INPUT_VALUE, CHANGE_CARD, TOGGLE_LOADING } from "./DataReducer"
 import { AppStateType } from './Redux';
 
 
@@ -80,6 +80,10 @@ export type AC_T = {
     },
     logoutAC_T: () => {
         type: typeof LOGOUT
+    },
+    toggleLoadingAC_T: (value: boolean) => {
+        type: typeof TOGGLE_LOADING,
+        value: boolean
     }
 }
 //action creators' connected types
@@ -154,6 +158,7 @@ export type StateControllerThunks_T = {
 
 
 export type AllActionsData = 
+ReturnType<AC_T["toggleLoadingAC_T"]> |
 ReturnType<AC_T["changeCardAC_T"]> |
 ReturnType<AC_T["pullCardsAC_T"]> |
 ReturnType<AC_T["clearControllersAC_T"]> |

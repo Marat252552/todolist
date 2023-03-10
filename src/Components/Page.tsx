@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react"
 import { connect } from "react-redux"
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom"
+import { LoggedAPI } from "../Api/Api"
 import FirstGate from "../FirstGate"
 import AuthPage from "./Auth/AuthPage"
 import Body from "./Body/Body"
@@ -11,9 +13,9 @@ import { mapDispatch_T, mapState_T, PageProps_T } from "./types"
 
 const Page = (props: PageProps_T) => {
     return <Routes>
-            <Route path="/" element={<FirstGate isAuthorized={props.isAuthorized}/>}/>
+            {/* <Route path="/" element={<FirstGate isAuthorized={props.isAuthorized}/>}/> */}
             <Route path="/login" element={<AuthPage login_Thunk={props.login_Thunk} Login_AC={props.Login_AC} isAuthorized={props.isAuthorized}/>}/>
-            <Route path="/home" element={<Body PullAllCardsThunk={props.pullAllCards_Thunk} Login_AC={props.Login_AC} isAuthorized={props.isAuthorized} />}/>
+            <Route path="/" element={<Body PullAllCardsThunk={props.pullAllCards_Thunk} Login_AC={props.Login_AC} isAuthorized={props.isAuthorized} />}/>
             <Route path="/register" element={<Register isAuthorized={props.isAuthorized} Login_AC={props.Login_AC}/>} />
         </Routes>
 }

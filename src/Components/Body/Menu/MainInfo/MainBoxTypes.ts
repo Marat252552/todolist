@@ -8,7 +8,8 @@ export type MapStateType = {
     name: string,
     lastName: string,
     email: string,
-    state: AppStateType
+    state: AppStateType,
+    loading: boolean
 }
 
 export type MapDispatchType = {
@@ -30,7 +31,8 @@ export type InfoBoxPropsType = {
     logout_Thunk: T_cT["logoutThunk_cT"],
     name: string,
     lastName: string,
-    email: string
+    email: string,
+    loading: boolean
 }
 
 export type MainBoxPropsType = MapStateType & MapDispatchType
