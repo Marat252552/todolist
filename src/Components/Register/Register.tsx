@@ -3,8 +3,10 @@ import { Field, FormikProvider, useFormik } from "formik"
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { LoggedAPI, SignInAPI } from "../../Api/Api"
+import LocalStorage from "../LocalStorage"
 import styles from './Register.module.css'
 import { RegisterProps_T } from "./types"
+import {useState} from 'react'
 
 let Errors = {
     email: (value: string) => {
@@ -43,6 +45,7 @@ const Register = (props: RegisterProps_T) => {
         }
     }, [props.isAuthorized])
     const RegisterForm = () => {
+        let [error, setError] = useState('')
         const formik = useFormik({
             initialValues: {
                 login: '',
@@ -54,20 +57,28 @@ const Register = (props: RegisterProps_T) => {
                 lastName: ''
             },
             onSubmit: async (values: any, { resetForm }: any) => {
-                let res = await SignInAPI(values.login, values.password, values.email, values.age, values.name, values.lastName)
-                if (res.status === 201) {
+                try {
+                    let res = await SignInAPI(values.login, values.password, values.email, values.age, values.name, values.lastName)
+                    if (res.status === 201) {
                     let res = await LoggedAPI()
-                    console.log(res)
                     if (+res.status === 200) {
-                        console.log(res)
-                        props.Login_AC(res.data.email, res.data.name, res.data.lastName)
+                        LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email, )
+                        LocalStorage.setToken(res.data.AccessToken)
+                        LocalStorage.setIsAuthorized(true)
                     }
                 }
+                } catch(e: any) {
+                    if(e.response.status === 400) {
+                        setError(e.response.data)
+                    }
+                }
+                
             },
         })
         return <FormikProvider value={formik}>
             <form onSubmit={formik.handleSubmit}>
                 <div className={styles.login_form}>
+                    <span>{error}</span>
                     {(formik.errors.login && formik.touched.login) ? <span>{formik.errors.login}</span> : <span></span>}
                     <Field
                         className={styles.input}

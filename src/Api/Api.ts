@@ -60,6 +60,15 @@ export const LoginAPI: LoginAPI_T = async (login, password) => {
     }
     return result
 }
+export const DeleteUserAPI = async () => {
+    console.log('DeleteUser request')
+    let response = await instanse.delete('/auth/users')
+    let result = {
+        status: response.status,
+        data: response.data
+    }
+    return result
+}
 export const LoggedAPI: LoggedAPI_T = async () => {
     console.log('LoggedIn request')
     let response = await instanse.get('/auth')

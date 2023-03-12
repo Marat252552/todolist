@@ -8,7 +8,7 @@ import { InfoBoxPropsType, MainBoxPropsType, MapDispatchType, MapStateType, Sear
 import { useFormik } from 'formik';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
-import { GetUsersAPI, LogoutAPI } from '../../../../Api/Api'
+import { DeleteUserAPI, GetUsersAPI, LogoutAPI } from '../../../../Api/Api'
 import { toggleSearch_AC, updateSearchInputValue_AC } from '../../../Redux/ActionCreators'
 import { ControllerThunks } from '../../../Redux/Thunks'
 import { observer } from "mobx-react-lite";
@@ -65,9 +65,17 @@ const MainBox = (props: MainBoxPropsType) => {
         {
             key: '1',
             label: (
-                <div onClick={() => {LocalStorage.setNumber(1)}}>Push all cards</div>
+                <div onClick={async () => {
+                    let response = await DeleteUserAPI()
+                    console.log(response)
+                    if(response.status === 200) {
+                        LocalStorage.setToken('')
+                        LocalStorage.setIsAuthorized(false)
+                    }
+                }}>Удалить аккаунт</div>
             ),
-            icon: <SyncOutlined />
+            danger: true,
+            icon: <UserDeleteOutlined />
             // <SettingOutlined />
         },
         {

@@ -32,7 +32,16 @@ const AuthPage = (props: AuthPagePropsType) => {
                 lastName: ''
             },
             onSubmit: async (values: any) => {
-                props.login_Thunk(values.login, values.password)
+                try {
+                    let res = await LoginAPI(values.login, values.password)
+                    if (res.status === 200) {
+                        LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email, )
+                        LocalStorage.setToken(res.data.AccessToken)
+                        LocalStorage.setIsAuthorized(true)
+                    }
+                } catch (e: any) {
+                    setError(e.response.data)
+                }
             },
         })
         return <form onSubmit={formik.handleSubmit}>
