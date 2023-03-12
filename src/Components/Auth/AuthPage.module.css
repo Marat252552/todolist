@@ -5,16 +5,44 @@
     position: fixed;
     align-items: center;
     justify-content: center;
+    background-image: url('./../../Media/Trianglify-10s-1280px.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border: solid 1px red;
+    height: 100%;
+}
+
+.buttons button {
+    height: 100%;
+    border: solid 1px red
 }
 
 .auth_form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: solid 1px black;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    width: 70%;
+    height: 50%;
+    background-color: white;
+    border-radius: 10px;
 }
 
+.fill {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden
+}
+.fill img {
+    flex-shrink: 0;
+    min-width: 100%;
+    min-height: 100%;
+    border-radius: 0 10px 10px 0;
+}
 .login_form {
     display: flex;
     align-items: center;
@@ -24,8 +52,4 @@
     margin: 20px;
     padding: 20px;
     gap: 20px;
-}
-
-.login_input {
-    
 }

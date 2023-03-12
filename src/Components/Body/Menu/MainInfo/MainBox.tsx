@@ -1,5 +1,5 @@
 import styles from './MainBox.module.css'
-import { App, Avatar, Button, Modal, Popover } from 'antd'
+import { App, Avatar, Button, Popover, Modal } from 'antd'
 import { Input } from 'antd'
 import { DownOutlined, SearchOutlined, SettingOutlined, SmileOutlined, SyncOutlined, UserDeleteOutlined } from '@ant-design/icons'
 import { AppStateType } from '../../../Redux/Redux'
@@ -13,12 +13,12 @@ import { toggleSearch_AC, updateSearchInputValue_AC } from '../../../Redux/Actio
 import { ControllerThunks } from '../../../Redux/Thunks'
 import { observer } from "mobx-react-lite";
 import LocalStorage from '../../../LocalStorage'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 
 const InfoBox = observer((props: InfoBoxPropsType) => {
     const makeLoading = () => {
-        return <div style={{width: '100%'}}>
+        return <div style={{ width: '100%' }}>
             <div className={styles.loadingioSpinnerRollingAjhtd6xnhrc}><div className={styles.ldioAqq6nx8vg0n}>
                 <div></div>
             </div></div>
@@ -35,8 +35,6 @@ const InfoBox = observer((props: InfoBoxPropsType) => {
         </div>
     </div>
 })
-
-
 
 const SearchBox = (props: SearchBoxPropsType) => {
     const formik = useFormik({
@@ -58,21 +56,28 @@ const SearchBox = (props: SearchBoxPropsType) => {
     </div>
 }
 
-
-
 const MainBox = (props: MainBoxPropsType) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleOk = async () => {
+        let response = await DeleteUserAPI()
+        console.log(response)
+        if (response.status === 200) {
+            LocalStorage.setToken('')
+            LocalStorage.setIsAuthorized(false)
+        }
+        setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     const items: MenuProps['items'] = [
         {
             key: '1',
             label: (
-                <div onClick={async () => {
-                    let response = await DeleteUserAPI()
-                    console.log(response)
-                    if(response.status === 200) {
-                        LocalStorage.setToken('')
-                        LocalStorage.setIsAuthorized(false)
-                    }
-                }}>Удалить аккаунт</div>
+                <div onClick={showModal}>Удалить аккаунт</div>
             ),
             danger: true,
             icon: <UserDeleteOutlined />
@@ -83,7 +88,7 @@ const MainBox = (props: MainBoxPropsType) => {
             label: (
                 <div onClick={() => {
                     props.PushData_Thunk(props.state)
-                }}>Pull added cards</div>
+                }}>Синхронизировать</div>
             ),
             icon: <SyncOutlined />
         },
@@ -105,6 +110,10 @@ const MainBox = (props: MainBoxPropsType) => {
                 </Space>
             </a>
         </Dropdown>
+        <Modal title="Внимание!" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okType='danger' okText='Удалить' cancelText='Отменить'>
+            <p>Вы точно хотите удалить аккаунт?</p>
+            <p>Восстановить удаленный аккаунт невозможно</p>
+        </Modal>
         <SearchBox
             updateSearchInputValue_AC={props.updateSearchInputValue_AC}
             toggleSearch_AC={props.toggleSearch_AC}
