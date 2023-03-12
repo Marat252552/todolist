@@ -27,8 +27,8 @@ const InfoBox = observer((props: InfoBoxPropsType) => {
     return <div className={styles.mainBoxInfo}>
         <Avatar className={styles.avatar} />
         <div className={styles.mainBoxInfoText}>
-            <span>{props.name} {props.lastName}</span>
-            <span>{props.email}</span>
+            <span>{LocalStorage.userData.name} {LocalStorage.userData.lastName}</span>
+            <span>{LocalStorage.userData.email}</span>
         </div>
         <div className={styles.imgDiv}>
             {(props.loading) ? makeLoading() : undefined}

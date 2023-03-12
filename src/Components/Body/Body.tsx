@@ -18,9 +18,9 @@ const Body = observer((props: BodyProps_T) => {
             try {
                 let response = await LoggedAPI()
                 if(response.status === 200) {
-                    props.Login_AC(response.data.email, response.data.name, response.data.lastName)
-                    props.PullAllCardsThunk()
+                    LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email)
                     LocalStorage.setIsAuthorized(true)
+                    props.PullAllCardsThunk()
                 } else {
                     LocalStorage.setIsAuthorized(false)
                     LocalStorage.setToken('')
@@ -34,15 +34,10 @@ const Body = observer((props: BodyProps_T) => {
         }
         a()
     }, [])
-    
-    if (LocalStorage.IsAuthorized === true) {
         return <div className={styles.body}>
             <Menu />
             <MainBody />
         </div>
-    } else {
-        return <LoadingScreen />
-    }
 })
 
 export default Body

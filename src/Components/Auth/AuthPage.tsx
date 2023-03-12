@@ -14,7 +14,7 @@ const AuthPage = (props: AuthPagePropsType) => {
         let a = async () => {
             let response = await LoggedAPI()
             if(response.status === 200) {
-                props.Login_AC(response.data.email, response.data.name, response.data.lastName)
+                LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email)
                 LocalStorage.setToken(response.data.AccessToken)
                 LocalStorage.setIsAuthorized(true)
             }

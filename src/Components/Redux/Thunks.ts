@@ -52,7 +52,7 @@ export const ControllerThunks: ControllersThunks_T = {
                 let res = await LoginAPI(login, password)
                 console.log(res.data)
                 if (res.status === 200) {
-                    dispatch(Login_AC(res.data.email, res.data.name, res.data.lastName))
+                    LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email, )
                     LocalStorage.setToken(res.data.AccessToken)
                     LocalStorage.setIsAuthorized(true)
                 }
