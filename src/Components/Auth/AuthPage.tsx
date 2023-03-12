@@ -8,7 +8,6 @@ import LocalStorage from "../LocalStorage"
 import styles from './AuthPage.module.css'
 import { AuthPagePropsType } from "./types"
 
-
 const AuthPage = (props: AuthPagePropsType) => {
     let navigate = useNavigate()
     useEffect(() => {
@@ -17,17 +16,14 @@ const AuthPage = (props: AuthPagePropsType) => {
             if(response.status === 200) {
                 props.Login_AC(response.data.email, response.data.name, response.data.lastName)
                 LocalStorage.setToken(response.data.AccessToken)
+                LocalStorage.setIsAuthorized(true)
             }
         }
         a()
     }, [])
-    useEffect(() => {
-        if (props.isAuthorized === true) {
-            navigate('/')
-        }
-    }, [props.isAuthorized])
     const LoginForm = () => {
         let [error, setError] = useState('')
+        let navigate = useNavigate()
         const formik = useFormik({
             initialValues: {
                 login: '',

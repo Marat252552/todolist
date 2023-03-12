@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { addCardsAPI, deleteCardsAPI as deleteCardsAPI, updateCardAPI as updateCardsAPI } from './../../Api/Api';
 import { Dispatch } from "react"
 import { PullCardsAPI, LogoutAPI, LoginAPI } from "../../Api/Api"
@@ -53,6 +54,7 @@ export const ControllerThunks: ControllersThunks_T = {
                 if (res.status === 200) {
                     dispatch(Login_AC(res.data.email, res.data.name, res.data.lastName))
                     LocalStorage.setToken(res.data.AccessToken)
+                    LocalStorage.setIsAuthorized(true)
                 }
             } catch (e) {
                 console.log(e)
@@ -65,6 +67,8 @@ export const ControllerThunks: ControllersThunks_T = {
             try {
                 let res = await LogoutAPI()
                 if (res.status === 200) {
+                    LocalStorage.setToken('')
+                    LocalStorage.setIsAuthorized(false)
                     dispatch(Logout_AC())
                 }
             } catch (e) {

@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+
 import LocalStorage from "../Components/LocalStorage";
 import { U_T } from "../Components/Redux/ReduxTypes";
 import { addCardsAPI_T, LoggedAPI_T, LoginAPI_T, LogoutAPI_T, PullCardsAPI_T, SignInAPI_T } from "./types";
@@ -14,15 +15,17 @@ const instanse = axios.create({
 })
 
 instanse.interceptors.request.use((config: any) => {
-    console.log(LocalStorage)
     config.headers.Authorization = `Bearer ${LocalStorage.AccessToken}`
     return config
 })
+
 instanse.interceptors.response.use((config: any) => {
     return config;
 }, async (error) => {
+    console.log(error.config)
     const OriginalRequest = error.config
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
+        console.log('Refresh request')
         OriginalRequest._isRetry = true
         try {
             let response = await instanse.get('/auth/refresh')
@@ -49,6 +52,7 @@ export const MakeNewCardAPI = (text: string, groupID: number) => {
         })
 }
 export const LoginAPI: LoginAPI_T = async (login, password) => {
+    console.log('Login request')
     let response = await instanse.post('/auth/login', { login: login, password: password })
     let result = {
         status: response.status,
@@ -57,6 +61,7 @@ export const LoginAPI: LoginAPI_T = async (login, password) => {
     return result
 }
 export const LoggedAPI: LoggedAPI_T = async () => {
+    console.log('LoggedIn request')
     let response = await instanse.get('/auth')
     let result = {
         status: response.status,
@@ -73,6 +78,7 @@ export const SignInAPI: SignInAPI_T = async (login, password, email, age, name, 
     return result
 }
 export const LogoutAPI: LogoutAPI_T = async () => {
+    console.log('Logout request')
     let response = await instanse.post('/auth/logout')
     let result = {
         status: response.status

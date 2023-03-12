@@ -8,12 +8,15 @@ import { InfoBoxPropsType, MainBoxPropsType, MapDispatchType, MapStateType, Sear
 import { useFormik } from 'formik';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
-import { GetUsersAPI } from '../../../../Api/Api'
+import { GetUsersAPI, LogoutAPI } from '../../../../Api/Api'
 import { toggleSearch_AC, updateSearchInputValue_AC } from '../../../Redux/ActionCreators'
 import { ControllerThunks } from '../../../Redux/Thunks'
+import { observer } from "mobx-react-lite";
+import LocalStorage from '../../../LocalStorage'
+import { useNavigate } from 'react-router-dom'
 
 
-const InfoBox = (props: InfoBoxPropsType) => {
+const InfoBox = observer((props: InfoBoxPropsType) => {
     const makeLoading = () => {
         return <div style={{width: '100%'}}>
             <div className={styles.loadingioSpinnerRollingAjhtd6xnhrc}><div className={styles.ldioAqq6nx8vg0n}>
@@ -26,13 +29,13 @@ const InfoBox = (props: InfoBoxPropsType) => {
         <div className={styles.mainBoxInfoText}>
             <span>{props.name} {props.lastName}</span>
             <span>{props.email}</span>
+            <span>{LocalStorage.AccessToken}</span>
         </div>
         <div className={styles.imgDiv}>
             {(props.loading) ? makeLoading() : undefined}
         </div>
-
     </div>
-}
+})
 
 
 
@@ -59,11 +62,18 @@ const SearchBox = (props: SearchBoxPropsType) => {
 
 
 const MainBox = (props: MainBoxPropsType) => {
+    let navigate = useNavigate()
+    const Logout = async () => {
+        let res = await LogoutAPI()
+        if(res.status === 200) {
+            LocalStorage.setIsAuthorized(false)
+        }
+    }
     const items: MenuProps['items'] = [
         {
             key: '1',
             label: (
-                <div>Push all cards</div>
+                <div onClick={() => {LocalStorage.setNumber(1)}}>Push all cards</div>
             ),
             icon: <SyncOutlined />
             // <SettingOutlined />
@@ -80,7 +90,7 @@ const MainBox = (props: MainBoxPropsType) => {
         {
             key: '3',
             label: (
-                <div onClick={props.logout_Thunk}>Выйти</div>
+                <div onClick={Logout}>Выйти</div>
             ),
             danger: true,
             icon: <UserDeleteOutlined />

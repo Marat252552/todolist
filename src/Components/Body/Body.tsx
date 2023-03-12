@@ -7,27 +7,33 @@ import { LoggedAPI } from "../../Api/Api";
 import { BodyProps_T } from "./types";
 import LoadingScreen from './../LoadingScreen/LoadingScreen'
 import LocalStorage from "../LocalStorage";
+import { observer } from "mobx-react-lite";
 
 
-const Body = (props: BodyProps_T) => {
+const Body = observer((props: BodyProps_T) => {
+    console.log('Page - Body')
     let navigate = useNavigate()
     useEffect(() => {
         let a = async () => {
-            let response = await LoggedAPI()
-            if(response.status === 200) {
-                props.Login_AC(response.data.email, response.data.name, response.data.lastName)
-                LocalStorage.setToken(response.data.AccessToken)
-                props.PullAllCardsThunk()
+            try {
+                let response = await LoggedAPI()
+                if(response.status === 200) {
+                    props.Login_AC(response.data.email, response.data.name, response.data.lastName)
+                    props.PullAllCardsThunk()
+                    LocalStorage.setIsAuthorized(true)
+                } else {
+                    LocalStorage.setIsAuthorized(false)
+                }
+            } catch(e: any) {
+                if(e.response.status === 401) {
+                    LocalStorage.setIsAuthorized(false)
+                }
             }
         }
         a()
     }, [])
-    useEffect(() => {
-        if (props.isAuthorized === false) {
-            navigate('/login')
-        }
-    }, [props.isAuthorized])
-    if (props.isAuthorized === true) {
+    
+    if (LocalStorage.IsAuthorized === true) {
         return <div className={styles.body}>
             <Menu />
             <MainBody />
@@ -35,6 +41,6 @@ const Body = (props: BodyProps_T) => {
     } else {
         return <LoadingScreen />
     }
-}
+})
 
 export default Body
