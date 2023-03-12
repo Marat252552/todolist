@@ -29,7 +29,6 @@ const InfoBox = observer((props: InfoBoxPropsType) => {
         <div className={styles.mainBoxInfoText}>
             <span>{props.name} {props.lastName}</span>
             <span>{props.email}</span>
-            <span>{LocalStorage.AccessToken}</span>
         </div>
         <div className={styles.imgDiv}>
             {(props.loading) ? makeLoading() : undefined}
@@ -62,13 +61,6 @@ const SearchBox = (props: SearchBoxPropsType) => {
 
 
 const MainBox = (props: MainBoxPropsType) => {
-    let navigate = useNavigate()
-    const Logout = async () => {
-        let res = await LogoutAPI()
-        if(res.status === 200) {
-            LocalStorage.setIsAuthorized(false)
-        }
-    }
     const items: MenuProps['items'] = [
         {
             key: '1',
@@ -90,7 +82,7 @@ const MainBox = (props: MainBoxPropsType) => {
         {
             key: '3',
             label: (
-                <div onClick={Logout}>Выйти</div>
+                <div onClick={props.logout_Thunk}>Выйти</div>
             ),
             danger: true,
             icon: <UserDeleteOutlined />

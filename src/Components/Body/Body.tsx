@@ -23,10 +23,12 @@ const Body = observer((props: BodyProps_T) => {
                     LocalStorage.setIsAuthorized(true)
                 } else {
                     LocalStorage.setIsAuthorized(false)
+                    LocalStorage.setToken('')
                 }
             } catch(e: any) {
                 if(e.response.status === 401) {
                     LocalStorage.setIsAuthorized(false)
+                    LocalStorage.setToken('')
                 }
             }
         }
