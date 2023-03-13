@@ -1,7 +1,7 @@
 import styles from './MainBox.module.css'
 import { App, Avatar, Button, Popover, Modal } from 'antd'
 import { Input } from 'antd'
-import { DownOutlined, SearchOutlined, SettingOutlined, SmileOutlined, SyncOutlined, UserDeleteOutlined } from '@ant-design/icons'
+import { DownOutlined, LoadingOutlined, SearchOutlined, SettingOutlined, SmileOutlined, SyncOutlined, UserDeleteOutlined } from '@ant-design/icons'
 import { AppStateType } from '../../../Redux/Redux'
 import { connect } from 'react-redux'
 import { InfoBoxPropsType, MainBoxPropsType, MapDispatchType, MapStateType, SearchBoxPropsType } from './MainBoxTypes'
@@ -58,18 +58,42 @@ const SearchBox = (props: SearchBoxPropsType) => {
 
 const MainBox = (props: MainBoxPropsType) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    let [logoutLoading, setLogoutLoading] = useState(false)
+    let [syncLoading, setSyncLoading] = useState(false)
+    let [deleteUserLoading, setDeleteUserLoading] = useState(false)
     const showModal = () => {
         setIsModalOpen(true);
     };
     const handleOk = async () => {
-        let response = await DeleteUserAPI()
-        console.log(response)
-        if (response.status === 200) {
-            LocalStorage.setToken('')
-            LocalStorage.setIsAuthorized(false)
+        setDeleteUserLoading(true)
+        try {
+            let response = await DeleteUserAPI()
+            if (response.status === 200) {
+                LocalStorage.setToken('')
+                LocalStorage.setIsAuthorized(false)
+            }
+            setIsModalOpen(false);
+        } catch(e) {
+            console.log(e)
+        } finally {
+            setDeleteUserLoading(false)
         }
-        setIsModalOpen(false);
+        
     };
+    const Logout = async () => {
+        setLogoutLoading(true)
+        try {
+            let res = await LogoutAPI()
+            if (res.status === 200) {
+                LocalStorage.setToken('')
+                LocalStorage.setIsAuthorized(false)
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setLogoutLoading(false)
+        }
+    }
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -81,7 +105,6 @@ const MainBox = (props: MainBoxPropsType) => {
             ),
             danger: true,
             icon: <UserDeleteOutlined />
-            // <SettingOutlined />
         },
         {
             key: '2',
@@ -90,27 +113,41 @@ const MainBox = (props: MainBoxPropsType) => {
                     props.PushData_Thunk(props.state)
                 }}>Синхронизировать</div>
             ),
-            icon: <SyncOutlined />
+            icon: (syncLoading)? <LoadingOutlined /> : <SyncOutlined />
         },
         {
             key: '3',
             label: (
-                <div onClick={props.logout_Thunk}>Выйти</div>
+                <div onClick={Logout}>Выйти</div>
             ),
             danger: true,
-            icon: <UserDeleteOutlined />
+            icon: (logoutLoading)? <LoadingOutlined /> : <UserDeleteOutlined />
         },
 
     ];
+
+
+    const [open, setOpen] = useState(false);
+
+  const handleMenuClick: MenuProps['onClick'] = (e) => {
+    if (e.key === '1') {
+      setOpen(false);
+    }
+  };
+
+  const handleOpenChange = (flag: boolean) => {
+    setOpen(flag);
+  };
     return <div className={styles.mainBox}>
-        <Dropdown menu={{ items }} trigger={['click']}>
+        <Dropdown menu={{ items, onClick: handleMenuClick, }} trigger={['click']} onOpenChange={handleOpenChange}
+      open={open}>
             <a onClick={(e) => e.preventDefault()}>
                 <Space>
                     <InfoBox loading={props.loading} email={props.email} name={props.name} lastName={props.lastName} isAuthorized={props.isAuthorized} logout_Thunk={props.logout_Thunk} />
                 </Space>
             </a>
         </Dropdown>
-        <Modal title="Внимание!" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okType='danger' okText='Удалить' cancelText='Отменить'>
+        <Modal title="Внимание!" open={isModalOpen} confirmLoading={deleteUserLoading} onOk={handleOk} onCancel={handleCancel} okType='danger' okText='Удалить' cancelText='Отменить'>
             <p>Вы точно хотите удалить аккаунт?</p>
             <p>Восстановить удаленный аккаунт невозможно</p>
         </Modal>

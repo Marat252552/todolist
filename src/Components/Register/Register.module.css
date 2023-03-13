@@ -5,14 +5,25 @@
     position: fixed;
     align-items: center;
     justify-content: center;
+    background-image: url('./../../Media/Trianglify-10s-1280px.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .auth_form {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: solid 1px black;
     flex-direction: column;
+    background: white;
+    padding: 100px 70px 30px 70px;
+    border-radius: 10px;
+    overflow: scroll;
+    height: 400px;
+}
+
+.auth_form::-webkit-scrollbar {
+    display: none
 }
 
 .login_form {

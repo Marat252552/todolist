@@ -1,12 +1,25 @@
-import { Button, Input } from "antd"
 import { Field, FormikProvider, useFormik } from "formik"
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { LoggedAPI, SignInAPI } from "../../Api/Api"
+import { checkduplAPI, LoggedAPI, SignInAPI } from "../../Api/Api"
 import LocalStorage from "../LocalStorage"
 import styles from './Register.module.css'
 import { RegisterProps_T } from "./types"
-import {useState} from 'react'
+import { useState } from 'react'
+import type { CascaderProps } from 'antd';
+import {
+    DatePicker,
+    AutoComplete,
+    Button,
+    Cascader,
+    Checkbox,
+    Col,
+    Form,
+    Input,
+    InputNumber,
+    Row,
+    Select,
+} from 'antd';
 
 let Errors = {
     email: (value: string) => {
@@ -40,7 +53,7 @@ let Errors = {
 const Register = (props: RegisterProps_T) => {
     let navigate = useNavigate()
     useEffect(() => {
-        if(props.isAuthorized === true) {
+        if (props.isAuthorized === true) {
             navigate('/home')
         }
     }, [props.isAuthorized])
@@ -60,19 +73,19 @@ const Register = (props: RegisterProps_T) => {
                 try {
                     let res = await SignInAPI(values.login, values.password, values.email, values.age, values.name, values.lastName)
                     if (res.status === 201) {
-                    let res = await LoggedAPI()
-                    if (+res.status === 200) {
-                        LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email, )
-                        LocalStorage.setToken(res.data.AccessToken)
-                        LocalStorage.setIsAuthorized(true)
+                        let res = await LoggedAPI()
+                        if (+res.status === 200) {
+                            LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email,)
+                            LocalStorage.setToken(res.data.AccessToken)
+                            LocalStorage.setIsAuthorized(true)
+                        }
                     }
-                }
-                } catch(e: any) {
-                    if(e.response.status === 400) {
+                } catch (e: any) {
+                    if (e.response.status === 400) {
                         setError(e.response.data)
                     }
                 }
-                
+
             },
         })
         return <FormikProvider value={formik}>
@@ -155,9 +168,235 @@ const Register = (props: RegisterProps_T) => {
             </form>
         </FormikProvider>
     }
+    const RegisterFormAnt = () => {
+        let [emailError, setEmailError] = useState('')
+        let [loginError, setLoginError] = useState('')
+        let [loading, setLoading] = useState(false)
+        const [form] = Form.useForm();
+        const formItemLayout = {
+            labelCol: {
+                xs: { span: 24 },
+                sm: { span: 8 },
+            },
+            wrapperCol: {
+                xs: { span: 24 },
+                sm: { span: 16 },
+            },
+        };
+        const tailFormItemLayout = {
+            wrapperCol: {
+                xs: {
+                    span: 24,
+                    offset: 0,
+                },
+                sm: {
+                    span: 16,
+                    offset: 8,
+                },
+            },
+        };
+        const onFinish = async (values: any) => {
+            setLoading(true)
+            try {
+                let res = await SignInAPI(values.login, values.password, values.email, values.birthdate, values.name, values.lastName, values.phone, values.gender)
+                if (res.status === 201) {
+                    let res = await LoggedAPI()
+                    if (+res.status === 200) {
+                        LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email,)
+                        LocalStorage.setToken(res.data.AccessToken)
+                        LocalStorage.setIsAuthorized(true)
+                    }
+                }
+            } catch (e: any) {
+                console.log(e)
+            } finally {
+                setLoading(false)
+            }
+        };
+        const checkDupl = async (values: any) => {
+            if(values.email) {
+                try {
+                    await checkduplAPI(values.email)
+                    setEmailError('')
+                } catch(e: any) {
+                    if(e.response.status) {setEmailError(e.response.data)}
+                }
+            }
+            if(values.login) {
+                try {
+                    await checkduplAPI(values.login)
+                    setLoginError('')
+                } catch(e: any) {
+                    if(e.response.status) {setLoginError(e.response.data)}
+                }
+            }
+            
+            
+            
+            
+        }
+        const prefixSelector = (
+            <Form.Item name="prefix" noStyle>
+                <Select style={{ width: 70 }}>
+                    <Option value="7">+7</Option>
+                </Select>
+            </Form.Item>
+        );
+        return (
+            <Form
+                {...formItemLayout}
+                form={form}
+                name="register"
+                onFinish={onFinish}
+                initialValues={{prefix: '+7' }}
+                style={{ maxWidth: 600 }}
+                onValuesChange={checkDupl}
+                scrollToFirstError
+            >
+                <br></br>
+                <br></br>
+                <br></br>
+                <Form.Item
+                    name="email"
+                    label="Адрес почты"
+                    validateStatus={(emailError)? 'error' : ''}
+                    help={(emailError)? 'Данный email уже используется' : ''}
+                    rules={[
+                        {
+                            type: 'email',
+                            message: 'Указанный адрес недействителен',
+                        },
+                        {
+                            required: true,
+                            message: 'Пожалуйста, введите адрес вашей почты',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    name="name"
+                    label="Имя"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Пожалуйста, введите имя',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    name="lastName"
+                    label="Фамилия"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Пожалуйста, введите фамилию',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    name="password"
+                    label="Пароль"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Пожалуйста, введите ваш пароль',
+                        },
+                    ]}
+                    hasFeedback
+                >
+                    <Input.Password />
+                </Form.Item>
+
+                <Form.Item
+                    name="confirm"
+                    label="Проверка"
+                    dependencies={['password']}
+                    hasFeedback
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Пожалуйста, подтвердите пароль',
+                        },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue('password') === value) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(new Error('Пароли не совпадают'));
+                            },
+                        }),
+                    ]}
+                >
+                    <Input.Password />
+                </Form.Item>
+
+                <Form.Item
+                    name="login"
+                    label="Пользователь"
+                    tooltip="Так Вас буду видеть другие"
+                    validateStatus={(loginError)? 'error' : ''}
+                    help={(loginError)? 'Логин занят' : ''}
+                    rules={[{ required: true, message: 'Пожалуйста, введите имя пользователя', whitespace: true }]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item label="Дата рождения" name="birthdate">
+                    <DatePicker/>
+                </Form.Item>
+
+                <Form.Item
+                    name="phone"
+                    label="Номер телефона"
+                    rules={[{ required: true, message: 'Пожалуйста, введите номер телефона' }]}
+                >
+                    <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                </Form.Item>
+
+                <Form.Item
+                    name="gender"
+                    label="Пол"
+                    rules={[{ required: true, message: 'Пожалуйста, укажите Ваш пол' }]}
+                >
+                    <Select placeholder="Укажите Ваш пол">
+                        <Option value={1}>Мужчина</Option>
+                        <Option value={0}>Женщина</Option>
+                    </Select>
+                </Form.Item>
+
+                <Form.Item
+                    name="agreement"
+                    valuePropName="checked"
+                    rules={[
+                        {
+                            validator: (_, value) =>
+                                value ? Promise.resolve() : Promise.reject(new Error('Необходимо согласие')),
+                        },
+                    ]}
+                    {...tailFormItemLayout}
+                >
+                    <Checkbox>
+                        Я прочитал <a href="">соглашение</a>
+                    </Checkbox>
+                </Form.Item>
+                <Form.Item {...tailFormItemLayout}>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                        Создать аккаунт
+                    </Button>
+                </Form.Item>
+            </Form>
+        );
+    }
     return <div className={styles.auth_page}>
         <div className={styles.auth_form}>
-            <RegisterForm />
+            <p></p>
+            <br></br>
+            <RegisterFormAnt />
         </div>
     </div>
 }

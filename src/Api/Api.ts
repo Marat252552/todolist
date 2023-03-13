@@ -78,8 +78,8 @@ export const LoggedAPI: LoggedAPI_T = async () => {
     }
     return result
 }
-export const SignInAPI: SignInAPI_T = async (login, password, email, age, name, lastName) => {
-    let response = await instanse.post('/auth/signin', { login: login, password: password, email: email, age: age, name: name, lastName: lastName })
+export const SignInAPI: SignInAPI_T = async (login, password, email, birthdate, name, lastName, phone, gender) => {
+    let response = await instanse.post('/auth/signin', { login, password, email, birthdate, name, lastName, phone, gender })
     let result = {
         status: response.status,
         data: response.data
@@ -118,6 +118,9 @@ export const updateCardAPI = (cards: Array<U_T["cardType"]>) => {
 }
 export const GetUsersAPI = () => {
     return instanse.get('/auth/users')
+}
+export const checkduplAPI = (value: string) => {
+    return instanse.get(`/users/checkdupl/${value}`)
 }
 
 

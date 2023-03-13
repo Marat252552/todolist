@@ -1,4 +1,3 @@
-import { Button, Input } from "antd"
 import { useFormik } from "formik"
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
@@ -9,6 +8,8 @@ import styles from './AuthPage.module.css'
 import { AuthPagePropsType } from "./types"
 import { Carousel } from 'antd';
 import man from './../../Media/man.jpg'
+import { Button, Checkbox, Form, Input } from 'antd';
+import { LockOutlined, UserOutlined } from "@ant-design/icons"
 
 const AuthPage = (props: AuthPagePropsType) => {
     let navigate = useNavigate()
@@ -66,32 +67,83 @@ const AuthPage = (props: AuthPagePropsType) => {
                     onChange={formik.handleChange}
                     value={formik.values.password}
                 ></Input>
-                <button type='submit'>Войти</button>
+                <button type="submit">Войти</button>
             </div>
         </form>
     }
-    const contentStyle: React.CSSProperties = {
-        height: '160px',
-        color: '#fff',
-        lineHeight: '160px',
-        textAlign: 'center',
-        background: '#364d79',
-    };
-    return <div className={styles.auth_page}>
-        <div className={styles.auth_form}>
-            <div style={{height: '100%'}}>
-                <LoginForm />
-                <div className={styles.buttons}>
-                    <button>Forgot Password?</button>
-                    <button onClick={() => { navigate('/register') }}>Sign in</button>
-                    <button>Forgot Password?</button>
-                </div>
-            </div>
-            <div className={styles.fill}>
-                <img src={man} alt="" />
-            </div>
-        </div>
+    const LoginFormAnt = () => {
+        const navigate = useNavigate()
+        let [loading, setLoading] = useState(false)
+        let [error, setError] = useState('')
+        const onFinish = async (values: any) => {
+            setLoading(true)
+            try {
+                let res = await LoginAPI(values.login, values.password)
+                if (res.status === 200) {
+                    LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email,)
+                    LocalStorage.setToken(res.data.AccessToken)
+                    LocalStorage.setIsAuthorized(true)
+                }
+            } catch (e: any) {
+                setError(e.response.data)
+            } finally {
+                setLoading(false)
+            }
+        };
+        const onFinishFailed = (errorInfo: any) => {
+            console.log('Failed:', errorInfo);
+        };
+        return <div style={{ background: 'white', padding: '30px 50px 0 50px', borderRadius: '20px' }}>
+            <Form
+                name="normal_login"
+                className={styles.loginForm}
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+            >
+                <Form.Item
+                    name="login"
+                    rules={[{ required: true, message: 'Пожалуйста, введите Ваш логин!' }]}
+                    validateStatus={(error)? 'error' : ''}
+                    help={(error)? 'Неверный логин или пароль' : ''}
+                >
+                    <Input prefix={<UserOutlined className={styles.siteFormItemIcon} />} placeholder="Логин" />
+                </Form.Item>
+                <Form.Item
+                    name="password"
+                    rules={[{ required: true, message: 'Пожалуйста, введите Ваш пароль!' }]}
+                    validateStatus={(error)? 'error' : ''}
+                    help={(error)? 'Неверный логин или пароль' : ''}
+                >
+                    <Input
+                        prefix={<LockOutlined className={styles.siteFormItemIcon} />}
+                        type="password"
+                        placeholder="Пароль"
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <Form.Item name="remember" valuePropName="checked" noStyle>
+                        <Checkbox>Запомнить меня</Checkbox>
+                    </Form.Item>
 
+                    <a className={styles.loginFormForgot} href="">
+                        Забыли пароль?
+                    </a>
+                </Form.Item>
+
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading} className={styles.loginFormButton}>
+                        Войти
+                    </Button>
+                    Или <a onClick={() => {navigate('/register')}}>создать аккаунт</a>
+                </Form.Item>
+            </Form>
+        </div>
+    }
+
+    return <div className={styles.auth_page}>
+        {/* <div className={styles.auth_form}> */}
+        <LoginFormAnt />
+        {/* </div> */}
     </div>
 }
 
