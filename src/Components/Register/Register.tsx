@@ -7,19 +7,8 @@ import styles from './Register.module.css'
 import { RegisterProps_T } from "./types"
 import { useState } from 'react'
 import type { CascaderProps } from 'antd';
-import {
-    DatePicker,
-    AutoComplete,
-    Button,
-    Cascader,
-    Checkbox,
-    Col,
-    Form,
-    Input,
-    InputNumber,
-    Row,
-    Select,
-} from 'antd';
+import ReCAPTCHA from "react-google-recaptcha"
+import { DatePicker, AutoComplete, Button, Cascader, Checkbox, Col, Form, Input, InputNumber, Row, Select, } from 'antd';
 
 let Errors = {
     email: (value: string) => {
@@ -169,10 +158,16 @@ const Register = (props: RegisterProps_T) => {
         </FormikProvider>
     }
     const RegisterFormAnt = () => {
+        let [captchaToken, setCaptchaToken] = useState('')
+        let [isCaptchaSuccessful, setIsCaptchaSuccess] = useState(false)
         let [emailError, setEmailError] = useState('')
         let [loginError, setLoginError] = useState('')
         let [loading, setLoading] = useState(false)
         const [form] = Form.useForm();
+        const onChange = (value: string) => {
+            setIsCaptchaSuccess(true)
+            setCaptchaToken(value)
+        }
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -198,7 +193,7 @@ const Register = (props: RegisterProps_T) => {
         const onFinish = async (values: any) => {
             setLoading(true)
             try {
-                let res = await SignInAPI(values.login, values.password, values.email, values.birthdate, values.name, values.lastName, values.phone, values.gender)
+                let res = await SignInAPI(values.login, values.password, values.email, values.birthdate, values.name, values.lastName, values.phone, values.gender, captchaToken)
                 if (res.status === 201) {
                     let res = await LoggedAPI()
                     if (+res.status === 200) {
@@ -214,26 +209,26 @@ const Register = (props: RegisterProps_T) => {
             }
         };
         const checkDupl = async (values: any) => {
-            if(values.email) {
+            if (values.email) {
                 try {
                     await checkduplAPI(values.email)
                     setEmailError('')
-                } catch(e: any) {
-                    if(e.response.status) {setEmailError(e.response.data)}
+                } catch (e: any) {
+                    if (e.response.status) { setEmailError(e.response.data) }
                 }
             }
-            if(values.login) {
+            if (values.login) {
                 try {
                     await checkduplAPI(values.login)
                     setLoginError('')
-                } catch(e: any) {
-                    if(e.response.status) {setLoginError(e.response.data)}
+                } catch (e: any) {
+                    if (e.response.status) { setLoginError(e.response.data) }
                 }
             }
-            
-            
-            
-            
+
+
+
+
         }
         const prefixSelector = (
             <Form.Item name="prefix" noStyle>
@@ -248,7 +243,7 @@ const Register = (props: RegisterProps_T) => {
                 form={form}
                 name="register"
                 onFinish={onFinish}
-                initialValues={{prefix: '+7' }}
+                initialValues={{ prefix: '+7' }}
                 style={{ maxWidth: 600 }}
                 onValuesChange={checkDupl}
                 scrollToFirstError
@@ -256,11 +251,15 @@ const Register = (props: RegisterProps_T) => {
                 <br></br>
                 <br></br>
                 <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                {/* Адрес почты */}
                 <Form.Item
                     name="email"
                     label="Адрес почты"
-                    validateStatus={(emailError)? 'error' : ''}
-                    help={(emailError)? 'Данный email уже используется' : ''}
+                    validateStatus={(emailError) ? 'error' : ''}
+                    help={(emailError) ? 'Данный email уже используется' : ''}
                     rules={[
                         {
                             type: 'email',
@@ -274,6 +273,8 @@ const Register = (props: RegisterProps_T) => {
                 >
                     <Input />
                 </Form.Item>
+
+                {/* Имя */}
                 <Form.Item
                     name="name"
                     label="Имя"
@@ -286,6 +287,8 @@ const Register = (props: RegisterProps_T) => {
                 >
                     <Input />
                 </Form.Item>
+
+                {/* Фамилия */}
                 <Form.Item
                     name="lastName"
                     label="Фамилия"
@@ -298,6 +301,8 @@ const Register = (props: RegisterProps_T) => {
                 >
                     <Input />
                 </Form.Item>
+
+                {/* Пароль */}
                 <Form.Item
                     name="password"
                     label="Пароль"
@@ -312,6 +317,7 @@ const Register = (props: RegisterProps_T) => {
                     <Input.Password />
                 </Form.Item>
 
+                {/* Проверка пароля */}
                 <Form.Item
                     name="confirm"
                     label="Проверка"
@@ -335,21 +341,24 @@ const Register = (props: RegisterProps_T) => {
                     <Input.Password />
                 </Form.Item>
 
+                {/* Логин пользователя */}
                 <Form.Item
                     name="login"
                     label="Пользователь"
                     tooltip="Так Вас буду видеть другие"
-                    validateStatus={(loginError)? 'error' : ''}
-                    help={(loginError)? 'Логин занят' : ''}
+                    validateStatus={(loginError) ? 'error' : ''}
+                    help={(loginError) ? 'Логин занят' : ''}
                     rules={[{ required: true, message: 'Пожалуйста, введите имя пользователя', whitespace: true }]}
                 >
                     <Input />
                 </Form.Item>
 
+                {/* Дата рождения */}
                 <Form.Item label="Дата рождения" name="birthdate">
-                    <DatePicker/>
+                    <DatePicker />
                 </Form.Item>
 
+                {/* Номер телефона */}
                 <Form.Item
                     name="phone"
                     label="Номер телефона"
@@ -358,6 +367,7 @@ const Register = (props: RegisterProps_T) => {
                     <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
                 </Form.Item>
 
+                {/* Пол */}
                 <Form.Item
                     name="gender"
                     label="Пол"
@@ -369,6 +379,7 @@ const Register = (props: RegisterProps_T) => {
                     </Select>
                 </Form.Item>
 
+                {/* Запомнить меня */}
                 <Form.Item
                     name="agreement"
                     valuePropName="checked"
@@ -384,8 +395,18 @@ const Register = (props: RegisterProps_T) => {
                         Я прочитал <a href="">соглашение</a>
                     </Checkbox>
                 </Form.Item>
+
+                {/* Капча */}
+                <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <ReCAPTCHA
+                        sitekey='6LcGzPokAAAAALlIR_f1wcHP9FuMWSIghMN4OKu_'
+                        onChange={onChange}
+                    />
+                </div>
+
+                {/* Кнопка "создать аккаунт" */}
                 <Form.Item {...tailFormItemLayout}>
-                    <Button type="primary" htmlType="submit" loading={loading}>
+                    <Button disabled={!isCaptchaSuccessful} type="primary" htmlType="submit" loading={loading}>
                         Создать аккаунт
                     </Button>
                 </Form.Item>

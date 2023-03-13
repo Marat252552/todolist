@@ -78,8 +78,8 @@ export const LoggedAPI: LoggedAPI_T = async () => {
     }
     return result
 }
-export const SignInAPI: SignInAPI_T = async (login, password, email, birthdate, name, lastName, phone, gender) => {
-    let response = await instanse.post('/auth/signin', { login, password, email, birthdate, name, lastName, phone, gender })
+export const SignInAPI: SignInAPI_T = async (login, password, email, birthdate, name, lastName, phone, gender, captchaToken) => {
+    let response = await instanse.post('/auth/signin', { login, password, email, birthdate, name, lastName, phone, gender, captchaToken })
     let result = {
         status: response.status,
         data: response.data

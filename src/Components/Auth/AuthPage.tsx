@@ -74,7 +74,7 @@ const AuthPage = (props: AuthPagePropsType) => {
     }
     const LoginFormAnt = () => {
         let [captchaToken, setCaptchaToken] = useState('')
-        const [isCaptchaSuccessful, setIsCaptchaSuccess] = useState(false)
+        let [isCaptchaSuccessful, setIsCaptchaSuccess] = useState(false)
         const navigate = useNavigate()
         let [loading, setLoading] = useState(false)
         let [error, setError] = useState('')
