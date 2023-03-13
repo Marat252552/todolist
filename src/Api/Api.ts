@@ -51,9 +51,9 @@ export const MakeNewCardAPI = (text: string, groupID: number) => {
             },
         })
 }
-export const LoginAPI: LoginAPI_T = async (login, password) => {
+export const LoginAPI: LoginAPI_T = async (login, password, remember, captchaToken) => {
     console.log('Login request')
-    let response = await instanse.post('/auth/login', { login: login, password: password })
+    let response = await instanse.post('/auth/login', { login, password, remember, captchaToken })
     let result = {
         status: response.status,
         data: response.data

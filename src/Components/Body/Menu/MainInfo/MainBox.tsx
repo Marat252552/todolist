@@ -73,12 +73,12 @@ const MainBox = (props: MainBoxPropsType) => {
                 LocalStorage.setIsAuthorized(false)
             }
             setIsModalOpen(false);
-        } catch(e) {
+        } catch (e) {
             console.log(e)
         } finally {
             setDeleteUserLoading(false)
         }
-        
+
     };
     const Logout = async () => {
         setLogoutLoading(true)
@@ -113,7 +113,7 @@ const MainBox = (props: MainBoxPropsType) => {
                     props.PushData_Thunk(props.state)
                 }}>Синхронизировать</div>
             ),
-            icon: (syncLoading)? <LoadingOutlined /> : <SyncOutlined />
+            icon: (syncLoading) ? <LoadingOutlined /> : <SyncOutlined />
         },
         {
             key: '3',
@@ -121,26 +121,24 @@ const MainBox = (props: MainBoxPropsType) => {
                 <div onClick={Logout}>Выйти</div>
             ),
             danger: true,
-            icon: (logoutLoading)? <LoadingOutlined /> : <UserDeleteOutlined />
+            icon: (logoutLoading) ? <LoadingOutlined /> : <UserDeleteOutlined />
         },
 
     ];
 
 
     const [open, setOpen] = useState(false);
-
-  const handleMenuClick: MenuProps['onClick'] = (e) => {
-    if (e.key === '1') {
-      setOpen(false);
-    }
-  };
-
-  const handleOpenChange = (flag: boolean) => {
-    setOpen(flag);
-  };
+    const handleMenuClick: MenuProps['onClick'] = (e) => {
+        if (e.key === '1') {
+            setOpen(false);
+        }
+    };
+    const handleOpenChange = (flag: boolean) => {
+        setOpen(flag);
+    };
     return <div className={styles.mainBox}>
         <Dropdown menu={{ items, onClick: handleMenuClick, }} trigger={['click']} onOpenChange={handleOpenChange}
-      open={open}>
+            open={open}>
             <a onClick={(e) => e.preventDefault()}>
                 <Space>
                     <InfoBox loading={props.loading} email={props.email} name={props.name} lastName={props.lastName} isAuthorized={props.isAuthorized} logout_Thunk={props.logout_Thunk} />

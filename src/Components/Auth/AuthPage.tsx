@@ -10,6 +10,7 @@ import { Carousel } from 'antd';
 import man from './../../Media/man.jpg'
 import { Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from "@ant-design/icons"
+import ReCAPTCHA from "react-google-recaptcha"
 
 const AuthPage = (props: AuthPagePropsType) => {
     let navigate = useNavigate()
@@ -72,13 +73,15 @@ const AuthPage = (props: AuthPagePropsType) => {
         </form>
     }
     const LoginFormAnt = () => {
+        let [captchaToken, setCaptchaToken] = useState('')
+        const [isCaptchaSuccessful, setIsCaptchaSuccess] = useState(false)
         const navigate = useNavigate()
         let [loading, setLoading] = useState(false)
         let [error, setError] = useState('')
         const onFinish = async (values: any) => {
             setLoading(true)
             try {
-                let res = await LoginAPI(values.login, values.password)
+                let res = await LoginAPI(values.login, values.password, values.remember, captchaToken)
                 if (res.status === 200) {
                     LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email,)
                     LocalStorage.setToken(res.data.AccessToken)
@@ -93,6 +96,10 @@ const AuthPage = (props: AuthPagePropsType) => {
         const onFinishFailed = (errorInfo: any) => {
             console.log('Failed:', errorInfo);
         };
+        const onChange = (value: string) => {
+            setIsCaptchaSuccess(true)
+            setCaptchaToken(value)
+        }
         return <div style={{ background: 'white', padding: '30px 50px 0 50px', borderRadius: '20px' }}>
             <Form
                 name="normal_login"
@@ -129,9 +136,14 @@ const AuthPage = (props: AuthPagePropsType) => {
                         Забыли пароль?
                     </a>
                 </Form.Item>
+                
+                <ReCAPTCHA
+                    sitekey='6LcGzPokAAAAALlIR_f1wcHP9FuMWSIghMN4OKu_'
+                    onChange={onChange}
+                />
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={loading} className={styles.loginFormButton}>
+                    <Button disabled={!isCaptchaSuccessful} type="primary" htmlType="submit" loading={loading} className={styles.loginFormButton}>
                         Войти
                     </Button>
                     Или <a onClick={() => {navigate('/register')}}>создать аккаунт</a>
