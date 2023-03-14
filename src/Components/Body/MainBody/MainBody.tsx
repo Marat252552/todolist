@@ -8,6 +8,7 @@ import { AppStateType } from "../../Redux/Redux";
 import { ChangeCardFormType, CreateNewCardPropsType, MainBodyPropsType, MakeCardPropsType, mapDispatchType, MapStateType, NewCardFormType } from "./MainBodyTypes";
 import { StateControllerThunks, addGroupID_Thunk, deleteGroupID_Thunk, switchCompleteCard_Thunk, ControllerThunks } from "../../Redux/Thunks";
 import { U_T } from "../../Redux/ReduxTypes";
+import { ModalWindow } from "../../Modal/Modal";
 
 
 const ChangeCardForm = (props: ChangeCardFormType) => {

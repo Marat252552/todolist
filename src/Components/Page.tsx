@@ -1,13 +1,13 @@
 import { observer } from "mobx-react-lite"
 import { useEffect, useState } from "react"
 import { connect } from "react-redux"
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom"
-import { LoggedAPI } from "../Api/Api"
-import FirstGate from "../FirstGate"
+import { Route, Routes, useNavigate } from "react-router-dom"
+import { AuthAPI } from "../Api/Api"
 import AuthPage from "./Auth/AuthPage"
 import Body from "./Body/Body"
 import LoadingScreen from "./LoadingScreen/LoadingScreen"
 import LocalStorage from "./LocalStorage"
+import { ModalWindow } from "./Modal/Modal"
 import { Login_AC } from "./Redux/ActionCreators"
 import { AppStateType } from "./Redux/Redux"
 import { ControllerThunks } from "./Redux/Thunks"
@@ -16,6 +16,7 @@ import { mapDispatch_T, mapState_T, PageProps_T } from "./types"
 
 const Page = observer((props: PageProps_T) => {
     let navigate = useNavigate()
+    // Редирект в зависимости от того, авторизован пользователь или нет
     useEffect(() => {
         if (LocalStorage.IsAuthorized === false) {
             navigate('/login')
@@ -24,31 +25,26 @@ const Page = observer((props: PageProps_T) => {
         }
     }, [LocalStorage.IsAuthorized])
     return <Routes>
-        {/* <Route path="/" element={<FirstGate isAuthorized={props.isAuthorized}/>}/> */}
-        <Route path="/login" element={<AuthPage login_Thunk={props.login_Thunk} Login_AC={props.Login_AC} isAuthorized={props.isAuthorized} />} />
-        <Route path="/" element={<Body PullAllCardsThunk={props.pullAllCards_Thunk} Login_AC={props.Login_AC} isAuthorized={props.isAuthorized} />} />
-        <Route path="/register" element={<Register isAuthorized={props.isAuthorized} Login_AC={props.Login_AC} />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/" element={<Body PullAllCardsThunk={props.pullAllCards_Thunk} />} />
+        <Route path="/register" element={<Register />} />
     </Routes>
 })
 
 const mapStateToProps = (state: AppStateType) => {
     return {
-        isAuthorized: state.data.isAuthorized
     }
 }
 
 const mapDispatchToProps = () => {
     return {
         Login_AC,
-        pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk,
-        login_Thunk: ControllerThunks.login_Thunk
+        pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk
     }
 }
 
 const PageContainer = connect<mapState_T, mapDispatch_T, unknown, AppStateType>(mapStateToProps, {
-    Login_AC,
-    pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk,
-    login_Thunk: ControllerThunks.login_Thunk
+    pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk
 })(Page)
 
 
@@ -58,7 +54,7 @@ const PageAPIContainer = () => {
     useEffect(() => {
         let a = async () => {
             try {
-                let response = await LoggedAPI()
+                let response = await AuthAPI.Logged()
                 if (response.status === 200) {
                     LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email)
                     LocalStorage.setToken(response.data.AccessToken)

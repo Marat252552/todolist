@@ -15,24 +15,11 @@ export type MapStateType = {
 export type MapDispatchType = {
     toggleSearch_AC: AC_cT["toggleSearchAC_cT"],
     updateSearchInputValue_AC: AC_cT["updateSearchInputValueTypeAC_cT"],
-    logout_Thunk: T_cT["logoutThunk_cT"],
     pullAllCards_Thunk: T_cT["PullAllCardsThunk_cT"],
     PushData_Thunk: T_cT["PushDataThunk_cT"]
 }
 
-export type SearchBoxPropsType = {
-    toggleSearch_AC: AC_cT["toggleSearchAC_cT"],
-    searchInputValue: string,
-    updateSearchInputValue_AC: AC_cT["updateSearchInputValueTypeAC_cT"]
-}
 
-export type InfoBoxPropsType = {
-    isAuthorized: boolean,
-    logout_Thunk: T_cT["logoutThunk_cT"],
-    name: string,
-    lastName: string,
-    email: string,
-    loading: boolean
-}
+
 
 export type MainBoxPropsType = MapStateType & MapDispatchType

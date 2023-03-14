@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { addCardsAPI, deleteCardsAPI as deleteCardsAPI, updateCardAPI as updateCardsAPI } from './../../Api/Api';
+import {CardsAPI } from './../../Api/Api';
 import { Dispatch } from "react"
-import { PullCardsAPI, LogoutAPI, LoginAPI } from "../../Api/Api"
 import { clearAllCards_AC, addNewCard_AC, updateCurrentCards_AC, deleteCard_AC, changeTextCard_AC, changeCurrentCardGroupID_AC, addGroupID_AC, deleteGroupID_AC, switchCompleteCard_AC, Logout_AC, Login_AC, clearControllers, pullCards_AC, changeCard_AC, toggleLoading_AC } from "./ActionCreators"
 import { T_T, AllActionsData, U_T, ControllersThunks_T, StateControllerThunks_T } from "./ReduxTypes"
 import { AppStateType } from './Redux';
@@ -14,16 +13,17 @@ export const ControllerThunks: ControllersThunks_T = {
     pullAllCards_Thunk: () => {
         return async (dispatch: Dispatch<AllActionsData>) => {
             dispatch(clearAllCards_AC())
-            let response = await PullCardsAPI()
-            if (response.status === 200) {
-                let cards: Array<U_T["cardType"]> = response.data as Array<U_T["cardType"]>
-                cards.forEach(card => {
-                    dispatch(pullCards_AC(card.cardID, card.text, card.groupsIDs, card.isCompleted))
-                })
-                dispatch(updateCurrentCards_AC())
-            } else {
-                console.log(response.status)
-            }
+                let response = await CardsAPI.PullCards()
+                if (response.status === 200) {
+                    let cards: Array<U_T["cardType"]> = response.data as Array<U_T["cardType"]>
+                    cards.forEach(card => {
+                        dispatch(pullCards_AC(card.cardID, card.text, card.groupsIDs, card.isCompleted))
+                    })
+                    dispatch(updateCurrentCards_AC())
+                } else {
+                    console.log(response.status)
+                }
+            
         }
     },
     // Completes 3 different thunks in order to push new data to server
@@ -31,51 +31,20 @@ export const ControllerThunks: ControllersThunks_T = {
         return async (dispatch: Dispatch<AllActionsData>) => {
             dispatch(toggleLoading_AC(true))
             if (state.data.addedCards[0]) {
-                await addCardsAPI(state.data.addedCards)
+                await CardsAPI.addCards(state.data.addedCards)
                 dispatch(clearControllers(1))
             }
             if (state.data.changedCards[0]) {
-                await updateCardsAPI(state.data.changedCards)
+                await CardsAPI.updateCards(state.data.changedCards)
                 dispatch(clearControllers(2))
             }
             if (state.data.deletedCards[0]) {
-                await deleteCardsAPI(state.data.deletedCards)
+                await CardsAPI.deleteCards(state.data.deletedCards)
                 dispatch(clearControllers(3))
             }
             dispatch(toggleLoading_AC(false))
         }
     },
-    // Resolves logging in
-    login_Thunk: (login, password) => {
-        return async (dispatch: Dispatch<AllActionsData>) => {
-            try {
-                let res = await LoginAPI(login, password)
-                console.log(res.data)
-                if (res.status === 200) {
-                    LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email, )
-                    LocalStorage.setToken(res.data.AccessToken)
-                    LocalStorage.setIsAuthorized(true)
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        }
-    },
-    // Resolves logging out
-    logout_Thunk: () => {
-        return async (dispatch: Dispatch<AllActionsData>) => {
-            try {
-                let res = await LogoutAPI()
-                if (res.status === 200) {
-                    LocalStorage.setToken('')
-                    LocalStorage.setIsAuthorized(false)
-                    dispatch(Logout_AC())
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        }
-    }
 }
 
 // Thunks that help Controller Thunks (manage controller state - state.addedCards etc.)

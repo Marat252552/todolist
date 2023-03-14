@@ -145,9 +145,7 @@ export type U_T = {
 
 export type ControllersThunks_T = {
     pullAllCards_Thunk: T_T["PullAllCardsThunk_T"],
-    PushData_Thunk: T_T["PushDataThunk_T"],
-    login_Thunk: T_T["loginThunk_T"],
-    logout_Thunk: T_T["logoutThunk_T"]
+    PushData_Thunk: T_T["PushDataThunk_T"]
 }
 
 export type StateControllerThunks_T = {

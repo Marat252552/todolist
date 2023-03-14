@@ -1,173 +1,52 @@
-import { Field, FormikProvider, useFormik } from "formik"
-import React, { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { checkduplAPI, LoggedAPI, SignInAPI } from "../../Api/Api"
+import { useEffect } from "react"
+import { AuthAPI } from "../../Api/Api"
 import LocalStorage from "../LocalStorage"
 import styles from './Register.module.css'
-import { RegisterProps_T } from "./types"
 import { useState } from 'react'
-import type { CascaderProps } from 'antd';
 import ReCAPTCHA from "react-google-recaptcha"
-import { DatePicker, AutoComplete, Button, Cascader, Checkbox, Col, Form, Input, InputNumber, Row, Select, } from 'antd';
+import { DatePicker, Button, Checkbox, Form, Input, Select, } from 'antd';
+import { observer } from "mobx-react-lite"
+import { message } from 'antd';
+import { SigninErrorHandler } from "../ErrorHandlers/AuthErrorHandlers"
 
-let Errors = {
-    email: (value: string) => {
-        let error
-        if (!value) {
-            error = 'Не введен email';
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-            error = 'Неверный email';
-        }
-        return error;
-    },
-    login: (value: string) => {
-        let error;
-        if (!value) {
-            error = 'Не введен логин'
-        }
-        return error;
-    },
-    password: (value: string, password2: string) => {
-        let error;
-        if (!value) {
-            error = 'Не введен пароль'
-        }
-        if (value !== password2) {
-            error = 'Пароли не совпадают'
-        }
-        return error;
+const Register = observer(() => {
+    const [messageApi, contextHolder] = message.useMessage();
+    const SetMessageError = (value: string) => {
+        messageApi.open({
+          type: 'error',
+          content: value,
+        });
     }
-}
-
-const Register = (props: RegisterProps_T) => {
-    let navigate = useNavigate()
+    // Проверка авторизации
     useEffect(() => {
-        if (props.isAuthorized === true) {
-            navigate('/home')
+        let a = async () => {
+            let response = await AuthAPI.Logged()
+            if (response.status === 200) {
+                LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email)
+                LocalStorage.setToken(response.data.AccessToken)
+                LocalStorage.setIsAuthorized(true)
+            }
         }
-    }, [props.isAuthorized])
-    const RegisterForm = () => {
-        let [error, setError] = useState('')
-        const formik = useFormik({
-            initialValues: {
-                login: '',
-                password: '',
-                password2: '',
-                email: '',
-                age: '',
-                name: '',
-                lastName: ''
-            },
-            onSubmit: async (values: any, { resetForm }: any) => {
-                try {
-                    let res = await SignInAPI(values.login, values.password, values.email, values.age, values.name, values.lastName)
-                    if (res.status === 201) {
-                        let res = await LoggedAPI()
-                        if (+res.status === 200) {
-                            LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email,)
-                            LocalStorage.setToken(res.data.AccessToken)
-                            LocalStorage.setIsAuthorized(true)
-                        }
-                    }
-                } catch (e: any) {
-                    if (e.response.status === 400) {
-                        setError(e.response.data)
-                    }
-                }
-
-            },
-        })
-        return <FormikProvider value={formik}>
-            <form onSubmit={formik.handleSubmit}>
-                <div className={styles.login_form}>
-                    <span>{error}</span>
-                    {(formik.errors.login && formik.touched.login) ? <span>{formik.errors.login}</span> : <span></span>}
-                    <Field
-                        className={styles.input}
-                        placeholder='Введите имя'
-                        id="name"
-                        name='name'
-                        type='text'
-                        onChange={formik.handleChange}
-                        value={formik.values.name}
-                    ></Field>
-                    <Field
-                        className={styles.input}
-                        placeholder='Введите фамилию'
-                        id="lastName"
-                        name='lastName'
-                        type='text'
-                        onChange={formik.handleChange}
-                        value={formik.values.lastName}
-                    ></Field>
-                    <Field
-                        className={styles.input}
-                        placeholder='Введите логин'
-                        id="login"
-                        name='login'
-                        type='text'
-                        onChange={formik.handleChange}
-                        value={formik.values.login}
-                        validate={Errors.login}
-                    />
-                    {(formik.errors.password && formik.touched.password) ? <span>{formik.errors.password}</span> : <span></span>}
-                    <Field
-                        className={styles.input}
-                        placeholder='Введите пароль'
-                        id="password"
-                        name='password'
-                        type='text'
-                        onChange={formik.handleChange}
-                        value={formik.values.password}
-                        validate={(value: any) => Errors.password(value, formik.values.password2)}
-                    />
-                    {(formik.errors.password && formik.touched.password) ? <span>{formik.errors.password}</span> : <span></span>}
-                    <Field
-                        className={styles.input}
-                        placeholder='Повторите пароль'
-                        id="password2"
-                        name='password2'
-                        type='text'
-                        onChange={formik.handleChange}
-                        value={formik.values.password2}
-                    />
-                    {(formik.errors.email && formik.touched.email) ? <span>{formik.errors.email}</span> : <span></span>}
-                    <Field
-                        className={styles.input}
-                        placeholder='Введите email'
-                        id="email"
-                        name='email'
-                        type='text'
-                        onChange={formik.handleChange}
-                        value={formik.values.email}
-                        validate={Errors.email}
-                    />
-
-                    <Field
-                        className={styles.input}
-                        placeholder='Введите возраст'
-                        id="age"
-                        name='age'
-                        type='text'
-                        onChange={formik.handleChange}
-                        value={formik.values.age}
-                    />
-                    <button type='submit'>Создать аккаунт</button>
-                </div>
-            </form>
-        </FormikProvider>
-    }
+        a()
+    }, [])
+    // Форма регистрации
     const RegisterFormAnt = () => {
+        // Результат капчи
         let [captchaToken, setCaptchaToken] = useState('')
         let [isCaptchaSuccessful, setIsCaptchaSuccess] = useState(false)
+        // Ошибка почты - такая почта уже используется
         let [emailError, setEmailError] = useState('')
+        // Ошибка логина - такой логин уже существует
         let [loginError, setLoginError] = useState('')
+        // Загрузка после отправки формы
         let [loading, setLoading] = useState(false)
         const [form] = Form.useForm();
+        // Callback капчи
         const onChange = (value: string) => {
             setIsCaptchaSuccess(true)
             setCaptchaToken(value)
         }
+        // Далее настройки формы
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -193,9 +72,9 @@ const Register = (props: RegisterProps_T) => {
         const onFinish = async (values: any) => {
             setLoading(true)
             try {
-                let res = await SignInAPI(values.login, values.password, values.email, values.birthdate, values.name, values.lastName, values.phone, values.gender, captchaToken)
+                let res = await AuthAPI.SignIn(values.login, values.password, values.email, values.birthdate, values.name, values.lastName, values.phone, values.gender, captchaToken)
                 if (res.status === 201) {
-                    let res = await LoggedAPI()
+                    let res = await AuthAPI.Logged()
                     if (+res.status === 200) {
                         LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email,)
                         LocalStorage.setToken(res.data.AccessToken)
@@ -203,7 +82,7 @@ const Register = (props: RegisterProps_T) => {
                     }
                 }
             } catch (e: any) {
-                console.log(e)
+                SigninErrorHandler(e, SetMessageError)
             } finally {
                 setLoading(false)
             }
@@ -211,7 +90,7 @@ const Register = (props: RegisterProps_T) => {
         const checkDupl = async (values: any) => {
             if (values.email) {
                 try {
-                    await checkduplAPI(values.email)
+                    await AuthAPI.checkdupl(values.email)
                     setEmailError('')
                 } catch (e: any) {
                     if (e.response.status) { setEmailError(e.response.data) }
@@ -219,22 +98,16 @@ const Register = (props: RegisterProps_T) => {
             }
             if (values.login) {
                 try {
-                    await checkduplAPI(values.login)
+                    await AuthAPI.checkdupl(values.login)
                     setLoginError('')
                 } catch (e: any) {
                     if (e.response.status) { setLoginError(e.response.data) }
                 }
             }
-
-
-
-
         }
         const prefixSelector = (
             <Form.Item name="prefix" noStyle>
-                <Select style={{ width: 70 }}>
-                    <Option value="7">+7</Option>
-                </Select>
+                <Select options={[{value: '7', label: '+7'}]} style={{ width: 70 }} />
             </Form.Item>
         );
         return (
@@ -373,10 +246,7 @@ const Register = (props: RegisterProps_T) => {
                     label="Пол"
                     rules={[{ required: true, message: 'Пожалуйста, укажите Ваш пол' }]}
                 >
-                    <Select placeholder="Укажите Ваш пол">
-                        <Option value={1}>Мужчина</Option>
-                        <Option value={0}>Женщина</Option>
-                    </Select>
+                    <Select options={[{value: '1', label: 'Мужчина'}, {value: '2', label: 'Женщина'}]} placeholder="Укажите Ваш пол" />
                 </Form.Item>
 
                 {/* Запомнить меня */}
@@ -400,7 +270,7 @@ const Register = (props: RegisterProps_T) => {
                 <div style={{display: 'flex', justifyContent: 'center'}}>
                     <ReCAPTCHA
                         sitekey='6LcGzPokAAAAALlIR_f1wcHP9FuMWSIghMN4OKu_'
-                        onChange={onChange}
+                        onChange={(value: any) => {onChange(value)}}
                     />
                 </div>
 
@@ -415,11 +285,12 @@ const Register = (props: RegisterProps_T) => {
     }
     return <div className={styles.auth_page}>
         <div className={styles.auth_form}>
+        {contextHolder}
             <p></p>
             <br></br>
             <RegisterFormAnt />
         </div>
     </div>
-}
+})
 
 export default Register

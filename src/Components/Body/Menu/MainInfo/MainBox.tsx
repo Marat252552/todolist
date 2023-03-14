@@ -4,62 +4,30 @@ import { Input } from 'antd'
 import { DownOutlined, LoadingOutlined, SearchOutlined, SettingOutlined, SmileOutlined, SyncOutlined, UserDeleteOutlined } from '@ant-design/icons'
 import { AppStateType } from '../../../Redux/Redux'
 import { connect } from 'react-redux'
-import { InfoBoxPropsType, MainBoxPropsType, MapDispatchType, MapStateType, SearchBoxPropsType } from './MainBoxTypes'
+import { MainBoxPropsType, MapDispatchType, MapStateType } from './MainBoxTypes'
 import { useFormik } from 'formik';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
-import { DeleteUserAPI, GetUsersAPI, LogoutAPI } from '../../../../Api/Api'
+import { AuthAPI, UsersAPI } from '../../../../Api/Api'
 import { toggleSearch_AC, updateSearchInputValue_AC } from '../../../Redux/ActionCreators'
 import { ControllerThunks } from '../../../Redux/Thunks'
 import { observer } from "mobx-react-lite";
 import LocalStorage from '../../../LocalStorage'
 import { useState } from 'react'
-
-
-const InfoBox = observer((props: InfoBoxPropsType) => {
-    const makeLoading = () => {
-        return <div style={{ width: '100%' }}>
-            <div className={styles.loadingioSpinnerRollingAjhtd6xnhrc}><div className={styles.ldioAqq6nx8vg0n}>
-                <div></div>
-            </div></div>
-        </div>
-    }
-    return <div className={styles.mainBoxInfo}>
-        <Avatar className={styles.avatar} />
-        <div className={styles.mainBoxInfoText}>
-            <span>{LocalStorage.userData.name} {LocalStorage.userData.lastName}</span>
-            <span>{LocalStorage.userData.email}</span>
-        </div>
-        <div className={styles.imgDiv}>
-            {(props.loading) ? makeLoading() : undefined}
-        </div>
-    </div>
-})
-
-const SearchBox = (props: SearchBoxPropsType) => {
-    const formik = useFormik({
-        initialValues: {
-            card: '',
-        },
-        onSubmit: (values: any, { resetForm }: any) => {
-            props.updateSearchInputValue_AC(values.searchInput)
-            resetForm({ values: '' })
-        },
-    })
-    return <div className={styles.searchBoxContainer}>
-        <div className={styles.searchBox}>
-            <form onChange={formik.handleSubmit} onSubmit={formik.handleSubmit}>
-                <Input onChange={formik.handleChange} id="searchInput" name='searchInput' className={styles.input} placeholder="Search" bordered={false} onFocus={() => { props.toggleSearch_AC(true) }} onBlur={() => { props.toggleSearch_AC(false) }} value={props.searchInputValue} />
-            </form>
-            <button className={styles.searchButton}><SearchOutlined className={styles.searchIcon} /></button>
-        </div>
-    </div>
-}
+import SearchBox from './SearchBox/SearchBox'
+import InfoBox from './InfoBox/InfoBox'
+import { message } from 'antd';
 
 const MainBox = (props: MainBoxPropsType) => {
+    const [messageApi, contextHolder] = message.useMessage();
+    const SetMessageError = (value: string) => {
+        messageApi.open({
+          type: 'error',
+          content: value,
+        });
+    }
     const [isModalOpen, setIsModalOpen] = useState(false);
     let [logoutLoading, setLogoutLoading] = useState(false)
-    let [syncLoading, setSyncLoading] = useState(false)
     let [deleteUserLoading, setDeleteUserLoading] = useState(false)
     const showModal = () => {
         setIsModalOpen(true);
@@ -67,14 +35,14 @@ const MainBox = (props: MainBoxPropsType) => {
     const handleOk = async () => {
         setDeleteUserLoading(true)
         try {
-            let response = await DeleteUserAPI()
+            let response = await UsersAPI.DeleteUser()
             if (response.status === 200) {
                 LocalStorage.setToken('')
                 LocalStorage.setIsAuthorized(false)
             }
             setIsModalOpen(false);
         } catch (e) {
-            console.log(e)
+            SetMessageError('Кажется, произошла ошибка')
         } finally {
             setDeleteUserLoading(false)
         }
@@ -83,13 +51,13 @@ const MainBox = (props: MainBoxPropsType) => {
     const Logout = async () => {
         setLogoutLoading(true)
         try {
-            let res = await LogoutAPI()
+            let res = await AuthAPI.Logout()
             if (res.status === 200) {
                 LocalStorage.setToken('')
                 LocalStorage.setIsAuthorized(false)
             }
         } catch (e) {
-            console.log(e)
+            SetMessageError('Кажется, произошла ошибка')
         } finally {
             setLogoutLoading(false)
         }
@@ -113,7 +81,7 @@ const MainBox = (props: MainBoxPropsType) => {
                     props.PushData_Thunk(props.state)
                 }}>Синхронизировать</div>
             ),
-            icon: (syncLoading) ? <LoadingOutlined /> : <SyncOutlined />
+            icon: <SyncOutlined />
         },
         {
             key: '3',
@@ -129,7 +97,7 @@ const MainBox = (props: MainBoxPropsType) => {
 
     const [open, setOpen] = useState(false);
     const handleMenuClick: MenuProps['onClick'] = (e) => {
-        if (e.key === '1') {
+        if (e.key === '2' || e.key === '1') {
             setOpen(false);
         }
     };
@@ -137,11 +105,12 @@ const MainBox = (props: MainBoxPropsType) => {
         setOpen(flag);
     };
     return <div className={styles.mainBox}>
+        {contextHolder}
         <Dropdown menu={{ items, onClick: handleMenuClick, }} trigger={['click']} onOpenChange={handleOpenChange}
             open={open}>
             <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                    <InfoBox loading={props.loading} email={props.email} name={props.name} lastName={props.lastName} isAuthorized={props.isAuthorized} logout_Thunk={props.logout_Thunk} />
+                    <InfoBox loading={props.loading} email={props.email} name={props.name} lastName={props.lastName} isAuthorized={props.isAuthorized} />
                 </Space>
             </a>
         </Dropdown>
@@ -173,7 +142,6 @@ let mapDispatchToProps = () => {
     return {
         PushData_Thunk: ControllerThunks.PushData_Thunk,
         toggleSearch_AC, updateSearchInputValue_AC,
-        logout_Thunk: ControllerThunks.logout_Thunk,
         pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk
     }
 }

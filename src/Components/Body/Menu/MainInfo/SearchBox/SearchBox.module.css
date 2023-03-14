@@ -1,0 +1,17 @@
+.searchIcon {
+    font-size: 15px;
+    color: rgb(102, 102, 102);
+}
+
+.searchBox {
+    display: grid;
+    grid-template-columns: 7fr 1fr;
+    border: solid 1px rgb(215, 215, 215);
+    border-radius: 5px;
+    width: 100%;
+    border-bottom: solid 1px black
+}
+.searchButton {
+    border: none;
+    background: none
+}

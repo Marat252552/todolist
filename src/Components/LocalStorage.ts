@@ -9,8 +9,17 @@ class LocalStorage {
         lastName: '',
         email: ''
     }
+    isActivated = false
+    notedAboutActivated = false
+    
     constructor() {
         makeAutoObservable(this)
+    }
+    setIsActivated(value: boolean) {
+        this.isActivated = value
+    }
+    setNotedAboutActivated(value: boolean) {
+        this.notedAboutActivated = value
     }
     setUserData(name: string, lastName: string, email: string) {
         this.userData.name = name
