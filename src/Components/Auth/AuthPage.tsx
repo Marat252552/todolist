@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { AuthAPI } from "../../Api/Api"
-import LocalStorage from "../LocalStorage"
+import LocalStorage from "../Mobx/LocalStorage"
 import styles from './AuthPage.module.css'
 import { Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from "@ant-design/icons"

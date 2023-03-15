@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-import LocalStorage from "../Components/LocalStorage";
+import LocalStorage from "../Components/Mobx/LocalStorage";
 import { U_T } from "../Components/Redux/ReduxTypes";
 import { addCardsAPI_T, AuthAPI_T, CardsAPI_T, deleteCardsAPI_T, DeleteUserAPI_T, GetUsersAPI_T, LoggedAPI_T, LoginAPI_T, LogoutAPI_T, PullCardsAPI_T, SignInAPI_T, updateCardsAPI_T, UsersAPI_T } from "./types";
 
@@ -21,7 +21,6 @@ instanse.interceptors.request.use((config: any) => {
 instanse.interceptors.response.use((config: any) => {
     return config;
 }, async (error) => {
-    console.log(error.config)
     const OriginalRequest = error.config
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
         console.log('Refresh request')

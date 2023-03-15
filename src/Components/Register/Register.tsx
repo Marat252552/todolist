@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { AuthAPI } from "../../Api/Api"
-import LocalStorage from "../LocalStorage"
+import LocalStorage from "../Mobx/LocalStorage"
 import styles from './Register.module.css'
 import { useState } from 'react'
 import ReCAPTCHA from "react-google-recaptcha"

@@ -1,4 +1,4 @@
-import LocalStorage from '../LocalStorage'
+import LocalStorage from '../Mobx/LocalStorage'
 import styles from './Modal.module.css'
 
 

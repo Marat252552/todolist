@@ -2,13 +2,17 @@ import { connect } from "react-redux";
 import styles from './MainBody.module.css'
 import { Checkbox, Popconfirm, Popover, Button } from "antd";
 import { PlusOutlined, StarFilled, StarOutlined } from '@ant-design/icons'
-import React from "react";
+import {useEffect} from "react";
 import { Field, Formik, FormikProvider, useFormik } from "formik";
 import { AppStateType } from "../../Redux/Redux";
 import { ChangeCardFormType, CreateNewCardPropsType, MainBodyPropsType, MakeCardPropsType, mapDispatchType, MapStateType, NewCardFormType } from "./MainBodyTypes";
 import { StateControllerThunks, addGroupID_Thunk, deleteGroupID_Thunk, switchCompleteCard_Thunk, ControllerThunks } from "../../Redux/Thunks";
 import { U_T } from "../../Redux/ReduxTypes";
 import { ModalWindow } from "../../Modal/Modal";
+import LocalStorage from "../../Mobx/LocalStorage";
+import { observer } from "mobx-react-lite";
+import { AddCard_Thunk, ChangeCard_Thunk, DeleteCard_Thunk, SwitchCompleteCard_Thunk } from "../../Mobx/Thunks";
+import { toJS } from 'mobx'
 
 
 const ChangeCardForm = (props: ChangeCardFormType) => {
@@ -44,7 +48,7 @@ const NewCardForm = (props: NewCardFormType) => {
             card: '',
         },
         onSubmit: async (values: any, { resetForm }: any) => {
-            props.addCard_Thunk(Date.now(), values.card, [5, props.currentCardGroup.groupID], false)
+            AddCard_Thunk(Date.now(), values.card, [5, props.currentCardGroup.groupID], false)
             resetForm({ values: '' })
         },
     })
@@ -75,24 +79,24 @@ const CreateNewCard = (props: CreateNewCardPropsType) => {
     </div>
 }
 
-const MakeCard = (props: MakeCardPropsType) => {
+const MakeCard = observer((props: MakeCardPropsType) => {
     let addGroup = async (groupID: number, card: U_T["cardType"]) => {
         let updatedCard = card
         updatedCard.groupsIDs.push(groupID)
-        props.changeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted)
+        ChangeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted)
     }
     let deleteGroup = async (groupID: number, card: U_T["cardType"]) => {
         let updatedCard = card
         updatedCard.groupsIDs = updatedCard.groupsIDs.filter(ID => {return ID !== groupID})
-        props.changeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted)
+        ChangeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted)
     }
     let completeCard = async (card: U_T["cardType"]) => {
-        props.switchCompleteCardThunk(props.cardID)
-        props.changeCard_Thunk(card.cardID, card.text, card.groupsIDs, card.isCompleted)
+        SwitchCompleteCard_Thunk(props.cardID)
+        ChangeCard_Thunk(card.cardID, card.text, card.groupsIDs, card.isCompleted)
     }
     let incompleteCard = async (card: U_T["cardType"]) => {
-        props.switchCompleteCardThunk(props.cardID)
-        props.changeCard_Thunk(card.cardID, card.text, card.groupsIDs, card.isCompleted)
+        SwitchCompleteCard_Thunk(props.cardID)
+        ChangeCard_Thunk(card.cardID, card.text, card.groupsIDs, card.isCompleted)
     }
     // Массив со всеми группами карточки
     let requiredGroupsArray = props.groupsIDs.filter(groupID => {
@@ -110,7 +114,7 @@ const MakeCard = (props: MakeCardPropsType) => {
                 danger
                 type='primary'
                 style={{ width: '100%' }}
-                onClick={() => {props.deleteCard_Thunk(props.cardID)}}>
+                onClick={() => {DeleteCard_Thunk(props.cardID)}}>
                 Delete
             </Button>
             {(props.groupsIDs.find(el => el === 1))?
@@ -148,9 +152,15 @@ const MakeCard = (props: MakeCardPropsType) => {
             </div>
         </Popover>
     </>
-}
+})
 
-const MainBody = (props: MainBodyPropsType) => {
+const MainBody = observer((props: MainBodyPropsType) => {
+    useEffect(() => {
+        console.log(toJS(LocalStorage.state.changedCards) )
+    }, [LocalStorage.state.changedCards])
+    useEffect(() => {
+        console.log(toJS(LocalStorage.state.deletedCards) )
+    }, [LocalStorage.state.deletedCards])
     // Функция для выбора обоев
     const wallpaper = (background: string) => {
         return (background === 'wallpaper1') ? styles.wallpaper1 :
@@ -161,16 +171,16 @@ const MainBody = (props: MainBodyPropsType) => {
                             (background === 'blue') ? styles.blue : undefined
     }
     // Массив с невыполненным карточками
-    let incompletedCards = props.currentCards.filter(card => {
+    let incompletedCards = LocalStorage.state.currentCards.filter((card: U_T["cardType"]) => {
         return card.isCompleted === false
     })
     // Массив с выполненным карточками
-    let completedCards = props.currentCards.filter(card => {
+    let completedCards = LocalStorage.state.currentCards.filter((card: U_T["cardType"]) => {
         return card.isCompleted === true
     })
     // Условие, которое показывает либо поиск либо выбранную колоду карточек
     if(props.isSearchOn) {
-        return <div>{props.allCards.filter(card => {
+        return <div>{LocalStorage.state.allCards.filter(card => {
             return card.text.includes(props.searchInputValue)
         }).map(card => {
             return <MakeCard changeCard_Thunk={props.changeCard_Thunk} deleteCard_Thunk={props.deleteCard_Thunk} PullAllCardsThunk={props.PullAllCardsThunk} switchCompleteCardThunk={props.switchCompleteCardThunk} deleteGroupIDThunk={props.deleteGroupIDThunk} addGroupIDThunk={props.addGroupIDThunk} deleteCardThunk={props.deleteCardThunk} card={card} key={card.cardID} cardID={card.cardID} text={card.text} currentCardGroup={props.currentCardGroup} groupsIDs={card.groupsIDs} allCardGroups={props.allCardGroups} isCompleted={card.isCompleted}/>
@@ -180,7 +190,7 @@ const MainBody = (props: MainBodyPropsType) => {
         <div style={{ height: '80vh' }}>
             {/* Название выбранной группы */}
             <div className={styles.header}>
-                <h1>{props.currentCardGroup.name}</h1>
+                <h1>{LocalStorage.state.currentCardGroup.name}</h1>
             </div>
             {/* Карточки */}
             <div className={styles.scroll}>
@@ -201,7 +211,7 @@ const MainBody = (props: MainBodyPropsType) => {
         </div>
     </div>
     }
-}
+})
 
 const mapStateToProps = (state: AppStateType) => {
     return {

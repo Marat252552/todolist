@@ -4,7 +4,7 @@ import { Dispatch } from "react"
 import { clearAllCards_AC, addNewCard_AC, updateCurrentCards_AC, deleteCard_AC, changeTextCard_AC, changeCurrentCardGroupID_AC, addGroupID_AC, deleteGroupID_AC, switchCompleteCard_AC, Logout_AC, Login_AC, clearControllers, pullCards_AC, changeCard_AC, toggleLoading_AC } from "./ActionCreators"
 import { T_T, AllActionsData, U_T, ControllersThunks_T, StateControllerThunks_T } from "./ReduxTypes"
 import { AppStateType } from './Redux';
-import LocalStorage from '../LocalStorage';
+import LocalStorage from '../Mobx/LocalStorage';
 
 
 // Controller Thunks (directly work with API)

@@ -12,11 +12,12 @@ import { AuthAPI, UsersAPI } from '../../../../Api/Api'
 import { toggleSearch_AC, updateSearchInputValue_AC } from '../../../Redux/ActionCreators'
 import { ControllerThunks } from '../../../Redux/Thunks'
 import { observer } from "mobx-react-lite";
-import LocalStorage from '../../../LocalStorage'
+import LocalStorage from '../../../Mobx/LocalStorage'
 import { useState } from 'react'
 import SearchBox from './SearchBox/SearchBox'
 import InfoBox from './InfoBox/InfoBox'
 import { message } from 'antd';
+import { PushData_Thunk } from '../../../Mobx/Thunks'
 
 const MainBox = (props: MainBoxPropsType) => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -78,7 +79,7 @@ const MainBox = (props: MainBoxPropsType) => {
             key: '2',
             label: (
                 <div onClick={() => {
-                    props.PushData_Thunk(props.state)
+                    PushData_Thunk(SetMessageError)
                 }}>Синхронизировать</div>
             ),
             icon: <SyncOutlined />

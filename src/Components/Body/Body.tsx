@@ -6,11 +6,12 @@ import { useEffect } from "react";
 import { AuthAPI } from "../../Api/Api";
 import { BodyProps_T } from "./types";
 import LoadingScreen from './../LoadingScreen/LoadingScreen'
-import LocalStorage from "../LocalStorage";
+import LocalStorage from "../Mobx/LocalStorage";
 import { observer } from "mobx-react-lite";
 import { ModalWindow } from "../Modal/Modal";
 import {useState} from 'react'
 import { message } from 'antd';
+import { PullAllCards_Thunk } from "../Mobx/Thunks";
 
 
 const Body = observer((props: BodyProps_T) => {
@@ -32,12 +33,13 @@ const Body = observer((props: BodyProps_T) => {
                 if(response.status === 200) {
                     LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email)
                     LocalStorage.setIsAuthorized(true)
-                    props.PullAllCardsThunk()
+                    PullAllCards_Thunk()
                 } else {
                     LocalStorage.setIsAuthorized(false)
                     LocalStorage.setToken('')
                 }
             } catch(e: any) {
+                SetMessageError('Кажется, произошла ошибка')
                 if(e.response.status === 401) {
                     LocalStorage.setIsAuthorized(false)
                     LocalStorage.setToken('')

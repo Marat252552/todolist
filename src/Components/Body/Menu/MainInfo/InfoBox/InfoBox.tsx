@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import { InfoBoxPropsType } from "./types"
 import styles from './InfoBox.module.css'
 import { Avatar } from "antd"
-import LocalStorage from "../../../../LocalStorage"
+import LocalStorage from "../../../../Mobx/LocalStorage"
 
 
 const InfoBox = observer((props: InfoBoxPropsType) => {
@@ -20,7 +20,7 @@ const InfoBox = observer((props: InfoBoxPropsType) => {
             <span>{LocalStorage.userData.email}</span>
         </div>
         <div className={styles.imgDiv}>
-            {(props.loading) ? makeLoading() : undefined}
+            {(LocalStorage.state.loading) ? makeLoading() : undefined}
         </div>
     </div>
 })
