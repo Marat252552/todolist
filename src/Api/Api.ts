@@ -102,7 +102,7 @@ export const AuthAPI: AuthAPI_T = {
 export const UsersAPI: UsersAPI_T = {
     DeleteUser: async () => {
         console.log('DeleteUser request')
-        let response = await instanse.delete('/auth/users')
+        let response = await instanse.delete('/users')
         let result = {
             status: response.status,
             data: response.data
