@@ -147,33 +147,33 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
                 currentCards: [...newCurrentCards]
             }
         }
-        case ADD_GROUP_ID: {
-            let cardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
-            let card = state.allCards[cardIndex]
-            card.groupsIDs = [
-                ...card.groupsIDs,
-                action.groupID
-            ]
-            let newAllCards = [...state.allCards]
-            newAllCards[cardIndex] = card
-            return {
-                ...state,
-                allCards: newAllCards
-            }
-        }
-        case DELETE_GROUP_ID: {
-            let cardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
-            let card = state.allCards[cardIndex]
-            card.groupsIDs = card.groupsIDs.filter(groupID => {
-                return groupID !== action.groupID
-            })
-            let newAllCards = [...state.allCards]
-            newAllCards[cardIndex] = card
-            return {
-                ...state,
-                allCards: newAllCards
-            }
-        }
+        // case ADD_GROUP_ID: {
+        //     let cardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
+        //     let card = state.allCards[cardIndex]
+        //     card.groupsIDs = [
+        //         ...card.groupsIDs,
+        //         action.groupID
+        //     ]
+        //     let newAllCards = [...state.allCards]
+        //     newAllCards[cardIndex] = card
+        //     return {
+        //         ...state,
+        //         allCards: newAllCards
+        //     }
+        // }
+        // case DELETE_GROUP_ID: {
+        //     let cardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
+        //     let card = state.allCards[cardIndex]
+        //     card.groupsIDs = card.groupsIDs.filter(groupID => {
+        //         return groupID !== action.groupID
+        //     })
+        //     let newAllCards = [...state.allCards]
+        //     newAllCards[cardIndex] = card
+        //     return {
+        //         ...state,
+        //         allCards: newAllCards
+        //     }
+        // }
         case CHANGE_TEXT_CARD: {
             let findIndex = () => {
                 let index = 0

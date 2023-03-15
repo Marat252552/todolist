@@ -11,7 +11,7 @@ import { switchCardGroup_Thunk } from "../../Redux/Thunks"
 const Menu = (props: MenuPropsType) => {
     return <div className={styles.menu}>
         <MainBox/>
-        <CardsInfo switchCardGroup_Thunk={props.switchCardGroup_Thunk} menuCardGroups={props.menuCardGroups} changeCurrentCardGroupID_AC={props.changeCurrentCardGroupID_AC}/>
+        <CardsInfo />
     </div>
 }
 

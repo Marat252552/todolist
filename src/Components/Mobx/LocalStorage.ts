@@ -1,5 +1,6 @@
+import { U_T } from './../Redux/ReduxTypes';
 import { makeAutoObservable } from "mobx"
-import { U_T } from "../Redux/ReduxTypes"
+import { toJS } from 'mobx'
 
 class LocalStorage {
     AccessToken = ''
@@ -10,8 +11,8 @@ class LocalStorage {
         lastName: '',
         email: ''
     }
-    isActivated = false
-    notedAboutActivated = false
+    isActivated = 0
+    notedAboutActivated = true
     state = {
         currentCardGroup: { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
         currentCards: [
@@ -47,6 +48,12 @@ class LocalStorage {
         let card = { cardID, text, groupsIDs, isCompleted }
         this.state.allCards.push(card)
     }
+    changeCurrentCardGroupID(groupID: number) {
+        let cardGroup = this.state.allCardGroups.filter(cardGroup => {
+            return cardGroup.groupID === groupID
+        })[0]
+        this.state.currentCardGroup = cardGroup
+    }
     updateCurrentCards() {
         let newCurrentCards = this.state.allCards.filter(card => {
             return card.groupsIDs.includes(this.state.currentCardGroup.groupID)
@@ -65,10 +72,6 @@ class LocalStorage {
         if (controller === 2) { this.state.changedCards = [] }
         if (controller === 3) { this.state.deletedCards = [] }
     }
-    changeCard(cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) {
-        let card = { cardID, text, groupsIDs, isCompleted }
-        this.state.changedCards.push(card)
-    }
     switchCompleteCard(cardID: number) {
         let updatedCardIndex = this.state.allCards.findIndex(el => el.cardID === cardID)
         let updatedCard = this.state.allCards[updatedCardIndex]
@@ -81,13 +84,20 @@ class LocalStorage {
         updatedAllCards[updatedCardIndex] = updatedCard
         this.state.allCards = updatedAllCards
     }
-    setIsActivated(value: boolean) {
+    setIsActivated(value: number) {
         this.isActivated = value
     }
     addNewCard(cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) {
         let card = { cardID, text, groupsIDs, isCompleted }
         this.state.allCards.push(card)
         this.state.addedCards.push(card)
+    }
+    changeCard(cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) {
+        let changedCard = { cardID, text, groupsIDs, isCompleted }
+        this.state.addedCards = this.state.addedCards.map(card => (card.cardID === changedCard.cardID)? changedCard : card)
+        this.state.changedCards.push(changedCard)
+        this.state.allCards = this.state.allCards.map(card => (card.cardID === changedCard.cardID)? changedCard : card )
+        console.log(toJS(this.state.allCards) )
     }
     deleteCard(cardID: number) {
         let newAllCards = [

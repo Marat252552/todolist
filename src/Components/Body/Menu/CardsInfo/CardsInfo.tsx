@@ -1,4 +1,7 @@
 import {StarOutlined, DeploymentUnitOutlined, HomeOutlined, CalendarOutlined, UserOutlined} from '@ant-design/icons'
+import { observer } from 'mobx-react-lite'
+import LocalStorage from '../../../Mobx/LocalStorage'
+import { SwitchCardGroup_Thunk } from '../../../Mobx/Thunks'
 import styles from './CardsInfo.module.css'
 import { CardsInfoPropsType, MakeMenuCardGroupPropsType } from './CardsInfoType'
 
@@ -15,7 +18,7 @@ const iconConditions = (icon: string) => {
 const MakeMenuCardGroup = (props: MakeMenuCardGroupPropsType) => {
     return <div>
         <button onClick={() => {
-            props.switchCardGroup_Thunk(props.groupID)
+            SwitchCardGroup_Thunk(props.groupID)
             }} className={styles.button}>
             <div className={styles.buttonIcon}>{iconConditions(props.icon)}</div>
             <div className={styles.buttonText}>{props.name}</div>
@@ -23,13 +26,13 @@ const MakeMenuCardGroup = (props: MakeMenuCardGroupPropsType) => {
     </div>
 }
 
-const CardsInfo = (props: CardsInfoPropsType) => {
+const CardsInfo = observer((props: CardsInfoPropsType) => {
     return <div>
-        {props.menuCardGroups.map(group => {
-            return <MakeMenuCardGroup switchCardGroup_Thunk={props.switchCardGroup_Thunk} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} changeCurrentCardGroupID_AC={props.changeCurrentCardGroupID_AC}/>
+        {LocalStorage.state.menuCardGroups.map(group => {
+            return <MakeMenuCardGroup key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
         })}
         <div className={styles.line}></div>
     </div>
-}
+})
 
 export default CardsInfo

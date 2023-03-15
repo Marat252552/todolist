@@ -19,7 +19,7 @@ import InfoBox from './InfoBox/InfoBox'
 import { message } from 'antd';
 import { PushData_Thunk } from '../../../Mobx/Thunks'
 
-const MainBox = (props: MainBoxPropsType) => {
+const MainBox = observer((props: MainBoxPropsType) => {
     const [messageApi, contextHolder] = message.useMessage();
     const SetMessageError = (value: string) => {
         messageApi.open({
@@ -124,7 +124,7 @@ const MainBox = (props: MainBoxPropsType) => {
             toggleSearch_AC={props.toggleSearch_AC}
             searchInputValue={props.searchInputValue} />
     </div>
-}
+})
 
 let mapStateToProps = (state: AppStateType) => {
     return {

@@ -7,7 +7,7 @@ type Result_T = {
         name: string,
         lastName: string,
         email: string,
-        isActivated: boolean,
+        isActivated: number,
         AccessToken: string
     }
 }

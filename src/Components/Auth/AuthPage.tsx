@@ -12,7 +12,6 @@ import { LoginErrorHandler } from "../ErrorHandlers/AuthErrorHandlers"
 import { ModalWindow } from "../Modal/Modal"
 
 const AuthPage = () => {
-    let [active, setActive] = useState(false)
     const [messageApi, contextHolder] = message.useMessage();
     const SetMessageError = (value: string) => {
         messageApi.open({
@@ -51,7 +50,11 @@ const AuthPage = () => {
                     LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email,)
                     LocalStorage.setToken(res.data.AccessToken)
                     LocalStorage.setIsAuthorized(true)
-                    LocalStorage.setIsActivated(res.data.isActivated)
+                    if(!res.data.isActivated) {
+                        LocalStorage.setNotedAboutActivated(false)
+                        LocalStorage.setIsActivated(res.data.isActivated)
+                    }
+                    
                 }
             } catch (e: any) {
                 LoginErrorHandler(e, SetFormError, SetMessageError)

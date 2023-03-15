@@ -1,25 +1,20 @@
 import MainBody from "./MainBody/MainBody"
 import Menu from "./Menu/Menu"
 import styles from './Body.module.css';
-import { useNavigate } from 'react-router-dom'
 import { useEffect } from "react";
 import { AuthAPI } from "../../Api/Api";
-import { BodyProps_T } from "./types";
-import LoadingScreen from './../LoadingScreen/LoadingScreen'
 import LocalStorage from "../Mobx/LocalStorage";
 import { observer } from "mobx-react-lite";
 import { ModalWindow } from "../Modal/Modal";
-import {useState} from 'react'
-import { message } from 'antd';
+import { message, Result, Button } from 'antd';
 import { PullAllCards_Thunk } from "../Mobx/Thunks";
 
-
-const Body = observer((props: BodyProps_T) => {
+const Body = observer(() => {
     const [messageApi, contextHolder] = message.useMessage();
     const SetMessageError = (value: string) => {
         messageApi.open({
-          type: 'error',
-          content: value,
+            type: 'error',
+            content: value,
         });
     }
     let setActive = () => {
@@ -30,17 +25,22 @@ const Body = observer((props: BodyProps_T) => {
         let a = async () => {
             try {
                 let response = await AuthAPI.Logged()
-                if(response.status === 200) {
+                if (response.status === 200) {
                     LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email)
                     LocalStorage.setIsAuthorized(true)
                     PullAllCards_Thunk()
+                    console.log(response.data.isActivated)
+                    if (response.data.isActivated === 0) {
+                        LocalStorage.setNotedAboutActivated(false)
+                    }
+                    LocalStorage.setIsActivated(response.data.isActivated)
                 } else {
                     LocalStorage.setIsAuthorized(false)
                     LocalStorage.setToken('')
                 }
-            } catch(e: any) {
+            } catch (e: any) {
                 SetMessageError('Кажется, произошла ошибка')
-                if(e.response.status === 401) {
+                if (e.response.status === 401) {
                     LocalStorage.setIsAuthorized(false)
                     LocalStorage.setToken('')
                 }
@@ -48,14 +48,24 @@ const Body = observer((props: BodyProps_T) => {
         }
         a()
     }, [])
-        return <div className={styles.body}>
-            {contextHolder}
-            <Menu />
-            <MainBody />
-            <ModalWindow active={!LocalStorage.notedAboutActivated} setActive={setActive}>
-                Здравствуйте! Ваша почта не подтверждена!
-            </ModalWindow>
-        </div>
+    return <div className={styles.body}>
+        {contextHolder}
+        <Menu />
+        <MainBody />
+        <ModalWindow active={!LocalStorage.notedAboutActivated} setActive={setActive}>
+            <Result
+                status="warning"
+                title="Почта не подтверждена"
+                subTitle="Чтобы получить доступ ко всем функциям приложения,
+                 необходимо подтвердить указанную Вами почту"
+                extra={
+                    <Button type="primary" onClick={setActive}>
+                        Хорошо
+                    </Button>
+                }
+            />
+        </ModalWindow>
+    </div>
 })
 
 export default Body

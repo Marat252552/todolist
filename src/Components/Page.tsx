@@ -12,9 +12,8 @@ import { Login_AC } from "./Redux/ActionCreators"
 import { AppStateType } from "./Redux/Redux"
 import { ControllerThunks } from "./Redux/Thunks"
 import Register from "./Register/Register"
-import { mapDispatch_T, mapState_T, PageProps_T } from "./types"
 
-const Page = observer((props: PageProps_T) => {
+const Page = observer(() => {
     let navigate = useNavigate()
     // Редирект в зависимости от того, авторизован пользователь или нет
     useEffect(() => {
@@ -26,28 +25,10 @@ const Page = observer((props: PageProps_T) => {
     }, [LocalStorage.IsAuthorized])
     return <Routes>
         <Route path="/login" element={<AuthPage />} />
-        <Route path="/" element={<Body PullAllCardsThunk={props.pullAllCards_Thunk} />} />
+        <Route path="/" element={<Body />} />
         <Route path="/register" element={<Register />} />
     </Routes>
 })
-
-const mapStateToProps = (state: AppStateType) => {
-    return {
-    }
-}
-
-const mapDispatchToProps = () => {
-    return {
-        Login_AC,
-        pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk
-    }
-}
-
-const PageContainer = connect<mapState_T, mapDispatch_T, unknown, AppStateType>(mapStateToProps, {
-    pullAllCards_Thunk: ControllerThunks.pullAllCards_Thunk
-})(Page)
-
-
 
 const PageAPIContainer = () => {
     let [loading, setLoading] = useState(true)
@@ -71,7 +52,7 @@ const PageAPIContainer = () => {
     if (loading) {
         return <LoadingScreen />
     } else {
-        return <PageContainer />
+        return <Page />
     }
 }
 
