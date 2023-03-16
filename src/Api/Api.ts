@@ -113,6 +113,21 @@ export const UsersAPI: UsersAPI_T = {
         return instanse.get('/users')
     }
 }
+export const GroupsAPI = {
+    pullGroups: async () => {
+        let response = await instanse.get('/groups')
+        let result = {
+            status: response.status,
+            data: response.data
+        }
+        return result
+    },
+    addGroups: async (groups: Array<{groupID: number, name: string, icon: string, background: string}>) => {
+        let response = await instanse.post('/groups', {groups: groups})
+        return response
+    },
+
+}
 
 
 

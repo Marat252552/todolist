@@ -1,7 +1,9 @@
 import {StarOutlined, DeploymentUnitOutlined, HomeOutlined, CalendarOutlined, UserOutlined} from '@ant-design/icons'
+import { Button } from 'antd'
 import { observer } from 'mobx-react-lite'
 import LocalStorage from '../../../Mobx/LocalStorage'
 import { SwitchCardGroup_Thunk } from '../../../Mobx/Thunks'
+import Actions from '../../MainBody/Helpers/Actions'
 import styles from './CardsInfo.module.css'
 import { CardsInfoPropsType, MakeMenuCardGroupPropsType } from './CardsInfoType'
 
@@ -26,12 +28,20 @@ const MakeMenuCardGroup = (props: MakeMenuCardGroupPropsType) => {
     </div>
 }
 
-const CardsInfo = observer((props: CardsInfoPropsType) => {
+const CardsInfo = observer((props: {SetMessageError: (value: any) => void}) => {
     return <div>
         {LocalStorage.state.menuCardGroups.map(group => {
             return <MakeMenuCardGroup key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
         })}
         <div className={styles.line}></div>
+        {LocalStorage.state.allCardGroups.map(group => {
+            if(group.groupID !== 1 && group.groupID !== 2 && group.groupID !== 3 && group.groupID !== 4 && group.groupID !== 5 )
+            return <MakeMenuCardGroup key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
+        })}
+        <Button onClick={() => {
+            let groupID = Math.random()
+            Actions.createGroup(groupID, 'Новая группа', 'StarOutlined', 'blue', props.SetMessageError)
+        }}>Создать группу</Button>
     </div>
 })
 

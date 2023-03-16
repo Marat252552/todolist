@@ -7,6 +7,40 @@
     border-radius: 5px;
 }
 
+.line {
+    border-bottom: solid 1px rgb(235, 235, 235);
+}
+
+.button {
+    margin: 7px 0 7px 0;
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    border: none;
+    padding: 12px 0 12px 0;
+    background: none;
+    width: 100%;
+    align-items: left;
+    border-radius: 5px;
+    justify-content: center;
+}
+
+
+
+.buttonIcon {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 10px;
+    justify-content: center;
+}
+
+.buttonText {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 15px;
+}
+
 .starButton {
     margin-top: 4px;
     border: none;
@@ -38,6 +72,15 @@
     border: none;
     outline: 0;
     background-color: rgb(245, 245, 245);
+    width: 100%;
+}
+
+.input2 {
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    border: none;
+    outline: 0;
     width: 100%;
 }
 

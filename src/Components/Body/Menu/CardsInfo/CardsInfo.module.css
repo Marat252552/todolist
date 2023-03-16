@@ -1,3 +1,7 @@
+.line {
+    border-bottom: solid 1px rgb(235, 235, 235);
+}
+
 .button {
     margin: 7px 0 7px 0;
     display: grid;
@@ -11,9 +15,7 @@
     justify-content: center;
 }
 
-.line {
-    border-bottom: solid 1px rgb(235, 235, 235);
-}
+
 
 .buttonIcon {
     display: flex;

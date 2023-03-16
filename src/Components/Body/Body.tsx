@@ -7,7 +7,7 @@ import LocalStorage from "../Mobx/LocalStorage";
 import { observer } from "mobx-react-lite";
 import { ModalWindow } from "../Modal/Modal";
 import { message, Result, Button } from 'antd';
-import { PullAllCards_Thunk } from "../Mobx/Thunks";
+import { PullAllCards_Thunk, PullAllGroups_Thunk } from "../Mobx/Thunks";
 
 const Body = observer(() => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -29,7 +29,7 @@ const Body = observer(() => {
                     LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email)
                     LocalStorage.setIsAuthorized(true)
                     PullAllCards_Thunk()
-                    console.log(response.data.isActivated)
+                    PullAllGroups_Thunk()
                     if (response.data.isActivated === 0) {
                         LocalStorage.setNotedAboutActivated(false)
                     }

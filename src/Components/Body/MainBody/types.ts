@@ -9,7 +9,9 @@ import { T_cT, U_T } from "../../Redux/ReduxTypes"
 export type MakeCardPropsType = {
     SetMessageError: (value: string) => void,
     key: number,
-    card: U_T["cardType"]
+    card: U_T["cardType"],
+    showDrawer: any,
+    setCardID: any
 }
 
 export type CreateNewCardPropsType = {
@@ -21,7 +23,6 @@ export type NewCardFormType = {
 }
 
 export type ChangeCardFormType = {
-    text: string,
-    cardID: number,
-    isCompleted: boolean,
+    card: U_T["cardType"],
+    SetMessageError: (value: any) => void
 }

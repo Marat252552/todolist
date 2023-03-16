@@ -18,35 +18,41 @@ class LocalStorage {
         currentCards: [
         ] as any,
         menuCardGroups: [
-            { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'wallpaper1' },
-            { groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'wallpaper1' },
-            { groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'wallpaper1' },
-            { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'wallpaper1' },
-            { groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'wallpaper1' },
+            { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
+            { groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red' },
+            { groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'blue' },
+            { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'orange' },
+            { groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'blue' },
         ],
         loading: false,
         addedCards: [] as Array<U_T["cardType"]>,
         changedCards: [] as Array<U_T["cardType"]>,
         deletedCards: [] as Array<U_T["cardType"]>,
+        createdGroups: [] as Array<{groupID: number, name: string, icon: string, background: string}>,
         searchInputValue: '',
         isSearchOn: false,
         newCardID: 6 as number,
         allCards: [] as Array<U_T["cardType"]>,
         allCardGroups: [
-            { groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red' },
             { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
-            { groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'orange' },
-            { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'blue' },
+            { groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red' },
+            { groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'blue' },
+            { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'orange' },
             { groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'blue' },
-        ]
+        ] as Array<{groupID: number, name: string, icon: string, background: string}>
     }
     constructor() {
         makeAutoObservable(this)
     }
     // Используется для сохранения карточки с сервера
+    
     setCard(cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) {
         let card = { cardID, text, groupsIDs, isCompleted }
         this.state.allCards.push(card)
+    }
+    setGroup(groupID: number, name: string, icon: string, background: string) {
+        let group = {groupID, name, icon, background}
+        this.state.allCardGroups.push(group)
     }
     changeCurrentCardGroupID(groupID: number) {
         let cardGroup = this.state.allCardGroups.filter(cardGroup => {
@@ -64,6 +70,9 @@ class LocalStorage {
         this.state.allCards = []
         this.state.currentCards = []
     }
+    clearAllGroups() {
+        this.state.allCardGroups = []
+    }
     toggleLoading(value: boolean) {
         this.state.loading = value
     }
@@ -71,6 +80,7 @@ class LocalStorage {
         if (controller === 1) { this.state.addedCards = [] }
         if (controller === 2) { this.state.changedCards = [] }
         if (controller === 3) { this.state.deletedCards = [] }
+        if (controller === 4) { this.state.createdGroups = [] }
     }
     switchCompleteCard(cardID: number) {
         let updatedCardIndex = this.state.allCards.findIndex(el => el.cardID === cardID)
@@ -113,6 +123,11 @@ class LocalStorage {
         this.state.deletedCards.push(deletedCard)
         this.state.addedCards = newAddedCards
         this.state.changedCards = newChangedCards
+    }
+    createNewGroup(groupID: number, name: string, icon: string, background: string) {
+        let newGroup = {groupID, name, icon, background}
+        this.state.createdGroups.push(newGroup)
+        this.state.allCardGroups.push(newGroup)
     }
     setNotedAboutActivated(value: boolean) {
         this.notedAboutActivated = value

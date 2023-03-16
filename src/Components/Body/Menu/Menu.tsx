@@ -6,12 +6,20 @@ import { AppStateType } from "../../Redux/Redux"
 import { MapDispatchType, MapStateType, MenuPropsType } from "./MenuTypes"
 import { changeCurrentCardGroupID_AC } from "../../Redux/ActionCreators"
 import { switchCardGroup_Thunk } from "../../Redux/Thunks"
+import { message } from 'antd';
 
-
-const Menu = (props: MenuPropsType) => {
+const Menu = () => {
+    const [messageApi, contextHolder] = message.useMessage();
+    const SetMessageError = (value: string) => {
+        messageApi.open({
+            type: 'error',
+            content: value,
+        });
+    }
     return <div className={styles.menu}>
+        {contextHolder}
         <MainBox/>
-        <CardsInfo />
+        <CardsInfo SetMessageError={SetMessageError}/>
     </div>
 }
 

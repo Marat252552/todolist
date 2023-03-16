@@ -78,8 +78,12 @@ const MainBox = observer((props: MainBoxPropsType) => {
         {
             key: '2',
             label: (
-                <div onClick={() => {
-                    PushData_Thunk(SetMessageError)
+                <div onClick={async () => {
+                    try {
+                        await PushData_Thunk()
+                    } catch(e: any) {
+                        SetMessageError(e.message)
+                    }
                 }}>Синхронизировать</div>
             ),
             icon: <SyncOutlined />
