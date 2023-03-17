@@ -1,0 +1,13 @@
+import { AC_cT, T_cT, U_T } from '../../../../Side/Redux/ReduxTypes';
+
+export type CardsInfoPropsType = {
+}
+
+export type MakeMenuCardGroupPropsType = {
+    key: number,
+    name: string,
+    groupID: number,
+    icon: string,
+    background: string,
+    SetMessageError: (value: any) => void
+}
