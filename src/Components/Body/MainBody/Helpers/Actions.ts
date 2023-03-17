@@ -1,5 +1,5 @@
 import LocalStorage from "../../../Mobx/LocalStorage"
-import { AddCard_Thunk, ChangeCard_Thunk, CreateGroup_Thunk, DeleteCardGroup_Thunk, DeleteCard_Thunk } from "../../../Mobx/Thunks"
+import { AddCard_Thunk, ChangeCard_Thunk, CreateGroup_Thunk, DeleteCardGroup_Thunk, DeleteCard_Thunk, UpdateGroup_Thunk } from "../../../Mobx/Thunks"
 import { U_T } from "../../../Redux/ReduxTypes"
 import { Actions_T } from "./types"
 
@@ -66,16 +66,23 @@ const Actions: Actions_T = {
             SetMessageError(e.message)
         }
     },
-    createGroup: async (groupID: number, name: string, icon: string, background: string, SetMessageError) => {
+    createGroup: async (groupID, name, icon, background, SetMessageError) => {
         try {
             await CreateGroup_Thunk(groupID, name, icon, background)
         } catch(e: any) {
             SetMessageError(e.message)
         }
     },
-    deleteCardGroup: async (groupID: number, name: string, icon: string, background: string, SetMessageError) => {
+    deleteCardGroup: async (groupID, name, icon, background, SetMessageError) => {
         try {
             await DeleteCardGroup_Thunk(groupID, name, icon, background)
+        } catch(e: any) {
+            SetMessageError(e.message)
+        }
+    },
+    updateCardGroup: async (groupID, name, icon, background, SetMessageError) => {
+        try {
+            await UpdateGroup_Thunk(groupID, name, icon, background)
         } catch(e: any) {
             SetMessageError(e.message)
         }

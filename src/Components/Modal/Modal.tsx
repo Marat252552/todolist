@@ -2,7 +2,7 @@ import LocalStorage from '../Mobx/LocalStorage'
 import styles from './Modal.module.css'
 
 
-export const ModalWindow = ({active, setActive, children}: any) => {
+export const ModalWindow = ({active, setActive, children}: {active: boolean, setActive: any, children: any}) => {
     return <div className={(active)? styles.active : styles.modal} onClick={() =>{
         setActive(false)
     }}>

@@ -98,8 +98,15 @@ const HighComponent = {
         let requiredGroupsArray = props.card.groupsIDs.filter(groupID => {
             return groupID !== LocalStorage.state.currentCardGroup.groupID
         }).map(groupID => {
-            return LocalStorage.state.allCardGroups.filter(group => { return groupID === group.groupID })[0].name
+            try {
+                return LocalStorage.state.allCardGroups.filter(group => { return groupID === group.groupID })[0].name
+            } catch(e) {
+                return undefined
+            }
         })
+        if(requiredGroupsArray === undefined) {
+            return <div></div>
+        }
         return <>
             <Popover
                 placement="bottomLeft"
@@ -114,7 +121,7 @@ const HighComponent = {
                     props.showDrawer(props.card)
                 }}>
                     <LowComponent.CheckBox card={props.card} stopPropagation={false} SetMessageError={props.SetMessageError}  />
-                    <LowComponent.CardInfo requiredGroupsArray={requiredGroupsArray} text={props.card.text} />
+                    <LowComponent.CardInfo requiredGroupsArray={requiredGroupsArray!} text={props.card.text} />
                     <LowComponent.Buttons.Important card={props.card} SetMessageError={props.SetMessageError}  />
                 </div>
             </Popover>

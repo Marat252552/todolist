@@ -38,6 +38,9 @@ const LowComponent = {
         </div>
     },
     CardInfo: (props: { text: string, requiredGroupsArray: Array<string>, }) => {
+        if(props.requiredGroupsArray === undefined) {
+            return <div></div>
+        }
         return <div className={styles.cardInfo}>
             <p>{props.text}</p>
             <span className={styles.groupName}>{props.requiredGroupsArray.map(groupName => {

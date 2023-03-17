@@ -29,6 +29,7 @@ class LocalStorage {
         changedCards: [] as Array<U_T["cardType"]>,
         deletedCards: [] as Array<U_T["cardType"]>,
         createdGroups: [] as Array<{groupID: number, name: string, icon: string, background: string}>,
+        updatedGroups: [] as Array<{groupID: number, name: string, icon: string, background: string}>,
         deletedGroups: [] as Array<{groupID: number, name: string, icon: string, background: string}>,
         searchInputValue: '',
         isSearchOn: false,
@@ -109,6 +110,7 @@ class LocalStorage {
         if (controller === 3) { this.state.deletedCards = [] }
         if (controller === 4) { this.state.createdGroups = [] }
         if (controller === 5) { this.state.deletedGroups = [] }
+        if (controller === 6) { this.state.updatedGroups = [] }
     }
     switchCompleteCard(cardID: number) {
         let updatedCardIndex = this.state.allCards.findIndex(el => el.cardID === cardID)
@@ -179,6 +181,26 @@ class LocalStorage {
     }
     setIsAuthorized(value: boolean) {
         this.IsAuthorized = value
+    }
+    // Changing option - icon, name или background
+    updateCardGroup(groupID: number, name: string, icon: string, background: string) {
+        let updatedCardGroup = {groupID, name, icon, background}
+        this.state.allCardGroups = this.state.allCardGroups.map(cardGroup => {
+            if(cardGroup.groupID === groupID) {
+                return updatedCardGroup
+            } else {
+                return cardGroup
+            }
+        })
+        this.state.createdGroups = this.state.createdGroups.map(cardGroup => {
+            if(cardGroup.groupID === groupID) {
+                return updatedCardGroup
+            } else {
+                return cardGroup
+            }
+        })
+        this.state.updatedGroups.push(updatedCardGroup)
+        console.log(toJS(this.state.updatedGroups) )
     }
 }
 

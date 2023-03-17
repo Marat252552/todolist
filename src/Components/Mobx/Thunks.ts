@@ -53,6 +53,10 @@ export const PushData_Thunk = async () => {
                 await unifyCards
                 LocalStorage.clearController(4)
             }
+            if (LocalStorage.state.updatedGroups[0]) {
+                await GroupsAPI.updateGroups(LocalStorage.state.updatedGroups)
+                LocalStorage.clearController(6)
+            }
             if (LocalStorage.state.deletedGroups[0]) {
                 await GroupsAPI.deleteGroups(LocalStorage.state.deletedGroups)
                 LocalStorage.clearController(5)
@@ -138,6 +142,17 @@ export const DeleteCardGroup_Thunk = (groupID: number, name: string, icon: strin
             return
         }
         LocalStorage.deleteCardGroup(groupID, name, icon, background)
+        resolve(undefined)
+    })
+    return CreateGroup
+}
+export const UpdateGroup_Thunk = (groupID: number, name: string, icon: string, background: string) => {
+    let CreateGroup = new Promise((resolve, reject) => {
+        if(!LocalStorage.isActivated) {
+            reject(new Error('Почта не подтверждена. Доступны не все функции'))
+            return
+        }
+        LocalStorage.updateCardGroup(groupID, name, icon, background)
         resolve(undefined)
     })
     return CreateGroup

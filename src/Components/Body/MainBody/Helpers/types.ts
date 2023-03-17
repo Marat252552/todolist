@@ -11,4 +11,5 @@ export type Actions_T = {
     changeCardText: (card: U_T["cardType"], text: string, SetMessageError: (value: string) => void) => Promise<void>,
     createGroup: (groupID: number, name: string, icon: string, background: string, SetMessageError: (value: string) => void, helper?: any) => Promise<void>,
     deleteCardGroup: (groupID: number, name: string, icon: string, background: string, SetMessageError: (value: string) => void, helper?: any) => Promise<void>,
+    updateCardGroup: (groupID: number, name: string, icon: string, background: string, SetMessageError: (value: string) => void, helper?: any) => Promise<void>,
 }

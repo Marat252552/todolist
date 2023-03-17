@@ -1,11 +1,16 @@
 import { StarOutlined, DeploymentUnitOutlined, HomeOutlined, CalendarOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Popover } from 'antd'
+import { Button, Drawer, Popover } from 'antd'
 import { observer } from 'mobx-react-lite'
 import LocalStorage from '../../../Mobx/LocalStorage'
 import { SwitchCardGroup_Thunk } from '../../../Mobx/Thunks'
+import { ModalWindow } from '../../../Modal/Modal'
 import Actions from '../../MainBody/Helpers/Actions'
 import styles from './CardsInfo.module.css'
 import { CardsInfoPropsType, MakeMenuCardGroupPropsType } from './CardsInfoType'
+import { useState, useRef } from 'react'
+import { Field, FormikProvider, useFormik } from 'formik'
+
+
 
 const iconConditions = (icon: string) => {
     switch (icon) {
@@ -18,35 +23,115 @@ const iconConditions = (icon: string) => {
 }
 
 const MakeMenuCardGroup = (props: MakeMenuCardGroupPropsType) => {
+    // Состояние формы изменения имени группы
+    let [updating, setUpdating] = useState(false)
+    // Состояние popover
+    let [open, setOpen] = useState(false)
+    let handleOpenChange = (newOpen: boolean) => {
+        setOpen(newOpen)
+    }
+    let Errors = (value: string) => {
+        if (!value) {
+            return 'Поле не может быть пустым'
+        }
+        if (value.length > 20) {
+            return 'Название не больше 20 символов'
+        }
+    }
+    const formik = useFormik({
+        initialValues: {
+            cardGroup: props.name,
+        },
+        onSubmit: async (values: any, { resetForm }: any) => {
+            Actions.updateCardGroup(props.groupID, values.cardGroup, props.icon, props.background, props.SetMessageError)
+            setUpdating(false)
+        },
+    })
     return <div>
-        <button onClick={() => {
-            SwitchCardGroup_Thunk(props.groupID)
-        }} className={styles.button}>
-            <div className={styles.buttonIcon}>{iconConditions(props.icon)}</div>
-            <div className={styles.buttonText}>{props.name}</div>
-        </button>
+        <Popover placement="bottomLeft"
+            style={{ padding: '0' }}
+            content={
+                <div>
+                    <Button onClick={() => {
+                        Actions.deleteCardGroup(props.groupID, props.name, props.icon, props.background, props.SetMessageError)
+                    }}>Delete</Button>
+                    <Button onClick={() => { 
+                        setUpdating(true)
+                        setOpen(false)
+                        }}>Переименовать колоду</Button>
+                </div>
+            }
+            open={open}
+            trigger="contextMenu"
+            onOpenChange={handleOpenChange}
+        >
+            {(updating) ?
+                // Форма изменения названия группы
+                <button onClick={() => {
+                    SwitchCardGroup_Thunk(props.groupID)
+                }} className={styles.button}>
+                    <div className={styles.buttonIcon}>{iconConditions(props.icon)}</div>
+                    <div className={styles.buttonText}>
+                        <div>
+                            <FormikProvider value={formik}>
+                                <form onSubmit={formik.handleSubmit}>
+                                    <Field
+                                        autoFocus
+                                        className={styles.input}
+                                        placeholder='Название группы'
+                                        id="cardGroup"
+                                        name='cardGroup'
+                                        type='text'
+                                        onChange={formik.handleChange}
+                                        value={formik.values.cardGroup}
+                                        validate={Errors}
+                                        onBlur={() => {setUpdating(false)}}
+                                        maxLength='20'
+                                    />
+                                </form>
+                            </FormikProvider>
+                        </div>
+                    </div>
+                </button>
+                :
+                <button
+                    // Открывает popover
+                    onContextMenu={() => {setOpen(true)}}
+                    // Переключает на текущую группу
+                    onClick={() => {
+                    SwitchCardGroup_Thunk(props.groupID)
+                }} className={styles.button}>
+                    <div className={styles.buttonIcon}>{iconConditions(props.icon)}</div>
+                    <div className={styles.buttonText}>{props.name}</div>
+                </button>}
+        </Popover>
     </div>
 }
 
 const CardsInfo = observer((props: { SetMessageError: (value: any) => void }) => {
+    const [open, setOpen] = useState(false);
+    const DrawerF = {
+        showDrawer: () => {
+            setOpen(true);
+        },
+        close: () => {
+            setOpen(false);
+        }
+    }
     return <div>
+        <Drawer title="Basic Drawer" placement="right" onClose={DrawerF.close} open={open}>
+            <p>Создание группы</p>
+        </Drawer>
         {LocalStorage.state.menuCardGroups.map(group => {
-            return <MakeMenuCardGroup key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
+            return <MakeMenuCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
         })}
         <div className={styles.line}></div>
         {LocalStorage.state.allCardGroups.map(group => {
             if (group.groupID !== 1 && group.groupID !== 2 && group.groupID !== 3 && group.groupID !== 4 && group.groupID !== 5)
-                return <Popover placement="bottomLeft"
-                        style={{ padding: '0' }}
-                        content={<Button onClick={() => { Actions.deleteCardGroup(group.groupID, group.name, group.icon, group.background, props.SetMessageError) }}>Delete</Button>
-                        }
-                        trigger="contextMenu"
-                        open={true}
-                        >
-                        <MakeMenuCardGroup key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
-                    </Popover>
+                return <MakeMenuCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
         })}
         <Button onClick={() => {
+            // setOpen(true)
             let groupID = Math.random()
             Actions.createGroup(groupID, 'Новая группа', 'StarOutlined', 'blue', props.SetMessageError)
         }}>Создать группу</Button>
