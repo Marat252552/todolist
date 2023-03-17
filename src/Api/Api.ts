@@ -126,7 +126,11 @@ export const GroupsAPI = {
         let response = await instanse.post('/groups', {groups: groups})
         return response
     },
-
+    deleteGroups: async (groups: Array<{groupID: number, name: string, icon: string, background: string}>) => {
+        console.log('delete groups api')
+        let response = await instanse.put('/groups', {groups: groups})
+        return response
+    },
 }
 
 

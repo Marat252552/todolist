@@ -2,6 +2,7 @@ import { GroupsAPI } from './../../Api/Api';
 import { CardsAPI } from "../../Api/Api"
 import { U_T } from "../Redux/ReduxTypes"
 import LocalStorage from "./LocalStorage"
+import { toJS } from 'mobx';
 
 
 export const PullAllCards_Thunk = async () => {
@@ -41,8 +42,20 @@ export const PushData_Thunk = async () => {
         LocalStorage.toggleLoading(true)
         try {
             if (LocalStorage.state.createdGroups[0]) {
-                await GroupsAPI.addGroups(LocalStorage.state.createdGroups)
+                let response = await GroupsAPI.addGroups(LocalStorage.state.createdGroups)
+                let unifyCards = new Promise((resolve, reject) => {
+                    response.data.forEach((data: {groupID: number, initialGroupID: number}, index: any, array: any) => {
+                        console.log(data)
+                        LocalStorage.unifyCardsGroupsIDs(data.initialGroupID, data.groupID)
+                        if(index === array.length -1) {resolve(undefined)}
+                    })
+                })
+                await unifyCards
                 LocalStorage.clearController(4)
+            }
+            if (LocalStorage.state.deletedGroups[0]) {
+                await GroupsAPI.deleteGroups(LocalStorage.state.deletedGroups)
+                LocalStorage.clearController(5)
             }
             if (LocalStorage.state.addedCards[0]) {
                 await CardsAPI.addCards(LocalStorage.state.addedCards)
@@ -114,6 +127,17 @@ export const CreateGroup_Thunk = (groupID: number, name: string, icon: string, b
             return
         }
         LocalStorage.createNewGroup(groupID, name, icon, background)
+        resolve(undefined)
+    })
+    return CreateGroup
+}
+export const DeleteCardGroup_Thunk = (groupID: number, name: string, icon: string, background: string) => {
+    let CreateGroup = new Promise((resolve, reject) => {
+        if(!LocalStorage.isActivated) {
+            reject(new Error('Почта не подтверждена. Доступны не все функции'))
+            return
+        }
+        LocalStorage.deleteCardGroup(groupID, name, icon, background)
         resolve(undefined)
     })
     return CreateGroup

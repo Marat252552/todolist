@@ -29,6 +29,7 @@ class LocalStorage {
         changedCards: [] as Array<U_T["cardType"]>,
         deletedCards: [] as Array<U_T["cardType"]>,
         createdGroups: [] as Array<{groupID: number, name: string, icon: string, background: string}>,
+        deletedGroups: [] as Array<{groupID: number, name: string, icon: string, background: string}>,
         searchInputValue: '',
         isSearchOn: false,
         newCardID: 6 as number,
@@ -45,7 +46,6 @@ class LocalStorage {
         makeAutoObservable(this)
     }
     // Используется для сохранения карточки с сервера
-    
     setCard(cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) {
         let card = { cardID, text, groupsIDs, isCompleted }
         this.state.allCards.push(card)
@@ -59,6 +59,33 @@ class LocalStorage {
             return cardGroup.groupID === groupID
         })[0]
         this.state.currentCardGroup = cardGroup
+    }
+    unifyCardsGroupsIDs(initialGroupID: number, groupID: number) {
+        let newAddedCards = this.state.addedCards.map((card: U_T["cardType"]) => {
+            let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
+            unifiedCardGroups.push(groupID)
+            return {...card, groupsIDs: unifiedCardGroups}
+        })
+        let newChangedCards = this.state.changedCards.map((card: U_T["cardType"]) => {
+            let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
+            unifiedCardGroups.push(groupID)
+            return {...card, groupsIDs: unifiedCardGroups}
+        })
+        let newDeletedCards = this.state.deletedCards.map((card: U_T["cardType"]) => {
+            let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
+            unifiedCardGroups.push(groupID)
+            return {...card, groupsIDs: unifiedCardGroups}
+        })
+        let newAllCards = this.state.allCards.map((card: U_T["cardType"]) => {
+            let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
+            unifiedCardGroups.push(groupID)
+            console.log(unifiedCardGroups)
+            return {...card, groupsIDs: unifiedCardGroups}
+        })
+        this.state.addedCards = newAddedCards
+        this.state.changedCards = newChangedCards
+        this.state.deletedCards = newDeletedCards
+        this.state.allCards = newAllCards
     }
     updateCurrentCards() {
         let newCurrentCards = this.state.allCards.filter(card => {
@@ -81,6 +108,7 @@ class LocalStorage {
         if (controller === 2) { this.state.changedCards = [] }
         if (controller === 3) { this.state.deletedCards = [] }
         if (controller === 4) { this.state.createdGroups = [] }
+        if (controller === 5) { this.state.deletedGroups = [] }
     }
     switchCompleteCard(cardID: number) {
         let updatedCardIndex = this.state.allCards.findIndex(el => el.cardID === cardID)
@@ -128,6 +156,12 @@ class LocalStorage {
         let newGroup = {groupID, name, icon, background}
         this.state.createdGroups.push(newGroup)
         this.state.allCardGroups.push(newGroup)
+    }
+    deleteCardGroup(groupID: number, name: string, icon: string, background: string) {
+        let deletedGroup = {groupID, name, icon, background}
+        this.state.createdGroups = this.state.createdGroups.filter(group => groupID !== group.groupID)
+        this.state.allCardGroups = this.state.allCardGroups.filter(group => groupID !== group.groupID)
+        this.state.deletedGroups.push(deletedGroup)
     }
     setNotedAboutActivated(value: boolean) {
         this.notedAboutActivated = value
