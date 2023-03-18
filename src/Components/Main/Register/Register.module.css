@@ -5,7 +5,7 @@
     position: fixed;
     align-items: center;
     justify-content: center;
-    background-image: url('./../../Media/Trianglify-10s-1280px.svg');
+    background-image: url('./../../../Media/Trianglify-10s-1280px.svg');
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -45,8 +45,4 @@
 
 .input:hover {
     border: solid 1px rgb(123, 123, 255)
-}
-
-.section {
-
 }
