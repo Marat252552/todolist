@@ -17,7 +17,7 @@ export const ControllerThunks: ControllersThunks_T = {
                 if (response.status === 200) {
                     let cards: Array<U_T["cardType"]> = response.data as Array<U_T["cardType"]>
                     cards.forEach(card => {
-                        dispatch(pullCards_AC(card.cardID, card.text, card.groupsIDs, card.isCompleted))
+                        dispatch(pullCards_AC(card.id, card.content, card.groupsIDs, card.is_completed))
                     })
                     dispatch(updateCurrentCards_AC())
                 } else {
@@ -49,30 +49,30 @@ export const ControllerThunks: ControllersThunks_T = {
 
 // Thunks that help Controller Thunks (manage controller state - state.addedCards etc.)
 export const StateControllerThunks: StateControllerThunks_T = {
-    addCard_Thunk: (cardID, text, groupsIDs, isCompleted) => {
+    addCard_Thunk: (id, content, groupsIDs, is_completed) => {
         return (dispatch: Dispatch<AllActionsData>) => {
             try {
-                dispatch(addNewCard_AC(cardID, text, groupsIDs, isCompleted))
+                dispatch(addNewCard_AC(id, content, groupsIDs, is_completed))
                 dispatch(updateCurrentCards_AC())
             } catch (e) {
                 console.log(e)
             }
         }
     },
-    deleteCard_Thunk: (cardID: number) => {
+    deleteCard_Thunk: (id: number) => {
         return (dispatch: Dispatch<AllActionsData>) => {
             try {
-                dispatch(deleteCard_AC(cardID))
+                dispatch(deleteCard_AC(id))
                 dispatch(updateCurrentCards_AC())
             } catch (e) {
                 console.log(e)
             }
         }
     },
-    changeCard_Thunk: (cardID, text, groupsIDs, isCompleted) => {
+    changeCard_Thunk: (id, content, groupsIDs, is_completed) => {
         return (dispatch: Dispatch<AllActionsData>) => {
             try {
-                dispatch(changeCard_AC(cardID, text, groupsIDs, isCompleted))
+                dispatch(changeCard_AC(id, content, groupsIDs, is_completed))
                 dispatch(updateCurrentCards_AC())
             } catch (e) {
                 console.log(e)
@@ -89,21 +89,21 @@ export const switchCardGroup_Thunk: T_T["switchCardGroupThunk_T"] = (groupID: nu
         dispatch(updateCurrentCards_AC())
     }
 }
-export const addGroupID_Thunk: T_T["addGroupIDThunk_T"] = (groupID: number, cardID: number) => {
+export const addGroupID_Thunk: T_T["addGroupIDThunk_T"] = (groupID: number, id: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(addGroupID_AC(groupID, cardID))
+        dispatch(addGroupID_AC(groupID, id))
         dispatch(updateCurrentCards_AC())
     }
 }
-export const deleteGroupID_Thunk: T_T["deleteGroupIDThunk_T"] = (groupID: number, cardID: number) => {
+export const deleteGroupID_Thunk: T_T["deleteGroupIDThunk_T"] = (groupID: number, id: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(deleteGroupID_AC(groupID, cardID))
+        dispatch(deleteGroupID_AC(groupID, id))
         dispatch(updateCurrentCards_AC())
     }
 }
-export const switchCompleteCard_Thunk: T_T["switchCompleteCardThunk_T"] = (cardID: number) => {
+export const switchCompleteCard_Thunk: T_T["switchCompleteCardThunk_T"] = (id: number) => {
     return (dispatch: Dispatch<AllActionsData>) => {
-        dispatch(switchCompleteCard_AC(cardID))
+        dispatch(switchCompleteCard_AC(id))
         dispatch(updateCurrentCards_AC())
     }
 }

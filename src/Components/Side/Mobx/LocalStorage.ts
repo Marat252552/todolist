@@ -33,7 +33,7 @@ class LocalStorage {
         deletedGroups: [] as Array<{groupID: number, name: string, icon: string, background: string}>,
         searchInputValue: '',
         isSearchOn: false,
-        newCardID: 6 as number,
+        newid: 6 as number,
         allCards: [] as Array<U_T["cardType"]>,
         allCardGroups: [
             { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
@@ -47,8 +47,8 @@ class LocalStorage {
         makeAutoObservable(this)
     }
     // Используется для сохранения карточки с сервера
-    setCard(cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) {
-        let card = { cardID, text, groupsIDs, isCompleted }
+    setCard(id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) {
+        let card = { id, content, groupsIDs, is_completed }
         this.state.allCards.push(card)
     }
     setGroup(groupID: number, name: string, icon: string, background: string) {
@@ -83,10 +83,18 @@ class LocalStorage {
             console.log(unifiedCardGroups)
             return {...card, groupsIDs: unifiedCardGroups}
         })
+        let newUpdatedGroups = this.state.updatedGroups.map(cardGroup => {
+            if(cardGroup.groupID === initialGroupID) {
+                return {...cardGroup, groupID: groupID}
+            } else {
+                return {...cardGroup}
+            }
+        })
         this.state.addedCards = newAddedCards
         this.state.changedCards = newChangedCards
         this.state.deletedCards = newDeletedCards
         this.state.allCards = newAllCards
+        this.state.updatedGroups = newUpdatedGroups
     }
     updateCurrentCards() {
         let newCurrentCards = this.state.allCards.filter(card => {
@@ -112,14 +120,14 @@ class LocalStorage {
         if (controller === 5) { this.state.deletedGroups = [] }
         if (controller === 6) { this.state.updatedGroups = [] }
     }
-    switchCompleteCard(cardID: number) {
-        let updatedCardIndex = this.state.allCards.findIndex(el => el.cardID === cardID)
+    switchCompleteCard(id: number) {
+        let updatedCardIndex = this.state.allCards.findIndex(el => el.id === id)
         let updatedCard = this.state.allCards[updatedCardIndex]
         let updatedAllCards = this.state.allCards
-        if (this.state.allCards[updatedCardIndex].isCompleted === true) {
-            updatedCard.isCompleted = false
+        if (this.state.allCards[updatedCardIndex].is_completed === true) {
+            updatedCard.is_completed = false
         } else {
-            updatedCard.isCompleted = true
+            updatedCard.is_completed = true
         }
         updatedAllCards[updatedCardIndex] = updatedCard
         this.state.allCards = updatedAllCards
@@ -127,28 +135,28 @@ class LocalStorage {
     setIsActivated(value: number) {
         this.isActivated = value
     }
-    addNewCard(cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) {
-        let card = { cardID, text, groupsIDs, isCompleted }
+    addNewCard(id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) {
+        let card = { id, content, groupsIDs, is_completed }
         this.state.allCards.push(card)
         this.state.addedCards.push(card)
     }
-    changeCard(cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) {
-        let changedCard = { cardID, text, groupsIDs, isCompleted }
-        this.state.addedCards = this.state.addedCards.map(card => (card.cardID === changedCard.cardID)? changedCard : card)
+    changeCard(id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) {
+        let changedCard = { id, content, groupsIDs, is_completed }
+        this.state.addedCards = this.state.addedCards.map(card => (card.id === changedCard.id)? changedCard : card)
         this.state.changedCards.push(changedCard)
-        this.state.allCards = this.state.allCards.map(card => (card.cardID === changedCard.cardID)? changedCard : card )
+        this.state.allCards = this.state.allCards.map(card => (card.id === changedCard.id)? changedCard : card )
         console.log(toJS(this.state.allCards) )
     }
-    deleteCard(cardID: number) {
+    deleteCard(id: number) {
         let newAllCards = [
             ...this.state.allCards
         ]
-        let deletedCard = this.state.allCards.find(card => card.cardID === cardID) as any
+        let deletedCard = this.state.allCards.find(card => card.id === id) as any
         newAllCards = newAllCards.filter(card => {
-            return card.cardID !== deletedCard.cardID 
+            return card.id !== deletedCard.id 
         })
-        let newAddedCards = this.state.addedCards.filter(card => card.cardID !== cardID)
-        let newChangedCards = this.state.changedCards.filter(card => card.cardID !== cardID)
+        let newAddedCards = this.state.addedCards.filter(card => card.id !== id)
+        let newChangedCards = this.state.changedCards.filter(card => card.id !== id)
         this.state.allCards = newAllCards
         this.state.deletedCards.push(deletedCard)
         this.state.addedCards = newAddedCards

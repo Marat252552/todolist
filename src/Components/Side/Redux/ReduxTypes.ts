@@ -6,19 +6,19 @@ import { AppStateType } from './Redux';
 // ACTION CREATORS
 //action creators' types
 export type AC_T = {
-    addNewCardAC_T: (id: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) => {
+    addNewCardAC_T: (id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) => {
         type: typeof ADD_NEW_CARD,
         id: number,
-        text: string,
+        content: string,
         groupsIDs: Array<number>,
-        isCompleted: boolean
+        is_completed: boolean
     },
-    changeCardAC_T: (id: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) => {
+    changeCardAC_T: (id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) => {
         type: typeof CHANGE_CARD,
         id: number,
-        text: string,
+        content: string,
         groupsIDs: Array<number>,
-        isCompleted: boolean
+        is_completed: boolean
     },
     clearAllCardsAC_T: () => {
         type: typeof CLEAR_ALL_CARDS
@@ -27,17 +27,17 @@ export type AC_T = {
         type: typeof CLEAR_CONTROLLERS,
         controller: number
     }
-    pullCardsAC_T: (id: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) => {
+    pullCardsAC_T: (id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) => {
         type: typeof PULL_CARDS,
         id: number,
-        text: string,
+        content: string,
         groupsIDs: Array<number>,
-        isCompleted: boolean
+        is_completed: boolean
     }
-    changeTextCardAC_T: (text: string, cardID: number) => {
+    changeTextCardAC_T: (content: string, id: number) => {
         type: typeof CHANGE_TEXT_CARD,
-        text: string,
-        cardID: number
+        content: string,
+        id: number
     },
     toggleSearchAC_T: (isSearchOn: boolean) => {
         type: typeof TOGGLE_SEARCH,
@@ -46,31 +46,31 @@ export type AC_T = {
     updateCurrentCardsAC_T: () => {
         type: typeof UPDATE_CURRENT_CARDS
     },
-    deleteCardAC_T: (cardID: number) => {
+    deleteCardAC_T: (id: number) => {
         type: typeof DELETE_CARD,
-        cardID: number
+        id: number
     },
     changeCurrentCardGroupIDAC_T: (groupID: number) => {
         type: typeof CHANGE_CURRENT_GROUP_ID,
         groupID: number
     },
-    switchCompleteCardAC_T: (cardID: number) => {
+    switchCompleteCardAC_T: (id: number) => {
         type: typeof SWITCH_COMPLETE_CARD,
-        cardID: number
+        id: number
     },
-    addGroupIDAC_T: (groupID: number, cardID: number) => {
+    addGroupIDAC_T: (groupID: number, id: number) => {
         type: typeof ADD_GROUP_ID,
         groupID: number,
-        cardID: number
+        id: number
     },
-    deleteCardGroupIDAC_T: (groupID: number, cardID: number) => {
+    deleteCardGroupIDAC_T: (groupID: number, id: number) => {
         type: typeof DELETE_GROUP_ID,
         groupID: number,
-        cardID: number
+        id: number
     },
-    updateSearchInputValueTypeAC_T: (text: string) => {
+    updateSearchInputValueTypeAC_T: (content: string) => {
         type: typeof UPDATE_SEARCH_INPUT_VALUE,
-        text: string
+        content: string
     },
     loginAC_T: (email: string, name: string, lastName: string) => {
         type: typeof LOGIN,
@@ -91,27 +91,27 @@ export type AC_cT = {
     LoginAC_cT: (email: string, name: string, lastName: string) => void,
     changeCurrentCardGroupIDAC_cT: (groupID: number) => void,
     toggleSearchAC_cT: (isSearchOn: boolean) => void,
-    updateSearchInputValueTypeAC_cT: (text: string) => void
+    updateSearchInputValueTypeAC_cT: (content: string) => void
 }
 
 // THUNKS
 //thunks' types
 export type T_T = {
-    deleteCardThunk_T: (cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
-    changeTextCardThunk_T: (text: string, cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    deleteCardThunk_T: (id: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    changeTextCardThunk_T: (content: string, id: number) => (dispatch: Dispatch<AllActionsData>) => void,
     switchCardGroupThunk_T: (groupID: number) => (dispatch: Dispatch<AllActionsData>) => void,
-    addGroupIDThunk_T: (groupID: number, cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    addGroupIDThunk_T: (groupID: number, id: number) => (dispatch: Dispatch<AllActionsData>) => void,
     PullAllCardsThunk_T: () => (dispatch: Dispatch<AllActionsData>) => Promise<void>,
-    deleteGroupIDThunk_T: (groupID: number, cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
-    switchCompleteCardThunk_T: (cardID: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    deleteGroupIDThunk_T: (groupID: number, id: number) => (dispatch: Dispatch<AllActionsData>) => void,
+    switchCompleteCardThunk_T: (id: number) => (dispatch: Dispatch<AllActionsData>) => void,
     logoutThunk_T: () => (dispatch: Dispatch<AllActionsData>) => Promise<void>,
     loginThunk_T: (login: string, password: string) => (dispatch: Dispatch<AllActionsData>) => Promise<void>,
-    changeCardThunk_T: (cardID: number, text: string, groupsIDs: number[], isCompleted: boolean) => (dispatch: Dispatch<AllActionsData>) => void,
+    changeCardThunk_T: (id: number, content: string, groupsIDs: number[], is_completed: boolean) => (dispatch: Dispatch<AllActionsData>) => void,
     syncChangedCardsThunk_T: (state: AppStateType) => (dispatch: Dispatch<AllActionsData>) => Promise<void>,
     PushDataThunk_T: (state: AppStateType) => (dispatch: Dispatch<AllActionsData>) => Promise<void>,
     syncDeletedCardsThunk_T: (state: AppStateType) => (dispatch: Dispatch<AllActionsData>) => Promise<void>,
     syncAddedCardsThunk_T: (state: AppStateType) => (dispatch: Dispatch<AllActionsData>) => Promise<void>,
-    addCardThunk_T: (cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean) => (dispatch: Dispatch<AllActionsData>) => void
+    addCardThunk_T: (id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) => (dispatch: Dispatch<AllActionsData>) => void
 }
 // thunks connected' types
 export type T_cT = {
@@ -119,7 +119,7 @@ export type T_cT = {
     loginThunk_cT: (login: string, password: string) => void,
     switchCardGroupThunk_cT: (groupID: number) => void,
     logoutThunk_cT: () => void,
-    changeCard_Thunk: (cardID: number, text: string, groupsIDs: number[], isCompleted: boolean) => void,
+    changeCard_Thunk: (id: number, content: string, groupsIDs: number[], is_completed: boolean) => void,
     PushDataThunk_cT: (state: AppStateType) => void
 }
 
@@ -140,7 +140,7 @@ export type U_T = {
     currentCardGroup_T: U_T["menuCardGroupType"],
     allCardGroups_T: Array<U_T["cardGroupType"]>
     menuCardGroups_T: Array<U_T["menuCardGroupType"]>,
-    cardType: {cardID: number, text: string, groupsIDs: Array<number>, isCompleted: boolean}
+    cardType: {id: number, content: string, groupsIDs: Array<number>, is_completed: boolean}
 }
 
 export type ControllersThunks_T = {

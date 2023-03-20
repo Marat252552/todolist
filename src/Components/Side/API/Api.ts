@@ -80,7 +80,7 @@ export const AuthAPI: AuthAPI_T = {
         return result
     },
     SignIn: async (login, password, email, birthdate, name, lastName, phone, gender, captchaToken) => {
-        let response = await instanse.post('/auth/signin', { login, password, email, birthdate, name, lastName, phone, gender, captchaToken })
+        let response = await instanse.post('/auth/signin', { login, password, email, birthdate, name, last_name: lastName, phone, gender, captchaToken })
         let result = {
             status: response.status,
             data: response.data

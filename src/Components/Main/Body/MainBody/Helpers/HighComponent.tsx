@@ -33,8 +33,8 @@ const HighComponent = {
                 card: '',
             },
             onSubmit: async (values: any, { resetForm }: any) => {
-                let text = values.card
-                Actions.addCard(text, props.SetMessageError, resetForm)
+                let content = values.card
+                Actions.addCard(content, props.SetMessageError, resetForm)
             },
         })
         return <FormikProvider value={formik}>
@@ -55,11 +55,11 @@ const HighComponent = {
     DrawerChangeCardForm: (props: ChangeCardFormType) => {
         const formik = useFormik({
             initialValues: {
-                card: props.card.text
+                card: props.card.content
             },
             onSubmit: (values: any) => {
-                let text = values.card
-                Actions.changeCardText(props.card, text, props.SetMessageError)
+                let content = values.card
+                Actions.changeCardText(props.card, content, props.SetMessageError)
             }
         })
         return <form onSubmit={formik.handleSubmit}>
@@ -73,24 +73,24 @@ const HighComponent = {
             />
         </form>
     },
-    CurrentCards: (props: {setCardID: any, showDrawer: any, cards: {incompletedCards: Array<U_T["cardType"]>, completedCards: Array<U_T["cardType"]>}, SetMessageError: (value: string) => void}) => {
+    CurrentCards: (props: {setid: any, showDrawer: any, cards: {incompletedCards: Array<U_T["cardType"]>, completedCards: Array<U_T["cardType"]>}, SetMessageError: (value: string) => void}) => {
         return <div className={styles.scroll} >
         {/* Невыполненные карточки */}
         {props.cards.incompletedCards.map((card: U_T["cardType"]) => {
-            return <HighComponent.MakeCard setCardID={props.setCardID} showDrawer={props.showDrawer} SetMessageError={props.SetMessageError} card={card} key={card.cardID} />
+            return <HighComponent.MakeCard setid={props.setid} showDrawer={props.showDrawer} SetMessageError={props.SetMessageError} card={card} key={card.id} />
         })}
         {/* Выполненные карточки */}
         <p>Выполненные задач</p>
         {props.cards.completedCards.map((card: U_T["cardType"]) => {
-            return <HighComponent.MakeCard setCardID={props.setCardID} showDrawer={props.showDrawer} SetMessageError={props.SetMessageError} card={card} key={card.cardID} />
+            return <HighComponent.MakeCard setid={props.setid} showDrawer={props.showDrawer} SetMessageError={props.SetMessageError} card={card} key={card.id} />
         })}
     </div>
     },
-    SearchedCards: (props: {cards: any, setCard: any, showDrawer: any, setCardID: any, searchInputValue: string, SetMessageError: (value: string) => void}) => {
+    SearchedCards: (props: {cards: any, setCard: any, showDrawer: any, setid: any, searchInputValue: string, SetMessageError: (value: string) => void}) => {
         return <div>{LocalStorage.state.allCards.filter(card => {
-            return card.text.includes(props.searchInputValue)
+            return card.content.includes(props.searchInputValue)
         }).map(card => {
-            return <HighComponent.MakeCard setCardID={props.setCardID} showDrawer={props.showDrawer} SetMessageError={props.SetMessageError} card={card} key={card.cardID} />
+            return <HighComponent.MakeCard setid={props.setid} showDrawer={props.showDrawer} SetMessageError={props.SetMessageError} card={card} key={card.id} />
         })}</div>
     },
     MakeCard: observer((props: MakeCardPropsType) => {
@@ -112,7 +112,7 @@ const HighComponent = {
                 placement="bottomLeft"
                 style={{ padding: '0' }}
                 content={<div>
-                    <LowComponent.Buttons.DeleteCard SetMessageError={props.SetMessageError} cardID={props.card.cardID} />
+                    <LowComponent.Buttons.DeleteCard SetMessageError={props.SetMessageError} id={props.card.id} />
                     <LowComponent.Buttons.MyDay SetMessageError={props.SetMessageError} card={props.card} groupsIDs={props.card.groupsIDs} />
                 </div>
                 }
@@ -121,7 +121,7 @@ const HighComponent = {
                     props.showDrawer(props.card)
                 }}>
                     <LowComponent.CheckBox card={props.card} stopPropagation={false} SetMessageError={props.SetMessageError}  />
-                    <LowComponent.CardInfo requiredGroupsArray={requiredGroupsArray!} text={props.card.text} />
+                    <LowComponent.CardInfo requiredGroupsArray={requiredGroupsArray!} content={props.card.content} />
                     <LowComponent.Buttons.Important card={props.card} SetMessageError={props.SetMessageError}  />
                 </div>
             </Popover>

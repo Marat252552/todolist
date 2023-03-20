@@ -8,7 +8,7 @@ const Actions: Actions_T = {
         let updatedCard = { ...card }
         updatedCard.groupsIDs = [...updatedCard.groupsIDs, groupID]
         try {
-            await ChangeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted, SetMessageError)
+            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
         } catch (e: any) {
             SetMessageError(e.message)
         }
@@ -17,51 +17,51 @@ const Actions: Actions_T = {
         let updatedCard = { ...card }
         updatedCard.groupsIDs = updatedCard.groupsIDs.filter(ID => { return ID !== groupID })
         try {
-            await ChangeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted, SetMessageError)
+            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
         } catch (e: any) {
             SetMessageError(e.message)
         }
     },
     completeCard: async (card, SetMessageError) => {
         let updatedCard = { ...card }
-        updatedCard.isCompleted = true
+        updatedCard.is_completed = true
         try {
-            await ChangeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted, SetMessageError)
+            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
         } catch (e: any) {
             SetMessageError(e.message)
         }
     },
     incompleteCard: async (card, SetMessageError) => {
         let updatedCard = { ...card }
-        updatedCard.isCompleted = false
+        updatedCard.is_completed = false
         try {
-            await ChangeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted, SetMessageError)
+            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
         } catch (e: any) {
             SetMessageError(e.message)
         }
     },
-    deleteCard: async (cardID, SetMessageError, helper) => {
+    deleteCard: async (id, SetMessageError, helper) => {
         try {
-            await DeleteCard_Thunk(cardID)
+            await DeleteCard_Thunk(id)
             if (!helper) { return } helper()
         } catch (e: any) {
             SetMessageError(e.message)
         }
     },
-    addCard: async (text, SetMessageError, helper) => {
+    addCard: async (content, SetMessageError, helper) => {
         try {
-            await AddCard_Thunk(Date.now(), text, [5, LocalStorage.state.currentCardGroup.groupID], false)
+            await AddCard_Thunk(Date.now(), content, [5, LocalStorage.state.currentCardGroup.groupID], false)
             helper()
         } catch (e: any) {
             SetMessageError(e.message)
         }
 
     },
-    changeCardText: async (card, text, SetMessageError) => {
+    changeCardText: async (card, content, SetMessageError) => {
         let updatedCard = { ...card }
-        updatedCard.text = text
+        updatedCard.content = content
         try {
-            await ChangeCard_Thunk(updatedCard.cardID, updatedCard.text, updatedCard.groupsIDs, updatedCard.isCompleted, SetMessageError)
+            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
         } catch (e: any) {
             SetMessageError(e.message)
         }

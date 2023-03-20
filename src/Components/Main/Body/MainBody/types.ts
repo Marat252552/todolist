@@ -11,7 +11,7 @@ export type MakeCardPropsType = {
     key: number,
     card: U_T["cardType"],
     showDrawer: any,
-    setCardID: any
+    setid: any
 }
 
 export type CreateNewCardPropsType = {

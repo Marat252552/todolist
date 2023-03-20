@@ -13,22 +13,22 @@ import HighComponent from './HighComponent'
 const LowComponent = {
     CheckBox: observer((props: { card: U_T["cardType"], stopPropagation: boolean, SetMessageError: (value: string) => void }) => {
         return <div className={styles.checkbox}>
-            <input style={{ margin: '12px' }} type='checkbox' checked={props.card.isCompleted} id='chbox' onChange={() => {
-                if (props.card.isCompleted) { Actions.incompleteCard(props.card, props.SetMessageError) } else { Actions.completeCard(props.card, props.SetMessageError) }
+            <input style={{ margin: '12px' }} type='checkbox' checked={props.card.is_completed} id='chbox' onChange={() => {
+                if (props.card.is_completed) { Actions.incompleteCard(props.card, props.SetMessageError) } else { Actions.completeCard(props.card, props.SetMessageError) }
             }} onClick={e => e.stopPropagation()} />
         </div>
     }),
-    DrawerCheckBox: (props: { observableCardID: number, stopPropagation: boolean, SetMessageError: (value: string) => void }) => {
-        if (props.observableCardID === 0) {
+    DrawerCheckBox: (props: { observableid: number, stopPropagation: boolean, SetMessageError: (value: string) => void }) => {
+        if (props.observableid === 0) {
             return <div></div>
         }
-        let card = toJS(LocalStorage.state.allCards.find(card => card.cardID === props.observableCardID))
+        let card = toJS(LocalStorage.state.allCards.find(card => card.id === props.observableid))
         if (!card) {
             return <div></div>
         }
         return <div className={styles.checkbox}>
-            <input style={{ margin: '12px' }} type='checkbox' checked={card?.isCompleted} id='chbox' onChange={() => {
-                if (card!.isCompleted) { Actions.incompleteCard(card!, props.SetMessageError) } else if (!card?.isCompleted) { Actions.completeCard(card!, props.SetMessageError) }
+            <input style={{ margin: '12px' }} type='checkbox' checked={card?.is_completed} id='chbox' onChange={() => {
+                if (card!.is_completed) { Actions.incompleteCard(card!, props.SetMessageError) } else if (!card?.is_completed) { Actions.completeCard(card!, props.SetMessageError) }
             }} />
         </div>
     },
@@ -37,12 +37,12 @@ const LowComponent = {
             {children}
         </div>
     },
-    CardInfo: (props: { text: string, requiredGroupsArray: Array<string>, }) => {
+    CardInfo: (props: { content: string, requiredGroupsArray: Array<string>, }) => {
         if(props.requiredGroupsArray === undefined) {
             return <div></div>
         }
         return <div className={styles.cardInfo}>
-            <p>{props.text}</p>
+            <p>{props.content}</p>
             <span className={styles.groupName}>{props.requiredGroupsArray.map(groupName => {
                 if (groupName !== 'Важно') {
                     return <span key={groupName}>{groupName} </span>
@@ -51,11 +51,11 @@ const LowComponent = {
             )}</span>
         </div>
     },
-    DrawerCardInfo: (props: { observableCardID: number, SetMessageError: (value: any) => void }) => {
-        if (props.observableCardID === 0) {
+    DrawerCardInfo: (props: { observableid: number, SetMessageError: (value: any) => void }) => {
+        if (props.observableid === 0) {
             return <div></div>
         }
-        let card = toJS(LocalStorage.state.allCards.find(card => card.cardID === props.observableCardID))
+        let card = toJS(LocalStorage.state.allCards.find(card => card.id === props.observableid))
         if (!card) {
             return <div></div>
         }
@@ -82,11 +82,11 @@ const LowComponent = {
                 return <Button type="default" onClick={() => { Actions.addGroup(props.card, 1, props.SetMessageError) }}>Добавить в представление мой день</Button>
             }
         },
-        DrawerMyDay: (props: { observableCardID: number, SetMessageError: (value: string) => void }) => {
-            if (props.observableCardID === 0) {
+        DrawerMyDay: (props: { observableid: number, SetMessageError: (value: string) => void }) => {
+            if (props.observableid === 0) {
                 return <div></div>
             }
-            let card = toJS(LocalStorage.state.allCards.find(card => card.cardID === props.observableCardID))
+            let card = toJS(LocalStorage.state.allCards.find(card => card.id === props.observableid))
             if (!card) {
                 return <div></div>
             }
@@ -115,11 +115,11 @@ const LowComponent = {
                 }
             </div>
         },
-        DrawerImportant: (props: { observableCardID: number, SetMessageError: (value: string) => void }) => {
-            if (props.observableCardID === 0) {
+        DrawerImportant: (props: { observableid: number, SetMessageError: (value: string) => void }) => {
+            if (props.observableid === 0) {
                 return <div></div>
             }
-            let card = toJS(LocalStorage.state.allCards.find(card => card.cardID === props.observableCardID))
+            let card = toJS(LocalStorage.state.allCards.find(card => card.id === props.observableid))
             if (!card) {
                 return <div></div>
             }
@@ -141,20 +141,20 @@ const LowComponent = {
                 }
             </div>
         },
-        DeleteCard: (props: { cardID: number, SetMessageError: (value: string) => void }) => {
+        DeleteCard: (props: { id: number, SetMessageError: (value: string) => void }) => {
             return <Button
                 danger
                 type='primary'
                 style={{ width: '100%' }}
                 onClick={async () => {
-                    Actions.deleteCard(props.cardID, props.SetMessageError)
+                    Actions.deleteCard(props.id, props.SetMessageError)
                 }}>
                 Delete
             </Button>
         },
-        DrawerDeleteCard: (props: { observableCardID: number, SetMessageError: (value: string) => void, onClose: any }) => {
+        DrawerDeleteCard: (props: { observableid: number, SetMessageError: (value: string) => void, onClose: any }) => {
             return <Button icon={<DeleteOutlined />} onClick={async () => {
-                Actions.deleteCard(props.observableCardID, props.SetMessageError, props.onClose)
+                Actions.deleteCard(props.observableid, props.SetMessageError, props.onClose)
             }}></Button>
         }
     },

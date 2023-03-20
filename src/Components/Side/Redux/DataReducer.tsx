@@ -41,7 +41,7 @@ const initialState = {
     deletedCards: [] as Array<U_T["cardType"]>,
     searchInputValue: '',
     isSearchOn: false,
-    newCardID: 6 as number,
+    newid: 6 as number,
     allCards: [] as Array<U_T["cardType"]>,
     token: '',
     allCardGroups: [
@@ -57,7 +57,7 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
     switch (action.type) {
         case ADD_NEW_CARD: {
             // 2.Создаем карточку
-            let card = { cardID: action.id, text: action.text, groupsIDs: action.groupsIDs, isCompleted: action.isCompleted }
+            let card = { id: action.id, content: action.content, groupsIDs: action.groupsIDs, is_completed: action.is_completed }
             // 3.Добавляем в state allCards
             return {
                 ...state,
@@ -73,7 +73,7 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
         }
         case PULL_CARDS: {
             // 2.Создаем карточку
-            let card = { cardID: action.id, text: action.text, groupsIDs: action.groupsIDs, isCompleted: action.isCompleted }
+            let card = { id: action.id, content: action.content, groupsIDs: action.groupsIDs, is_completed: action.is_completed }
             // 3.Добавляем в state allCards
             return {
                 ...state,
@@ -96,13 +96,13 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             }
         }
         case SWITCH_COMPLETE_CARD: {
-            let updatedCardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
+            let updatedCardIndex = state.allCards.findIndex(el => el.id === action.id)
             let updatedCard = state.allCards[updatedCardIndex]
             let updatedAllCards = state.allCards
-            if (state.allCards[updatedCardIndex].isCompleted === true) {
-                updatedCard.isCompleted = false
+            if (state.allCards[updatedCardIndex].is_completed === true) {
+                updatedCard.is_completed = false
             } else {
-                updatedCard.isCompleted = true
+                updatedCard.is_completed = true
             }
             updatedAllCards[updatedCardIndex] = updatedCard
             return {
@@ -120,12 +120,12 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             let newAllCards = [
                 ...state.allCards
             ]
-            let deletedCard = state.allCards.find(card => card.cardID === action.cardID) as any
+            let deletedCard = state.allCards.find(card => card.id === action.id) as any
             newAllCards = newAllCards.filter(card => {
-                return card.cardID !== deletedCard.cardID 
+                return card.id !== deletedCard.id 
             })
-            let newAddedCards = state.addedCards.filter(card => card.cardID !== action.cardID)
-            let newChangedCards = state.changedCards.filter(card => card.cardID !== action.cardID)
+            let newAddedCards = state.addedCards.filter(card => card.id !== action.id)
+            let newChangedCards = state.changedCards.filter(card => card.id !== action.id)
             return {
                 ...state,
                 allCards: newAllCards,
@@ -148,7 +148,7 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             }
         }
         // case ADD_GROUP_ID: {
-        //     let cardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
+        //     let cardIndex = state.allCards.findIndex(el => el.id === action.id)
         //     let card = state.allCards[cardIndex]
         //     card.groupsIDs = [
         //         ...card.groupsIDs,
@@ -162,7 +162,7 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
         //     }
         // }
         // case DELETE_GROUP_ID: {
-        //     let cardIndex = state.allCards.findIndex(el => el.cardID === action.cardID)
+        //     let cardIndex = state.allCards.findIndex(el => el.id === action.id)
         //     let card = state.allCards[cardIndex]
         //     card.groupsIDs = card.groupsIDs.filter(groupID => {
         //         return groupID !== action.groupID
@@ -178,14 +178,14 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
             let findIndex = () => {
                 let index = 0
                 for (let i = 0; i < state.allCards.length; i++) {
-                    if (state.allCards[i].cardID === action.cardID) {
+                    if (state.allCards[i].id === action.id) {
                         index = i
                     }
                 }
                 return index
             }
             let cardIndex = findIndex()
-            let newCard = { cardID: action.cardID, text: action.text, groupsIDs: state.allCards[cardIndex].groupsIDs, isCompleted: state.allCards[cardIndex].isCompleted }
+            let newCard = { id: action.id, content: action.content, groupsIDs: state.allCards[cardIndex].groupsIDs, is_completed: state.allCards[cardIndex].is_completed }
             let newAllCards = state.allCards
             newAllCards[cardIndex] = newCard
             return {
@@ -206,11 +206,11 @@ const DataReducer = (state = initialState, action: AllActionsData) => {
         case UPDATE_SEARCH_INPUT_VALUE: {
             return {
                 ...state,
-                searchInputValue: action.text
+                searchInputValue: action.content
             }
         }
         case CHANGE_CARD: {
-            let card = { cardID: action.id, text: action.text, groupsIDs: action.groupsIDs, isCompleted: action.isCompleted }
+            let card = { id: action.id, content: action.content, groupsIDs: action.groupsIDs, is_completed: action.is_completed }
             return {
                 ...state,
                 changedCards: [

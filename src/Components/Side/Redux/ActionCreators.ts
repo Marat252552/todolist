@@ -3,28 +3,28 @@ import { AC_T } from "./ReduxTypes"
 
 
 // Action creators that work with controller Thunks
-export const addNewCard_AC: AC_T["addNewCardAC_T"] = (id, text, groupsIDs, isCompleted) => {
+export const addNewCard_AC: AC_T["addNewCardAC_T"] = (id, content, groupsIDs, is_completed) => {
     return {
         type: ADD_NEW_CARD,
         id: id,
-        text: text,
+        content: content,
         groupsIDs: groupsIDs,
-        isCompleted: isCompleted,
+        is_completed: is_completed,
     }
 }
-export const deleteCard_AC: AC_T["deleteCardAC_T"] = (cardID) => {
+export const deleteCard_AC: AC_T["deleteCardAC_T"] = (id) => {
     return {
         type: DELETE_CARD,
-        cardID: cardID
+        id: id
     }
 }
-export const changeCard_AC: AC_T["changeCardAC_T"] = (id, text, groupsIDs, isCompleted) => {
+export const changeCard_AC: AC_T["changeCardAC_T"] = (id, content, groupsIDs, is_completed) => {
     return {
         type: CHANGE_CARD,
         id: id,
-        text: text,
+        content: content,
         groupsIDs: groupsIDs,
-        isCompleted: isCompleted,
+        is_completed: is_completed,
     }
 }
 export const clearControllers: AC_T["clearControllersAC_T"] = (controller: number) => {
@@ -56,13 +56,13 @@ export const updateCurrentCards_AC: AC_T["updateCurrentCardsAC_T"] = ()  => {
         type: UPDATE_CURRENT_CARDS
     }
 }
-export const pullCards_AC: AC_T["pullCardsAC_T"] = (id, text, groupsIDs, isCompleted) => {
+export const pullCards_AC: AC_T["pullCardsAC_T"] = (id, content, groupsIDs, is_completed) => {
     return {
         type: PULL_CARDS,
         id: id,
-        text: text,
+        content: content,
         groupsIDs: groupsIDs,
-        isCompleted: isCompleted,
+        is_completed: is_completed,
     }
 }
 export const clearAllCards_AC: AC_T["clearAllCardsAC_T"] = () => {
@@ -70,17 +70,17 @@ export const clearAllCards_AC: AC_T["clearAllCardsAC_T"] = () => {
         type: CLEAR_ALL_CARDS
     }
 }
-export const changeTextCard_AC: AC_T["changeTextCardAC_T"] = (text, cardID) => {
+export const changeTextCard_AC: AC_T["changeTextCardAC_T"] = (content, id) => {
     return {
         type: CHANGE_TEXT_CARD,
-        text: text,
-        cardID: cardID
+        content: content,
+        id: id
     }
 }
-export const switchCompleteCard_AC: AC_T["switchCompleteCardAC_T"] = (cardID) => {
+export const switchCompleteCard_AC: AC_T["switchCompleteCardAC_T"] = (id) => {
     return {
         type: SWITCH_COMPLETE_CARD,
-        cardID: cardID
+        id: id
     }
 }
 export const changeCurrentCardGroupID_AC: AC_T["changeCurrentCardGroupIDAC_T"] = (groupID) => {
@@ -95,24 +95,24 @@ export const toggleSearch_AC: AC_T["toggleSearchAC_T"] = (isSearchOn) => {
         isSearchOn: isSearchOn
     }
 }
-export const addGroupID_AC: AC_T["addGroupIDAC_T"] = (groupID, cardID) => {
+export const addGroupID_AC: AC_T["addGroupIDAC_T"] = (groupID, id) => {
     return {
         type: ADD_GROUP_ID,
         groupID: groupID,
-        cardID: cardID
+        id: id
     }
 }
-export const deleteGroupID_AC: AC_T["deleteCardGroupIDAC_T"] = (groupID, cardID) => {
+export const deleteGroupID_AC: AC_T["deleteCardGroupIDAC_T"] = (groupID, id) => {
     return {
         type: DELETE_GROUP_ID,
         groupID: groupID,
-        cardID: cardID
+        id: id
     }
 }
-export const updateSearchInputValue_AC: AC_T["updateSearchInputValueTypeAC_T"] = (text) => {
+export const updateSearchInputValue_AC: AC_T["updateSearchInputValueTypeAC_T"] = (content) => {
     return {
         type: UPDATE_SEARCH_INPUT_VALUE,
-        text: text
+        content: content
     }
 }
 export const toggleLoading_AC: AC_T["toggleLoadingAC_T"] = (value) => {
