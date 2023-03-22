@@ -97,6 +97,9 @@ export const AuthAPI: AuthAPI_T = {
     },
     checkdupl: (value: string) => {
         return instanse.get(`/auth/checkdupl/${value}`)
+    },
+    setPhoto: async (formData: any) => {
+        return instanse.post(`/auth/setphoto`, formData, {headers: {"Content-Type": "multipart/form-data"}})
     }
 }
 export const UsersAPI: UsersAPI_T = {

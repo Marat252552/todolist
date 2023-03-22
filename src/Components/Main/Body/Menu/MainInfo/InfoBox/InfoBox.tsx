@@ -14,7 +14,7 @@ const InfoBox = observer(() => {
         </div>
     }
     return <div className={styles.mainBoxInfo}>
-        <Avatar className={styles.avatar} />
+        <Avatar className={styles.avatar} src={LocalStorage.userData.imgSRC}/>
         <div className={styles.mainBoxInfoText}>
             <span>{LocalStorage.userData.name} {LocalStorage.userData.lastName}</span>
             <span>{LocalStorage.userData.email}</span>

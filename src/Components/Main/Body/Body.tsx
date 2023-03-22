@@ -26,7 +26,8 @@ const Body = observer(() => {
             try {
                 let response = await AuthAPI.Logged()
                 if (response.status === 200) {
-                    LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email)
+                    console.log(response.data)
+                    LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email, response.data.imgSRC)
                     LocalStorage.setIsAuthorized(true)
                     PullAllCards_Thunk()
                     PullAllGroups_Thunk()

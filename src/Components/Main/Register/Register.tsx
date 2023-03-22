@@ -21,9 +21,10 @@ const Register = observer(() => {
     useEffect(() => {
         let a = async () => {
             let response = await AuthAPI.Logged()
+            let d = response.data
             if (response.status === 200) {
-                LocalStorage.setUserData(response.data.name, response.data.lastName, response.data.email)
-                LocalStorage.setToken(response.data.AccessToken)
+                LocalStorage.setUserData(d.name, d.lastName, d.email, d.imgSRC)
+                LocalStorage.setToken(d.AccessToken)
                 LocalStorage.setIsAuthorized(true)
             }
         }
@@ -75,8 +76,9 @@ const Register = observer(() => {
                 let res = await AuthAPI.SignIn(values.login, values.password, values.email, values.birthdate, values.name, values.lastName, values.phone, values.gender, captchaToken)
                 if (res.status === 201) {
                     let res = await AuthAPI.Logged()
+                    let d = res.data
                     if (+res.status === 200) {
-                        LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email,)
+                        LocalStorage.setUserData(d.name, d.lastName, d.email, d.imgSRC)
                         LocalStorage.setToken(res.data.AccessToken)
                         LocalStorage.setIsAuthorized(true)
                     }
@@ -240,16 +242,21 @@ const Register = observer(() => {
                     <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
                 </Form.Item>
 
-                {/* Пол */}
-                <Form.Item
+                {/* Аватарка */}
+                {/* <Form.Item
                     name="gender"
                     label="Пол"
                     rules={[{ required: true, message: 'Пожалуйста, укажите Ваш пол' }]}
                 >
                     <Select options={[{value: '1', label: 'Мужчина'}, {value: '2', label: 'Женщина'}]} placeholder="Укажите Ваш пол" />
                 </Form.Item>
-
-                {/* Запомнить меня */}
+                <Form.Item
+                    name="img"
+                    label="Аватарка"
+                >
+                    <Input type="file" style={{ width: '100%' }} />
+                </Form.Item> */}
+                {/* Условия соглашения */}
                 <Form.Item
                     name="agreement"
                     valuePropName="checked"

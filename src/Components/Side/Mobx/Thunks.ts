@@ -37,7 +37,6 @@ export const PullAllGroups_Thunk = async () => {
     
 }
 
-
 export const PushData_Thunk = async () => {
     let PushDataThunk = new Promise(async (resolve, reject) => {
         LocalStorage.toggleLoading(true)
@@ -64,7 +63,14 @@ export const PushData_Thunk = async () => {
                 LocalStorage.clearController(5)
             }
             if (LocalStorage.state.addedCards[0]) {
-                await CardsAPI.addCards(LocalStorage.state.addedCards)
+                let response = await CardsAPI.addCards(LocalStorage.state.addedCards)
+                let unifyCards = new Promise((resolve, reject) => {
+                    response.data.forEach((data: {initialCardID: number, cardID: number}, index: any, array: any) => {
+                        LocalStorage.unifyCardsIDs(data.initialCardID, data.cardID)
+                        if(index === array.length -1) {resolve(undefined)}
+                    })
+                })
+                await unifyCards
                 LocalStorage.clearController(1)
             }
             if (LocalStorage.state.changedCards[0]) {

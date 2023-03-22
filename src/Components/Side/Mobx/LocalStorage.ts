@@ -9,7 +9,8 @@ class LocalStorage {
     userData = {
         name: '',
         lastName: '',
-        email: ''
+        email: '',
+        imgSRC: ''
     }
     isActivated = 0
     notedAboutActivated = true
@@ -96,6 +97,32 @@ class LocalStorage {
         this.state.allCards = newAllCards
         this.state.updatedGroups = newUpdatedGroups
     }
+    unifyCardsIDs(initialCardID: number, cardID: number) {
+        let newChangedCards = this.state.changedCards.map((card: U_T["cardType"]) => {
+            if(card.id === initialCardID) {
+                return {...card, id: cardID}
+            } else {
+                return card
+            }
+        })
+        let newDeletedCards = this.state.deletedCards.map((card: U_T["cardType"]) => {
+            if(card.id === initialCardID) {
+                return {...card, id: cardID}
+            } else {
+                return card
+            }
+        })
+        let newAllCards = this.state.allCards.map((card: U_T["cardType"]) => {
+            if(card.id === initialCardID) {
+                return {...card, id: cardID}
+            } else {
+                return card
+            }
+        })
+        this.state.changedCards = newChangedCards
+        this.state.deletedCards = newDeletedCards
+        this.state.allCards = newAllCards
+    }
     updateCurrentCards() {
         let newCurrentCards = this.state.allCards.filter(card => {
             return card.groupsIDs.includes(this.state.currentCardGroup.groupID)
@@ -176,10 +203,14 @@ class LocalStorage {
     setNotedAboutActivated(value: boolean) {
         this.notedAboutActivated = value
     }
-    setUserData(name: string, lastName: string, email: string) {
+    setUserData(name: string, lastName: string, email: string, imgSRC: string) {
         this.userData.name = name
         this.userData.lastName = lastName
         this.userData.email = email
+        this.userData.imgSRC = imgSRC
+    }
+    setUserImgSRC(imgSRC: string) {
+        this.userData.imgSRC = imgSRC
     }
     setToken(token: string) {
         this.AccessToken = token
