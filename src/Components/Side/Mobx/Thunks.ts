@@ -8,7 +8,6 @@ export const PullAllCards_Thunk = async () => {
     try {
         LocalStorage.clearAllCards()
         let response = await CardsAPI.PullCards()
-        console.log(response.data)
         if (response.status === 200) {
             let cards: Array<U_T["cardType"]> = response.data as Array<U_T["cardType"]>
             cards.forEach(card => {
@@ -26,7 +25,6 @@ export const PullAllGroups_Thunk = async () => {
         let response = await GroupsAPI.pullGroups()
         if (response.status === 200) {
             let groups: Array<{id: number, name: string, icon: string, background: string}> = response.data
-            console.log(groups)
             groups.forEach(group => {
                 LocalStorage.setGroup(group.id, group.name, group.icon, group.background)
             })
@@ -46,7 +44,6 @@ export const PushData_Thunk = async () => {
                 console.log(response)
                 let unifyCards = new Promise((resolve, reject) => {
                     response.data.forEach((data: {groupID: number, initialGroupID: number}, index: any, array: any) => {
-                        console.log(data)
                         LocalStorage.unifyCardsGroupsIDs(data.initialGroupID, data.groupID)
                         if(index === array.length -1) {resolve(undefined)}
                     })
@@ -88,6 +85,7 @@ export const PushData_Thunk = async () => {
                 reject(new Error('Почта не подтверждена. Доступны не все функции'))
             }
         } finally {
+            console.log('oading finished')
             LocalStorage.toggleLoading(false)
         }
     })

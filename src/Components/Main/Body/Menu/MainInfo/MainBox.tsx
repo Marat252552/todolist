@@ -43,8 +43,8 @@ const MainBox = observer(() => {
                 formData.append('img', file)
                 let response = await AuthAPI.setPhoto(formData)
                 LocalStorage.setUserImgSRC(response.data.imgSRC)
-            } catch (e) {
-                console.log(e)
+            } catch (e: any) {
+                SetMessageError(e.response.data.message)
             } finally {
                 setFileLoading(false)
                 setIsFileModalOpen(false)

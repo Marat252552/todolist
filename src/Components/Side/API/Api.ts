@@ -23,7 +23,6 @@ instanse.interceptors.response.use((config: any) => {
 }, async (error) => {
     const OriginalRequest = error.config
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
-        console.log('Refresh request')
         OriginalRequest._isRetry = true
         try {
             let response = await instanse.get('/auth/refresh')
@@ -71,13 +70,16 @@ export const AuthAPI: AuthAPI_T = {
         return result
     },
     Logged: async () => {
-        console.log('LoggedIn request')
-        let response = await instanse.get('/auth')
-        let result = {
-            status: response.status,
-            data: response.data
+        try {
+            let response = await instanse.get('/auth')
+            let result = {
+                status: response.status,
+                data: response.data
+            }
+            return result
+        } catch(e) {
+            console.log(e)
         }
-        return result
     },
     SignIn: async (login, password, email, birthdate, name, lastName, phone, gender, captchaToken) => {
         let response = await instanse.post('/auth/signin', { login, password, email, birthdate, name, last_name: lastName, phone, gender, captchaToken })

@@ -138,6 +138,7 @@ class LocalStorage {
     }
     toggleLoading(value: boolean) {
         this.state.loading = value
+        console.log(this.state.loading)
     }
     clearController(controller: number) {
         if (controller === 1) { this.state.addedCards = [] }

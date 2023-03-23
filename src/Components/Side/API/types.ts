@@ -31,7 +31,7 @@ export type UsersAPI_T = {
     GetUsers: GetUsersAPI_T
 }
 
-export type LoggedAPI_T = () => Promise<Result_T>
+export type LoggedAPI_T = () => 
 export type LoginAPI_T = (login: string, password: string, remember: boolean, captchaToken: string) => Promise<Result_T>
 export type SignInAPI_T = (login: string, password: string, email: string, birtdate: any, name: string, lastName: string, phoneNumber: string, gender: number, captchaToken: string) => Promise<Result_T>
 export type addCardsAPI_T = (cards: Array<U_T["cardType"]>) => Promise<{status: number, data: Array<{initialCardID: number, cardID: number}>}>

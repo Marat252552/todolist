@@ -142,7 +142,6 @@ const CardsInfo = observer((props: { SetMessageError: (value: any) => void }) =>
         })}
         <div className={styles.line}></div>
         {LocalStorage.state.allCardGroups.map(group => {
-            console.log(toJS(group))
             if (group.groupID !== 1 && group.groupID !== 2 && group.groupID !== 3 && group.groupID !== 4 && group.groupID !== 5)
                 return <MakeCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
         })}
