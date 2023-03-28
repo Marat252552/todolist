@@ -1,4 +1,4 @@
-import { StarOutlined, DeploymentUnitOutlined, HomeOutlined, CalendarOutlined, UserOutlined } from '@ant-design/icons'
+import { StarOutlined, DeploymentUnitOutlined, HomeOutlined, CalendarOutlined, UserOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Button, Drawer, Popover } from 'antd'
 import { observer } from 'mobx-react-lite'
 import LocalStorage from '../../../../Side/Mobx/LocalStorage'
@@ -19,6 +19,7 @@ const iconConditions = (icon: string) => {
         case 'DeploymentUnitOutlined': { return <DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)' }} /> }
         case 'CalendarOutlined': { return <CalendarOutlined style={{ fontSize: '18px', color: 'rgb(24, 96, 0)' }} /> }
         case 'UserOutlined': { return <UserOutlined style={{ fontSize: '18px', color: 'rgb(24, 96, 0)' }} /> }
+        case 'UnorderedListOutlined': {return <UnorderedListOutlined style={{ fontSize: '18px', color: 'rgb(24, 96, 0)' }}/>}
     }
 }
 
@@ -148,7 +149,7 @@ const CardsInfo = observer((props: { SetMessageError: (value: any) => void }) =>
         <Button onClick={() => {
             // setOpen(true)
             let groupID = Math.random()
-            Actions.createGroup(groupID, 'Новая группа', 'StarOutlined', 'blue', props.SetMessageError)
+            Actions.createGroup(groupID, 'Новая группа', 'UnorderedListOutlined', 'blue', props.SetMessageError)
         }}>Создать группу</Button>
     </div>
 })

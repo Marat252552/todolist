@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import LocalStorage from "../Mobx/LocalStorage";
 import { U_T } from "../Redux/ReduxTypes";
-import { addCardsAPI_T, AuthAPI_T, CardsAPI_T, deleteCardsAPI_T, DeleteUserAPI_T, GetUsersAPI_T, LoggedAPI_T, LoginAPI_T, LogoutAPI_T, PullCardsAPI_T, SignInAPI_T, updateCardsAPI_T, UsersAPI_T } from "./types";
+import { AuthAPI_T, CardsAPI_T, UsersAPI_T } from "./types";
 
 const instanse = axios.create({
     withCredentials: true,
@@ -61,7 +61,6 @@ export const CardsAPI: CardsAPI_T = {
 }
 export const AuthAPI: AuthAPI_T = {
     Login: async (login, password, remember, captchaToken) => {
-        console.log('Login request')
         let response = await instanse.post('/auth/login', { login, password, remember, captchaToken })
         let result = {
             status: response.status,
@@ -102,6 +101,9 @@ export const AuthAPI: AuthAPI_T = {
     },
     setPhoto: async (formData: any) => {
         return instanse.post(`/auth/setphoto`, formData, {headers: {"Content-Type": "multipart/form-data"}})
+    },
+    resetPassword_1: async (login: string) => {
+        return instanse.post('/auth/resetmypassword', {login})
     }
 }
 export const UsersAPI: UsersAPI_T = {

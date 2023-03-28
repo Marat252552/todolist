@@ -8,27 +8,12 @@ import { DatePicker, Button, Checkbox, Form, Input, Select, } from 'antd';
 import { observer } from "mobx-react-lite"
 import { message } from 'antd';
 import { SigninErrorHandler } from "../ErrorHandlers/AuthErrorHandlers"
+import { LoggedController } from "../Controllers/AuthControllers"
 
-const Register = observer(() => {
-    const [messageApi, contextHolder] = message.useMessage();
-    const SetMessageError = (value: string) => {
-        messageApi.open({
-          type: 'error',
-          content: value,
-        });
-    }
+const Register = observer((props: {setError: (value: string) => void}) => {
     // Проверка авторизации
     useEffect(() => {
-        let a = async () => {
-            let response = await AuthAPI.Logged()
-            let d = response.data
-            if (response.status === 200) {
-                LocalStorage.setUserData(d.name, d.lastName, d.email, d.imgSRC)
-                LocalStorage.setToken(d.AccessToken)
-                LocalStorage.setIsAuthorized(true)
-            }
-        }
-        a()
+        LoggedController(props.setError)
     }, [])
     // Форма регистрации
     const RegisterFormAnt = () => {
@@ -70,21 +55,15 @@ const Register = observer(() => {
                 },
             },
         };
-        const onFinish = async (values: any) => {
+        const onFinish = async (v: any) => {
             setLoading(true)
             try {
-                let res = await AuthAPI.SignIn(values.login, values.password, values.email, values.birthdate, values.name, values.lastName, values.phone, values.gender, captchaToken)
+                let res = await AuthAPI.SignIn(v.login, v.password, v.email, v.birthdate, v.name, v.lastName, v.phone, v.gender, captchaToken)
                 if (res.status === 201) {
-                    let res = await AuthAPI.Logged()
-                    let d = res.data
-                    if (+res.status === 200) {
-                        LocalStorage.setUserData(d.name, d.lastName, d.email, d.imgSRC)
-                        LocalStorage.setToken(res.data.AccessToken)
-                        LocalStorage.setIsAuthorized(true)
-                    }
+                    LoggedController(props.setError)
                 }
             } catch (e: any) {
-                SigninErrorHandler(e, SetMessageError)
+                props.setError(e?.response?.data?.message)
             } finally {
                 setLoading(false)
             }
@@ -242,15 +221,15 @@ const Register = observer(() => {
                     <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
                 </Form.Item>
 
-                {/* Аватарка */}
-                {/* <Form.Item
+                {/* Пол */}
+                <Form.Item
                     name="gender"
                     label="Пол"
                     rules={[{ required: true, message: 'Пожалуйста, укажите Ваш пол' }]}
                 >
                     <Select options={[{value: '1', label: 'Мужчина'}, {value: '2', label: 'Женщина'}]} placeholder="Укажите Ваш пол" />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                     name="img"
                     label="Аватарка"
                 >
@@ -292,7 +271,6 @@ const Register = observer(() => {
     }
     return <div className={styles.auth_page}>
         <div className={styles.auth_form}>
-        {contextHolder}
             <p></p>
             <br></br>
             <RegisterFormAnt />

@@ -14,8 +14,9 @@ class LocalStorage {
     }
     isActivated = 0
     notedAboutActivated = true
+    error = ''
     state = {
-        currentCardGroup: { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
+        currentCardGroup: { groupID: 0.1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
         currentCards: [
         ] as any,
         menuCardGroups: [
@@ -34,7 +35,6 @@ class LocalStorage {
         deletedGroups: [] as Array<{groupID: number, name: string, icon: string, background: string}>,
         searchInputValue: '',
         isSearchOn: false,
-        newid: 6 as number,
         allCards: [] as Array<U_T["cardType"]>,
         allCardGroups: [
             { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
@@ -46,6 +46,9 @@ class LocalStorage {
     }
     constructor() {
         makeAutoObservable(this)
+    }
+    setError(text: string) {
+        this.error = text
     }
     // Используется для сохранения карточки с сервера
     setCard(id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) {
@@ -204,11 +207,14 @@ class LocalStorage {
     setNotedAboutActivated(value: boolean) {
         this.notedAboutActivated = value
     }
-    setUserData(name: string, lastName: string, email: string, imgSRC: string) {
+    setUserData(name: string, lastName: string, email: string, imgSRC?: string) {
         this.userData.name = name
         this.userData.lastName = lastName
         this.userData.email = email
-        this.userData.imgSRC = imgSRC
+        if(!imgSRC) {
+            this.userData.imgSRC = 'http://localhost:3000/default_user.jpg'
+        }
+        
     }
     setUserImgSRC(imgSRC: string) {
         this.userData.imgSRC = imgSRC

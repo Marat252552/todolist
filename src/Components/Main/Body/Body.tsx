@@ -9,14 +9,7 @@ import { ModalWindow } from "../Modal/Modal";
 import { message, Result, Button } from 'antd';
 import { PullAllCards_Thunk, PullAllGroups_Thunk } from "../../Side/Mobx/Thunks";
 
-const Body = observer(() => {
-    const [messageApi, contextHolder] = message.useMessage();
-    const SetMessageError = (value: string) => {
-        messageApi.open({
-            type: 'error',
-            content: value,
-        });
-    }
+const Body = observer((props: {setError: (value: string) => void}) => {
     let setActive = () => {
         LocalStorage.setNotedAboutActivated(true)
     }
@@ -39,7 +32,7 @@ const Body = observer(() => {
                     LocalStorage.setToken('')
                 }
             } catch (e: any) {
-                SetMessageError('Кажется, произошла ошибка')
+                props.setError('Кажется, произошла ошибка')
                 if (e.response.status === 401) {
                     LocalStorage.setIsAuthorized(false)
                     LocalStorage.setToken('')
@@ -49,9 +42,8 @@ const Body = observer(() => {
         a()
     }, [])
     return <div className={styles.body}>
-        {contextHolder}
         <Menu />
-        <MainBody />
+        <MainBody setError={props.setError}/>
         <ModalWindow active={!LocalStorage.notedAboutActivated} setActive={setActive}>
             <Result
                 status="warning"

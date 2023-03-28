@@ -11,14 +11,14 @@ import HighComponent from './HighComponent'
 
 
 const LowComponent = {
-    CheckBox: observer((props: { card: U_T["cardType"], stopPropagation: boolean, SetMessageError: (value: string) => void }) => {
+    CheckBox: observer((props: { card: U_T["cardType"], stopPropagation: boolean, setError: (value: string) => void }) => {
         return <div className={styles.checkbox}>
             <input style={{ margin: '12px' }} type='checkbox' checked={props.card.is_completed} id='chbox' onChange={() => {
-                if (props.card.is_completed) { Actions.incompleteCard(props.card, props.SetMessageError) } else { Actions.completeCard(props.card, props.SetMessageError) }
+                if (props.card.is_completed) { Actions.incompleteCard(props.card, props.setError) } else { Actions.completeCard(props.card, props.setError) }
             }} onClick={e => e.stopPropagation()} />
         </div>
     }),
-    DrawerCheckBox: (props: { observableid: number, stopPropagation: boolean, SetMessageError: (value: string) => void }) => {
+    DrawerCheckBox: (props: { observableid: number, stopPropagation: boolean, setError: (value: string) => void }) => {
         if (props.observableid === 0) {
             return <div></div>
         }
@@ -28,7 +28,7 @@ const LowComponent = {
         }
         return <div className={styles.checkbox}>
             <input style={{ margin: '12px' }} type='checkbox' checked={card?.is_completed} id='chbox' onChange={() => {
-                if (card!.is_completed) { Actions.incompleteCard(card!, props.SetMessageError) } else if (!card?.is_completed) { Actions.completeCard(card!, props.SetMessageError) }
+                if (card!.is_completed) { Actions.incompleteCard(card!, props.setError) } else if (!card?.is_completed) { Actions.completeCard(card!, props.setError) }
             }} />
         </div>
     },
@@ -51,7 +51,7 @@ const LowComponent = {
             )}</span>
         </div>
     },
-    DrawerCardInfo: (props: { observableid: number, SetMessageError: (value: any) => void }) => {
+    DrawerCardInfo: (props: { observableid: number, setError: (value: any) => void }) => {
         if (props.observableid === 0) {
             return <div></div>
         }
@@ -65,7 +65,7 @@ const LowComponent = {
             return LocalStorage.state.allCardGroups.filter(group => { return groupID === group.groupID })[0].name
         })
         return <div className={styles.cardInfo}>
-            <HighComponent.DrawerChangeCardForm card={card} SetMessageError={props.SetMessageError}/>
+            <HighComponent.DrawerChangeCardForm card={card} setError={props.setError}/>
             <span className={styles.groupName}>{requiredGroupsArray.map(groupName => {
                 if (groupName !== 'Важно') {
                     return <span key={groupName}>{groupName} </span>
@@ -75,14 +75,14 @@ const LowComponent = {
         </div>
     },
     Buttons: {
-        MyDay: (props: { groupsIDs: Array<number>, card: U_T["cardType"], SetMessageError: (value: string) => void }) => {
+        MyDay: (props: { groupsIDs: Array<number>, card: U_T["cardType"], setError: (value: string) => void }) => {
             if (props.groupsIDs.find(el => el === 1)) {
-                return <Button type="default" onClick={() => { Actions.deleteGroup(props.card, 1, props.SetMessageError) }}>Убрать из представления Мой день</Button>
+                return <Button type="default" onClick={() => { Actions.deleteGroup(props.card, 1, props.setError) }}>Убрать из представления Мой день</Button>
             } else {
-                return <Button type="default" onClick={() => { Actions.addGroup(props.card, 1, props.SetMessageError) }}>Добавить в представление мой день</Button>
+                return <Button type="default" onClick={() => { Actions.addGroup(props.card, 1, props.setError) }}>Добавить в представление мой день</Button>
             }
         },
-        DrawerMyDay: (props: { observableid: number, SetMessageError: (value: string) => void }) => {
+        DrawerMyDay: (props: { observableid: number, setError: (value: string) => void }) => {
             if (props.observableid === 0) {
                 return <div></div>
             }
@@ -91,23 +91,23 @@ const LowComponent = {
                 return <div></div>
             }
             if (card!.groupsIDs.find(el => el === 1)) {
-                return <Button style={{ width: '100%' }} icon={<DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)' }} />} type="default" onClick={() => { Actions.deleteGroup(card!, 1, props.SetMessageError) }}>Убрать из представления "Мой день"</Button>
+                return <Button style={{ width: '100%' }} icon={<DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)' }} />} type="default" onClick={() => { Actions.deleteGroup(card!, 1, props.setError) }}>Убрать из представления "Мой день"</Button>
             } else {
-                return <Button style={{ width: '100%' }} icon={<DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)' }} />} type="default" onClick={() => { Actions.addGroup(card!, 1, props.SetMessageError) }}>Добавить в представление "Мой день"</Button>
+                return <Button style={{ width: '100%' }} icon={<DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)' }} />} type="default" onClick={() => { Actions.addGroup(card!, 1, props.setError) }}>Добавить в представление "Мой день"</Button>
             }
         },
-        Important: (props: { card: U_T["cardType"], SetMessageError: (value: string) => void }) => {
+        Important: (props: { card: U_T["cardType"], setError: (value: string) => void }) => {
             return <div>
                 {(props.card.groupsIDs.find(el => el === 2) !== undefined) ?
                     <Button className={styles.starButton} onClick={(e) => {
-                        Actions.deleteGroup(props.card, 2, props.SetMessageError)
+                        Actions.deleteGroup(props.card, 2, props.setError)
                         e.stopPropagation()
                     }} shape="circle">
                         <StarFilled />
                     </Button>
                     :
                     <Button className={styles.starButton} onClick={(e) => {
-                        Actions.addGroup(props.card, 2, props.SetMessageError)
+                        Actions.addGroup(props.card, 2, props.setError)
                         e.stopPropagation()
                     }} shape="circle">
                         <StarOutlined />
@@ -115,7 +115,7 @@ const LowComponent = {
                 }
             </div>
         },
-        DrawerImportant: (props: { observableid: number, SetMessageError: (value: string) => void }) => {
+        DrawerImportant: (props: { observableid: number, setError: (value: string) => void }) => {
             if (props.observableid === 0) {
                 return <div></div>
             }
@@ -126,14 +126,14 @@ const LowComponent = {
             return <div>
                 {(card!.groupsIDs.find(el => el === 2) !== undefined) ?
                     <Button className={styles.starButton} onClick={(e) => {
-                        Actions.deleteGroup(card!, 2, props.SetMessageError)
+                        Actions.deleteGroup(card!, 2, props.setError)
                         e.stopPropagation()
                     }} shape="circle">
                         <StarFilled />
                     </Button>
                     :
                     <Button className={styles.starButton} onClick={(e) => {
-                        Actions.addGroup(card!, 2, props.SetMessageError)
+                        Actions.addGroup(card!, 2, props.setError)
                         e.stopPropagation()
                     }} shape="circle">
                         <StarOutlined />
@@ -141,20 +141,20 @@ const LowComponent = {
                 }
             </div>
         },
-        DeleteCard: (props: { id: number, SetMessageError: (value: string) => void }) => {
+        DeleteCard: (props: { id: number, setError: (value: string) => void }) => {
             return <Button
                 danger
                 type='primary'
                 style={{ width: '100%' }}
                 onClick={async () => {
-                    Actions.deleteCard(props.id, props.SetMessageError)
+                    Actions.deleteCard(props.id, props.setError)
                 }}>
                 Delete
             </Button>
         },
-        DrawerDeleteCard: (props: { observableid: number, SetMessageError: (value: string) => void, onClose: any }) => {
+        DrawerDeleteCard: (props: { observableid: number, setError: (value: string) => void, onClose: any }) => {
             return <Button icon={<DeleteOutlined />} onClick={async () => {
-                Actions.deleteCard(props.observableid, props.SetMessageError, props.onClose)
+                Actions.deleteCard(props.observableid, props.setError, props.onClose)
             }}></Button>
         }
     },

@@ -23,7 +23,7 @@ const HighComponent = {
                 <PlusOutlined />
             </div>
             <div className={styles.createNewCard}>
-                <HighComponent.NewCardForm SetMessageError={props.SetMessageError} />
+                <HighComponent.NewCardForm setError={props.setError} />
             </div>
         </div>
     },
@@ -34,7 +34,7 @@ const HighComponent = {
             },
             onSubmit: async (values: any, { resetForm }: any) => {
                 let content = values.card
-                Actions.addCard(content, props.SetMessageError, resetForm)
+                Actions.addCard(content, props.setError, resetForm)
             },
         })
         return <FormikProvider value={formik}>
@@ -59,7 +59,7 @@ const HighComponent = {
             },
             onSubmit: (values: any) => {
                 let content = values.card
-                Actions.changeCardText(props.card, content, props.SetMessageError)
+                Actions.changeCardText(props.card, content, props.setError)
             }
         })
         return <form onSubmit={formik.handleSubmit}>
@@ -73,24 +73,24 @@ const HighComponent = {
             />
         </form>
     },
-    CurrentCards: (props: {setid: any, showDrawer: any, cards: {incompletedCards: Array<U_T["cardType"]>, completedCards: Array<U_T["cardType"]>}, SetMessageError: (value: string) => void}) => {
+    CurrentCards: (props: {setid: any, showDrawer: any, cards: {incompletedCards: Array<U_T["cardType"]>, completedCards: Array<U_T["cardType"]>}, setError: (value: string) => void}) => {
         return <div className={styles.scroll} >
         {/* Невыполненные карточки */}
         {props.cards.incompletedCards.map((card: U_T["cardType"]) => {
-            return <HighComponent.MakeCard setid={props.setid} showDrawer={props.showDrawer} SetMessageError={props.SetMessageError} card={card} key={card.id} />
+            return <HighComponent.MakeCard setid={props.setid} showDrawer={props.showDrawer} setError={props.setError} card={card} key={card.id} />
         })}
         {/* Выполненные карточки */}
         <p>Выполненные задач</p>
         {props.cards.completedCards.map((card: U_T["cardType"]) => {
-            return <HighComponent.MakeCard setid={props.setid} showDrawer={props.showDrawer} SetMessageError={props.SetMessageError} card={card} key={card.id} />
+            return <HighComponent.MakeCard setid={props.setid} showDrawer={props.showDrawer} setError={props.setError} card={card} key={card.id} />
         })}
     </div>
     },
-    SearchedCards: (props: {cards: any, setCard: any, showDrawer: any, setid: any, searchInputValue: string, SetMessageError: (value: string) => void}) => {
+    SearchedCards: (props: {cards: any, setCard: any, showDrawer: any, setid: any, searchInputValue: string, setError: (value: string) => void}) => {
         return <div>{LocalStorage.state.allCards.filter(card => {
             return card.content.includes(props.searchInputValue)
         }).map(card => {
-            return <HighComponent.MakeCard setid={props.setid} showDrawer={props.showDrawer} SetMessageError={props.SetMessageError} card={card} key={card.id} />
+            return <HighComponent.MakeCard setid={props.setid} showDrawer={props.showDrawer} setError={props.setError} card={card} key={card.id} />
         })}</div>
     },
     MakeCard: observer((props: MakeCardPropsType) => {
@@ -106,26 +106,28 @@ const HighComponent = {
         })
         if(requiredGroupsArray === undefined) {
             return <div></div>
-        }
-        return <>
+        } else {
+            return <>
             <Popover
                 placement="bottomLeft"
                 style={{ padding: '0' }}
                 content={<div>
-                    <LowComponent.Buttons.DeleteCard SetMessageError={props.SetMessageError} id={props.card.id} />
-                    <LowComponent.Buttons.MyDay SetMessageError={props.SetMessageError} card={props.card} groupsIDs={props.card.groupsIDs} />
+                    <LowComponent.Buttons.DeleteCard setError={props.setError} id={props.card.id} />
+                    <LowComponent.Buttons.MyDay setError={props.setError} card={props.card} groupsIDs={props.card.groupsIDs} />
                 </div>
                 }
                 trigger="contextMenu">
                 <div className={styles.card} onClick={() => {
                     props.showDrawer(props.card)
                 }}>
-                    <LowComponent.CheckBox card={props.card} stopPropagation={false} SetMessageError={props.SetMessageError}  />
+                    <LowComponent.CheckBox card={props.card} stopPropagation={false} setError={props.setError}  />
                     <LowComponent.CardInfo requiredGroupsArray={requiredGroupsArray!} content={props.card.content} />
-                    <LowComponent.Buttons.Important card={props.card} SetMessageError={props.SetMessageError}  />
+                    <LowComponent.Buttons.Important card={props.card} setError={props.setError}  />
                 </div>
             </Popover>
         </>
+        }
+        
     })
 }
 

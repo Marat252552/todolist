@@ -7,10 +7,25 @@ import Body from "../Body/Body"
 import LoadingScreen from "../LoadingScreen/LoadingScreen"
 import LocalStorage from "../../Side/Mobx/LocalStorage"
 import Register from "../Register/Register"
+import { message } from "antd"
+import ForgotMyPassword from "../ForgotMyPassword/ForgotMyPassword"
 
 const Page = observer(() => {
-    let navigate = useNavigate()
+    const [messageApi, contextHolder] = message.useMessage();
+    const setError = (value: string) => {
+        messageApi.open({
+            type: 'error',
+            content: value,
+        });
+    }
+    const setSuccess = (value: string) => {
+        messageApi.open({
+            type: 'success',
+            content: value,
+        });
+    }
     // Редирект в зависимости от того, авторизован пользователь или нет
+    let navigate = useNavigate()
     useEffect(() => {
         if (LocalStorage.IsAuthorized === false) {
             navigate('/login')
@@ -18,11 +33,16 @@ const Page = observer(() => {
             navigate('/')
         }
     }, [LocalStorage.IsAuthorized])
-    return <Routes>
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/" element={<Body />} />
-        <Route path="/register" element={<Register />} />
-    </Routes>
+    return <div>
+        {contextHolder}
+        <Routes>
+            <Route path="/login" element={<AuthPage setError={setError}/>} />
+            <Route path="/" element={<Body setError={setError}/>} />
+            <Route path="/register" element={<Register setError={setError}/>} />
+            <Route path="/forgotmypassword" element={<ForgotMyPassword setError={setError} setSuccess={setSuccess}/> } />
+        </Routes>
+    </div>
+    
 })
 
 const PageAPIContainer = () => {
