@@ -1,0 +1,12 @@
+.auth_page {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    background-image: url('./../../../Config/Media/Trianglify-10s-1280px.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
