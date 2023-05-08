@@ -13,7 +13,7 @@ export const LoginErrorHandler = (e: any, setFormError: any, setMessageError: an
     } catch(e) {
         setMessageError('Кажется, произошла ошибка')
     }       
-}   
+}
 export const SigninErrorHandler = (e: any, setMessageError: any) => {
     try {
         // Неверная капча или не все поля заполнены

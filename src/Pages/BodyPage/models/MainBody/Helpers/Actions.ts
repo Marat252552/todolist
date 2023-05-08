@@ -1,3 +1,4 @@
+import GroupsState from "../../../../../App/state/GroupsState"
 import LocalStorage from "../../../../../App/state/LocalStorage"
 import { AddCard_Thunk, ChangeCard_Thunk, CreateGroup_Thunk, DeleteCardGroup_Thunk, DeleteCard_Thunk, UpdateGroup_Thunk } from './../Processes/Thunks'
 import { Actions_T } from "./types"
@@ -49,8 +50,13 @@ const Actions: Actions_T = {
     },
     addCard: async (content, SetMessageError, helper) => {
         try {
-            await AddCard_Thunk(Date.now(), content, [5, LocalStorage.state.currentCardGroup.groupID], false)
-            helper()
+            if(GroupsState.currentCardGroup.groupID === 5) {
+                await AddCard_Thunk(Date.now(), content, [GroupsState.currentCardGroup.groupID], false)
+                helper()
+            } else {
+                await AddCard_Thunk(Date.now(), content, [5, GroupsState.currentCardGroup.groupID], false)
+                helper()
+            }
         } catch (e: any) {
             SetMessageError(e.message)
         }

@@ -2,13 +2,13 @@ import { StarOutlined, DeploymentUnitOutlined, HomeOutlined, CalendarOutlined, U
 import { Button, Drawer, Popover } from 'antd'
 import { observer } from 'mobx-react-lite'
 import LocalStorage from '../../../../../../App/state/LocalStorage'
-import { SwitchCardGroup_Thunk } from './processes/Thunks' 
+import { SwitchCardGroup_Thunk } from './processes/Thunks'
 import Actions from '../../../MainBody/Helpers/Actions'
 import styles from './lib/styles.module.css'
 import { MakeMenuCardGroupPropsType } from './lib/types'
 import { useState } from 'react'
 import { Field, FormikProvider, useFormik } from 'formik'
-
+import GroupsState from '../../../../../../App/state/GroupsState'
 
 
 const iconConditions = (icon: string) => {
@@ -18,7 +18,7 @@ const iconConditions = (icon: string) => {
         case 'DeploymentUnitOutlined': { return <DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)' }} /> }
         case 'CalendarOutlined': { return <CalendarOutlined style={{ fontSize: '18px', color: 'rgb(24, 96, 0)' }} /> }
         case 'UserOutlined': { return <UserOutlined style={{ fontSize: '18px', color: 'rgb(24, 96, 0)' }} /> }
-        case 'UnorderedListOutlined': {return <UnorderedListOutlined style={{ fontSize: '18px', color: 'rgb(24, 96, 0)' }}/>}
+        case 'UnorderedListOutlined': { return <UnorderedListOutlined style={{ fontSize: '18px', color: 'rgb(24, 96, 0)' }} /> }
     }
 }
 
@@ -69,7 +69,7 @@ const MakeCardGroup = (props: MakeMenuCardGroupPropsType) => {
                 <div>
                     <Button onClick={() => {
                         Actions.deleteCardGroup(props.groupID, props.name, props.icon, props.background, props.SetMessageError)
-                    }}>Delete</Button>
+                    }}>Удалить колоду</Button>
                     <Button onClick={() => {
                         setUpdating(true)
                         setOpen(false)
@@ -133,18 +133,21 @@ const CardsInfo = observer((props: { SetMessageError: (value: any) => void }) =>
             setOpen(false);
         }
     }
-    return <div>
+    return <div  className={styles.group}>
         <Drawer title="Basic Drawer" placement="right" onClose={DrawerF.close} open={open}>
             <p>Создание группы</p>
         </Drawer>
-        {LocalStorage.state.menuCardGroups.map(group => {
+        {GroupsState.menuCardGroups.map(group => {
             return <MakeMenuCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
         })}
         <div className={styles.line}></div>
-        {LocalStorage.state.allCardGroups.map(group => {
-            if (group.groupID !== 1 && group.groupID !== 2 && group.groupID !== 3 && group.groupID !== 4 && group.groupID !== 5)
-                return <MakeCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
-        })}
+        <div className={styles.scroll}>
+            {GroupsState.allCardGroups.map(group => {
+                if (group.groupID !== 1 && group.groupID !== 2 && group.groupID !== 3 && group.groupID !== 4 && group.groupID !== 5)
+                    return <MakeCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
+            })}
+        </div>
+
         <Button onClick={() => {
             // setOpen(true)
             let groupID = Math.random()

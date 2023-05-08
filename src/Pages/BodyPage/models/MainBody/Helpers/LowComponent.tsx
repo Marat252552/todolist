@@ -7,6 +7,8 @@ import { U_T } from '../../../../../Shared/Types/typessss'
 import styles from './../lib/styles.module.css'
 import Actions from './Actions'
 import HighComponent from './HighComponent'
+import CardsState from '../../../../../App/state/CardsState'
+import GroupsState from '../../../../../App/state/GroupsState'
 
 
 const LowComponent = {
@@ -21,7 +23,7 @@ const LowComponent = {
         if (props.observableid === 0) {
             return <div></div>
         }
-        let card = toJS(LocalStorage.state.allCards.find(card => card.id === props.observableid))
+        let card = toJS(CardsState.allCards.find(card => card.id === props.observableid))
         if (!card) {
             return <div></div>
         }
@@ -36,15 +38,41 @@ const LowComponent = {
             {children}
         </div>
     },
-    CardInfo: (props: { content: string, requiredGroupsArray: Array<string>, }) => {
-        if(props.requiredGroupsArray === undefined) {
+    CardInfo: (props: {
+        content: string, requiredGroupsArray: Array<{
+            groupID: number;
+            name: string;
+            icon: string;
+            background: string
+        }>,
+    }) => {
+        if (props.requiredGroupsArray === undefined) {
             return <div></div>
         }
         return <div className={styles.cardInfo}>
             <p>{props.content}</p>
-            <span className={styles.groupName}>{props.requiredGroupsArray.map(groupName => {
-                if (groupName !== 'Важно') {
-                    return <span key={groupName}>{groupName} </span>
+            <span className={styles.groupName}>{props.requiredGroupsArray.map(group => {
+                if (group.name !== 'Важно') {
+                    return <span key={group.groupID}>{group.name} </span>
+                }
+            }
+            )}</span>
+        </div>
+    },
+    CompletedCardInfo: (props: { content: string, requiredGroupsArray: Array<{
+        groupID: number;
+        name: string;
+        icon: string;
+        background: string
+    }>, }) => {
+        if (props.requiredGroupsArray === undefined) {
+            return <div></div>
+        }
+        return <div className={styles.cardInfo}>
+            <p style={{ textDecoration: 'Line-through' }}>{props.content}</p>
+            <span className={styles.groupName}>{props.requiredGroupsArray.map(group => {
+                if (group.name !== 'Важно') {
+                    return <span key={group.groupID}>{group.name} </span>
                 }
             }
             )}</span>
@@ -54,17 +82,17 @@ const LowComponent = {
         if (props.observableid === 0) {
             return <div></div>
         }
-        let card = toJS(LocalStorage.state.allCards.find(card => card.id === props.observableid))
+        let card = toJS(CardsState.allCards.find(card => card.id === props.observableid))
         if (!card) {
             return <div></div>
         }
         let requiredGroupsArray = card!.groupsIDs.filter(groupID => {
-            return groupID !== LocalStorage.state.currentCardGroup.groupID
+            return groupID !== GroupsState.currentCardGroup.groupID
         }).map(groupID => {
-            return LocalStorage.state.allCardGroups.filter(group => { return groupID === group.groupID })[0].name
+            return GroupsState.allCardGroups.filter(group => { return groupID === group.groupID })[0].name
         })
         return <div className={styles.cardInfo}>
-            <HighComponent.DrawerChangeCardForm card={card} setError={props.setError}/>
+            <HighComponent.DrawerChangeCardForm card={card} setError={props.setError} />
             <span className={styles.groupName}>{requiredGroupsArray.map(groupName => {
                 if (groupName !== 'Важно') {
                     return <span key={groupName}>{groupName} </span>
@@ -85,7 +113,7 @@ const LowComponent = {
             if (props.observableid === 0) {
                 return <div></div>
             }
-            let card = toJS(LocalStorage.state.allCards.find(card => card.id === props.observableid))
+            let card = toJS(CardsState.allCards.find(card => card.id === props.observableid))
             if (!card) {
                 return <div></div>
             }
@@ -118,7 +146,7 @@ const LowComponent = {
             if (props.observableid === 0) {
                 return <div></div>
             }
-            let card = toJS(LocalStorage.state.allCards.find(card => card.id === props.observableid))
+            let card = toJS(CardsState.allCards.find(card => card.id === props.observableid))
             if (!card) {
                 return <div></div>
             }
@@ -142,13 +170,14 @@ const LowComponent = {
         },
         DeleteCard: (props: { id: number, setError: (value: string) => void }) => {
             return <Button
+
                 danger
                 type='primary'
-                style={{ width: '100%' }}
+                style={{ width: '100px' }}
                 onClick={async () => {
                     Actions.deleteCard(props.id, props.setError)
                 }}>
-                Delete
+                Удалить
             </Button>
         },
         DrawerDeleteCard: (props: { observableid: number, setError: (value: string) => void, onClose: any }) => {

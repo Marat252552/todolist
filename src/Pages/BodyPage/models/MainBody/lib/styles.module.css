@@ -7,6 +7,14 @@
     border-radius: 5px;
 }
 
+.test :active {
+    scale: 0.99;
+}
+/* 
+.test :hover {
+    scale: 0.99;
+} */
+
 .line {
     border-bottom: solid 1px rgb(235, 235, 235);
 }

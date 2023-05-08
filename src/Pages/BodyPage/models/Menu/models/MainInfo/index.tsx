@@ -9,7 +9,7 @@ import InfoBox from './models/InfoBox'
 import { PushData_Thunk } from './processes/Thunks';
 import { DeleteUserAPI, LogoutAPI, SetPhotoAPI } from './api/api';
 
-const MainBox = observer(() => {
+const MainBox = observer((props: {setSearchInput: any}) => {
     const [messageApi, contextHolder] = message.useMessage();
     const SetMessageError = (value: string) => {
         messageApi.open({
@@ -127,7 +127,6 @@ const MainBox = observer(() => {
 
     ];
 
-
     const [open, setOpen] = useState(false);
     const handleMenuClick: MenuProps['onClick'] = (e) => {
         if (e.key === '2' || e.key === '1' || e.key === '3') {
@@ -155,7 +154,7 @@ const MainBox = observer(() => {
             <p>Загрузите изображение</p>
             <input type='file' onChange={e => setFile(e.target.files[0])} />
         </Modal>
-        <SearchBox />
+        <SearchBox setSearchInput={props.setSearchInput}/>
     </div>
 })
 

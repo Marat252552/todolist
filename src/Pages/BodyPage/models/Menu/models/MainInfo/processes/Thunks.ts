@@ -1,3 +1,5 @@
+import CardsState from "../../../../../../../App/state/CardsState"
+import GroupsState from "../../../../../../../App/state/GroupsState"
 import LocalStorage from "../../../../../../../App/state/LocalStorage"
 import { CardsAPI, GroupsAPI } from "../api/api"
 
@@ -5,44 +7,45 @@ export const PushData_Thunk = async () => {
     let PushDataThunk = new Promise(async (resolve, reject) => {
         LocalStorage.toggleLoading(true)
         try {
-            if (LocalStorage.state.createdGroups[0]) {
-                let response = await GroupsAPI.addGroups(LocalStorage.state.createdGroups)
+            if (GroupsState.createdGroups[0]) {
+                let response = await GroupsAPI.addGroups(GroupsState.createdGroups)
                 console.log(response)
                 let unifyCards = new Promise((resolve, reject) => {
                     response.data.forEach((data: {groupID: number, initialGroupID: number}, index: any, array: any) => {
-                        LocalStorage.unifyCardsGroupsIDs(data.initialGroupID, data.groupID)
+                        CardsState.unifyCardsGroupsIDs(data.initialGroupID, data.groupID)
+                        GroupsState.unifyGroupsIDs(data.initialGroupID, data.groupID)
                         if(index === array.length -1) {resolve(undefined)}
                     })
                 })
                 await unifyCards
-                LocalStorage.clearController(4)
+                GroupsState.clearController(4)
             }
-            if (LocalStorage.state.updatedGroups[0]) {
-                await GroupsAPI.updateGroups(LocalStorage.state.updatedGroups)
-                LocalStorage.clearController(6)
+            if (GroupsState.updatedGroups[0]) {
+                await GroupsAPI.updateGroups(GroupsState.updatedGroups)
+                GroupsState.clearController(6)
             }
-            if (LocalStorage.state.deletedGroups[0]) {
-                await GroupsAPI.deleteGroups(LocalStorage.state.deletedGroups)
-                LocalStorage.clearController(5)
+            if (GroupsState.deletedGroups[0]) {
+                await GroupsAPI.deleteGroups(GroupsState.deletedGroups)
+                GroupsState.clearController(5)
             }
-            if (LocalStorage.state.addedCards[0]) {
-                let response = await CardsAPI.addCards(LocalStorage.state.addedCards)
+            if (CardsState.addedCards[0]) {
+                let response = await CardsAPI.addCards(CardsState.addedCards)
                 let unifyCards = new Promise((resolve, reject) => {
                     response.data.forEach((data: {initialCardID: number, cardID: number}, index: any, array: any) => {
-                        LocalStorage.unifyCardsIDs(data.initialCardID, data.cardID)
+                        CardsState.unifyCardsIDs(data.initialCardID, data.cardID)
                         if(index === array.length -1) {resolve(undefined)}
                     })
                 })
                 await unifyCards
-                LocalStorage.clearController(1)
+                CardsState.clearController(1)
             }
-            if (LocalStorage.state.changedCards[0]) {
-                await CardsAPI.updateCards(LocalStorage.state.changedCards)
-                LocalStorage.clearController(2)
+            if (CardsState.changedCards[0]) {
+                await CardsAPI.updateCards(CardsState.changedCards)
+                CardsState.clearController(2)
             }
-            if (LocalStorage.state.deletedCards[0]) {
-                await CardsAPI.deleteCards(LocalStorage.state.deletedCards)
-                LocalStorage.clearController(3)
+            if (CardsState.deletedCards[0]) {
+                await CardsAPI.deleteCards(CardsState.deletedCards)
+                CardsState.clearController(3)
             }
             LocalStorage.toggleLoading(false)
             resolve(undefined)
@@ -51,7 +54,6 @@ export const PushData_Thunk = async () => {
                 reject(new Error('Почта не подтверждена. Доступны не все функции'))
             }
         } finally {
-            console.log('oading finished')
             LocalStorage.toggleLoading(false)
         }
     })
