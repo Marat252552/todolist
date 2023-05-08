@@ -39,12 +39,7 @@ const LowComponent = {
         </div>
     },
     CardInfo: (props: {
-        content: string, requiredGroupsArray: Array<{
-            groupID: number;
-            name: string;
-            icon: string;
-            background: string
-        }>,
+        content: string, requiredGroupsArray: Array<any>,
     }) => {
         if (props.requiredGroupsArray === undefined) {
             return <div></div>
@@ -59,12 +54,9 @@ const LowComponent = {
             )}</span>
         </div>
     },
-    CompletedCardInfo: (props: { content: string, requiredGroupsArray: Array<{
-        groupID: number;
-        name: string;
-        icon: string;
-        background: string
-    }>, }) => {
+    CompletedCardInfo: (props: { content: string, requiredGroupsArray: Array<
+        any
+    >, }) => {
         if (props.requiredGroupsArray === undefined) {
             return <div></div>
         }

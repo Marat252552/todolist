@@ -26,7 +26,7 @@ const LoginForm = (props: {setError: (value: string) => void}) => {
                 LocalStorage.setIsAuthorized(true)
                 if(!res.data.isActivated) {
                     LocalStorage.setNotedAboutActivated(false)
-                    LocalStorage.setIsActivated(res.data.isActivated)
+                    LocalStorage.setIsActivated(res.data.isActivated as any)
                 }
             }
         } catch (e: any) {

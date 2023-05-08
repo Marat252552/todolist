@@ -32,7 +32,7 @@ const MainBox = observer((props: {setSearchInput: any}) => {
             setFileLoading(true)
             try {
                 const formData = new FormData()
-                formData.append('img', file)
+                formData.append('img', file as any)
                 let response = await SetPhotoAPI(formData)
                 LocalStorage.setUserImgSRC(response.data.imgSRC)
             } catch (e: any) {
@@ -152,7 +152,7 @@ const MainBox = observer((props: {setSearchInput: any}) => {
         </Modal>
         <Modal title="Изменение аватарки" open={isFileModalOpen} confirmLoading={fileLoading} onOk={file_F.handleOk} onCancel={file_F.handleCancel} okType='primary' okText='Сохранить' cancelText='Отменить'>
             <p>Загрузите изображение</p>
-            <input type='file' onChange={e => setFile(e.target.files[0])} />
+            <input type='file' onChange={e => setFile(e.target.files![0] as any)} />
         </Modal>
         <SearchBox setSearchInput={props.setSearchInput}/>
     </div>

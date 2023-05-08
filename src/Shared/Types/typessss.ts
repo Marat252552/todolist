@@ -1,88 +1,87 @@
 import { Dispatch } from 'react';
-import { ADD_GROUP_ID, ADD_NEW_CARD, CHANGE_TEXT_CARD, CHANGE_CURRENT_GROUP_ID, CLEAR_ALL_CARDS, CLEAR_CONTROLLERS, DELETE_CARD, DELETE_GROUP_ID, LOGIN, LOGOUT, PULL_CARDS, SWITCH_COMPLETE_CARD, TOGGLE_SEARCH, UPDATE_CURRENT_CARDS, UPDATE_SEARCH_INPUT_VALUE, CHANGE_CARD, TOGGLE_LOADING } from "../../Components/Side/Redux/DataReducer"
-import { AppStateType } from '../../Components/Side/Redux/Redux';
 
 
+type AppStateType = any
 // ACTION CREATORS
 //action creators' types
 export type AC_T = {
     addNewCardAC_T: (id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) => {
-        type: typeof ADD_NEW_CARD,
+        type: any,
         id: number,
         content: string,
         groupsIDs: Array<number>,
         is_completed: boolean
     },
     changeCardAC_T: (id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) => {
-        type: typeof CHANGE_CARD,
+        type: any,
         id: number,
         content: string,
         groupsIDs: Array<number>,
         is_completed: boolean
     },
     clearAllCardsAC_T: () => {
-        type: typeof CLEAR_ALL_CARDS
+        type: any
     },
     clearControllersAC_T: (controller: number) => {
-        type: typeof CLEAR_CONTROLLERS,
+        type: any,
         controller: number
     }
     pullCardsAC_T: (id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) => {
-        type: typeof PULL_CARDS,
+        type: any,
         id: number,
         content: string,
         groupsIDs: Array<number>,
         is_completed: boolean
     }
     changeTextCardAC_T: (content: string, id: number) => {
-        type: typeof CHANGE_TEXT_CARD,
+        type: any,
         content: string,
         id: number
     },
     toggleSearchAC_T: (isSearchOn: boolean) => {
-        type: typeof TOGGLE_SEARCH,
+        type: any,
         isSearchOn: boolean
     },
     updateCurrentCardsAC_T: () => {
-        type: typeof UPDATE_CURRENT_CARDS
+        type: any
     },
     deleteCardAC_T: (id: number) => {
-        type: typeof DELETE_CARD,
+        type: any,
         id: number
     },
     changeCurrentCardGroupIDAC_T: (groupID: number) => {
-        type: typeof CHANGE_CURRENT_GROUP_ID,
+        type: any,
         groupID: number
     },
     switchCompleteCardAC_T: (id: number) => {
-        type: typeof SWITCH_COMPLETE_CARD,
+        type: any,
         id: number
     },
     addGroupIDAC_T: (groupID: number, id: number) => {
-        type: typeof ADD_GROUP_ID,
+        type: any,
         groupID: number,
         id: number
     },
     deleteCardGroupIDAC_T: (groupID: number, id: number) => {
-        type: typeof DELETE_GROUP_ID,
+        type: any,
         groupID: number,
         id: number
     },
     updateSearchInputValueTypeAC_T: (content: string) => {
-        type: typeof UPDATE_SEARCH_INPUT_VALUE,
+        type: any,
         content: string
     },
     loginAC_T: (email: string, name: string, lastName: string) => {
-        type: typeof LOGIN,
+        type: any,
         email: string,
         name: string,
         lastName: string
     },
     logoutAC_T: () => {
-        type: typeof LOGOUT
+        type: any
     },
     toggleLoadingAC_T: (value: boolean) => {
-        type: typeof TOGGLE_LOADING,
+        type: any,
         value: boolean
     }
 }
