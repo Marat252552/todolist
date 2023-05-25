@@ -56,18 +56,7 @@ const MainBox = observer((props: {setSearchInput: any}) => {
         },
         async handleOk () {
             setDeleteUserLoading(true)
-            try {
-                let response = await DeleteUserAPI()
-                if (response.status === 200) {
-                    LocalStorage.setToken('')
-                    LocalStorage.setIsAuthorized(false)
-                }
-                setIsDeleteModalOpen(false);
-            } catch (e) {
-                SetMessageError('Кажется, произошла ошибка')
-            } finally {
-                setDeleteUserLoading(false)
-            }
+            LocalStorage.setIsAuthorized(false)
         },
         async handleDeleteCancel () {
             setIsDeleteModalOpen(false);
@@ -75,17 +64,9 @@ const MainBox = observer((props: {setSearchInput: any}) => {
     }
     const Logout = async () => {
         setLogoutLoading(true)
-        try {
-            let res = await LogoutAPI()
-            if (res.status === 200) {
-                LocalStorage.setToken('')
-                LocalStorage.setIsAuthorized(false)
-            }
-        } catch (e) {
-            SetMessageError('Кажется, произошла ошибка')
-        } finally {
-            setLogoutLoading(false)
-        }
+        setTimeout(() => {
+            LocalStorage.setIsAuthorized(false)
+        }, 2000)
     }
     const items: MenuProps['items'] = [
         {
@@ -99,22 +80,18 @@ const MainBox = observer((props: {setSearchInput: any}) => {
         {
             key: '2',
             label: (
-                <div onClick={async () => {
-                    try {
-                        await PushData_Thunk()
-                    } catch (e: any) {
-                        SetMessageError(e.message)
-                    }
-                }}>Синхронизировать</div>
+                <div>Синхронизировать</div>
             ),
+            disabled: true,
             icon: <SyncOutlined />
         },
         {
             key: '3',
             label: (
-                <div onClick={file_F.showModal}>Изменить аватарку</div>
+                <div>Изменить аватарку</div>
             ),
-            icon: (logoutLoading) ? <LoadingOutlined /> : <UserDeleteOutlined />
+            disabled: true,
+            icon: <UserDeleteOutlined />
         },
         {
             key: '4',

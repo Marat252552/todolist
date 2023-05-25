@@ -1,13 +1,12 @@
 import { observer } from "mobx-react-lite"
 import { createContext, useContext, useEffect, useState } from "react"
-import { Route, Routes, useNavigate } from "react-router-dom"
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom"
 import AuthPage from "../../Pages/AuthPage"
 import BodyPage from './../../Pages/BodyPage/index'
 import LoadingScreen from "../../Shared/Widgets/LoadingScreen/LoadingScreen"
 import LocalStorage from "../state/LocalStorage"
 import Register from "../../Pages/SigninPage"
 import { message } from "antd"
-import ForgotMyPassword from "../../Pages/ForgotMyPassword"
 import { LoggedAPI } from "../../Shared/Api/Api"
 
 const Page = observer(() => {
@@ -37,9 +36,14 @@ const Page = observer(() => {
         {contextHolder}
         <Routes>
                 <Route path="/login" element={<AuthPage setError={setError} />} />
-                <Route path="/" element={<BodyPage setError={setError} />} />
+                {
+                    LocalStorage.IsAuthorized?
+                    <Route path="/" element={<BodyPage setError={setError} />} />
+                    :
+                    undefined
+                }
                 <Route path="/register" element={<Register setError={setError} />} />
-                <Route path="/forgotmypassword" element={<ForgotMyPassword setError={setError} setSuccess={setSuccess} />} />
+                <Route path='*' element={<Navigate to='/login' />} />
         </Routes>
     </div>
 })

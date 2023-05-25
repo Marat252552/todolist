@@ -1,10 +1,12 @@
+import { observer } from "mobx-react-lite";
 import LocalStorage from "../../../../App/state/LocalStorage";
 import { ModalWindow } from "../../../../Shared/Widgets/Modal/Modal"; 
 import { message, Result, Button } from 'antd';
 
-let MakeEmailWarning = () => {
+let MakeEmailWarning = observer(() => {
     let setActive = () => {
         LocalStorage.setNotedAboutActivated(true)
+        console.log('adfdawfwe')
     }
     return <>
         <ModalWindow active={!LocalStorage.notedAboutActivated} setActive={setActive}>
@@ -21,6 +23,6 @@ let MakeEmailWarning = () => {
             />
         </ModalWindow>
     </>
-}
+})
 
 export default MakeEmailWarning
