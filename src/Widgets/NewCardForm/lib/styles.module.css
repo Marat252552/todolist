@@ -1,4 +1,4 @@
-.MainContainer {
+.mainContainer {
     display: grid;
     grid-template-columns: 40px auto;
     background: rgb(245, 245, 245);

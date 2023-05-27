@@ -26,7 +26,7 @@ const Card = observer((props: Props_T) => {
         return <div></div>
     } else {
         return <>
-        <div className={styles.MainContainer}>
+        <div className={styles.mainContainer}>
         <Popover
                 placement="bottomLeft"
                 style={{ padding: '0', width: '40px' }}
