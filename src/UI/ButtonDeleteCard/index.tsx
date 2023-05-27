@@ -2,6 +2,7 @@ import Actions from "../../Pages/BodyPage/models/MainBody/Helpers/Actions"
 import { Button } from "antd"
 
 const ButtonDeleteCard = (props: { _id: string}) => {
+    console.log(props._id)
     return <Button
         danger
         type='primary'

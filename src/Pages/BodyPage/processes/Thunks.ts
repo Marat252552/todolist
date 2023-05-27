@@ -1,6 +1,7 @@
 import CardsState from "../../../App/state/CardsState"
 import GroupsState from "../../../App/state/GroupsState"
 import LocalStorage from "../../../App/state/LocalStorage"
+import { Card_T, Group_T } from "../../../Shared/Types/types"
 import { U_T } from "../../../Shared/Types/typessss"
 import { PullCardsAPI, PullGroupsAPI } from "../api/api"
 
@@ -9,9 +10,9 @@ export const PullAllCards_Thunk = async () => {
         CardsState.clearAllCards()
         let response = await PullCardsAPI()
         if (response.status === 200) {
-            let cards: Array<U_T["cardType"]> = response.data as Array<U_T["cardType"]>
+            let cards: Array<Card_T> = response.data as Array<Card_T>
             cards.forEach(card => {
-                CardsState.setCard(card.id, card.content, card.groupsIDs, card.is_completed)
+                CardsState.setCard(card._id, card.content, card.groupsIDs, card.is_completed)
             })
             CardsState.updateCurrentCards()
         }
@@ -24,9 +25,9 @@ export const PullAllGroups_Thunk = async () => {
     try {
         let response = await PullGroupsAPI()
         if (response.status === 200) {
-            let groups: Array<{id: number, name: string, icon: string, background: string}> = response.data
+            let groups: Array<Group_T> = response.data
             groups.forEach(group => {
-                GroupsState.setGroup(group.id, group.name, group.icon, group.background)
+                GroupsState.setGroup(group._id, group.name, group.icon, group.background)
             })
         }
     } catch(e) {

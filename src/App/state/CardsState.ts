@@ -17,7 +17,7 @@ class CardsState {
         this.allCards = []
         this.currentCards = []
     }
-    setCard(_id: string, content: string, groupsIDs: Array<number>, is_completed: boolean) {
+    setCard(_id: string, content: string, groupsIDs: Array<string>, is_completed: boolean) {
         let card = { _id, content, groupsIDs, is_completed }
         this.allCards.push(card)
     }
@@ -51,16 +51,17 @@ class CardsState {
     }
     updateCurrentCards() {
         let newCurrentCards = this.allCards.filter(card => {
-            return card.groupsIDs.includes(GroupsState.currentCardGroup.groupID)
+            return card.groupsIDs.includes(GroupsState.currentCardGroup._id)
         })
         this.currentCards = newCurrentCards
     }
-    addNewCard(_id: string, content: string, groupsIDs: Array<number>, is_completed: boolean) {
+    addNewCard(_id: string, content: string, groupsIDs: Array<string>, is_completed: boolean) {
         let card = { _id, content, groupsIDs, is_completed }
         this.allCards.push(card)
         this.addedCards.push(card)
+        console.log(toJS(this.allCards))
     }
-    changeCard(_id: string, content: string, groupsIDs: Array<number>, is_completed: boolean) {
+    changeCard(_id: string, content: string, groupsIDs: Array<string>, is_completed: boolean) {
         let changedCard = { _id, content, groupsIDs, is_completed }
         this.addedCards = this.addedCards.map(card => (card._id === changedCard._id)? changedCard : card)
         this.changedCards.push(changedCard)
@@ -68,12 +69,13 @@ class CardsState {
         console.log(toJS(this.allCards) )
     }
     deleteCard(_id: string) {
+        console.log(_id)
         let newAllCards = [
             ...this.allCards
         ]
         let deletedCard = this.allCards.find(card => card._id === _id) as any
         newAllCards = newAllCards.filter(card => {
-            return card._id !== deletedCard.id 
+            return card._id !== deletedCard._id 
         })
         let newAddedCards = this.addedCards.filter(card => card._id !== _id)
         let newChangedCards = this.changedCards.filter(card => card._id !== _id)
@@ -87,25 +89,25 @@ class CardsState {
         if (controller === 2) { this.changedCards = [] }
         if (controller === 3) { this.deletedCards = [] }
     }
-    unifyCardsGroupsIDs(initialGroupID: number, groupID: number) {
+    unifyCardsGroupsIDs(initialGroupID: string, _id: string) {
         let newAddedCards = this.addedCards.map((card: Card_T) => {
             let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
-            unifiedCardGroups.push(groupID)
+            unifiedCardGroups.push(_id)
             return {...card, groupsIDs: unifiedCardGroups}
         })
         let newChangedCards = this.changedCards.map((card: Card_T) => {
             let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
-            unifiedCardGroups.push(groupID)
+            unifiedCardGroups.push(_id)
             return {...card, groupsIDs: unifiedCardGroups}
         })
         let newDeletedCards = this.deletedCards.map((card: Card_T) => {
             let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
-            unifiedCardGroups.push(groupID)
+            unifiedCardGroups.push(_id)
             return {...card, groupsIDs: unifiedCardGroups}
         })
         let newAllCards = this.allCards.map((card: Card_T) => {
             let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
-            unifiedCardGroups.push(groupID)
+            unifiedCardGroups.push(_id)
             console.log(unifiedCardGroups)
             return {...card, groupsIDs: unifiedCardGroups}
         })

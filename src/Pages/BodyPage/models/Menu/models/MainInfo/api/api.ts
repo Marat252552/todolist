@@ -1,4 +1,5 @@
 import { instanse } from "../../../../../../../Shared/Api/Api"
+import { Card_T, Group_T } from "../../../../../../../Shared/Types/types"
 import { U_T } from "../../../../../../../Shared/Types/typessss"
 import { CardsAPI_T, DeleteUserAPI_T, LogoutAPI_T, SetPhotoAPI_T } from "../lib/types"
 
@@ -30,23 +31,23 @@ export const CardsAPI: CardsAPI_T = {
         }
         return result
     },
-    deleteCards: (cards: Array<U_T["cardType"]>) => {
+    deleteCards: (cards: Array<Card_T>) => {
         return instanse.post(`/cards/delete`, { cards })
     },
-    updateCards: (cards: Array<U_T["cardType"]>) => {
+    updateCards: (cards: Array<Card_T>) => {
         return instanse.put(`/cards`, { cards })
     }
 }
 export const GroupsAPI = {
-    addGroups: async (groups: Array<{groupID: number, name: string, icon: string, background: string}>) => {
+    addGroups: async (groups: Array<Group_T>) => {
         let response = await instanse.post('/groups', {groups: groups})
         return response
     },
-    updateGroups: async (groups: Array<{groupID: number, name: string, icon: string, background: string}>) => {
+    updateGroups: async (groups: Array<Group_T>) => {
         let response = await instanse.put('/groups', {groups: groups})
         return response
     },
-    deleteGroups: async (groups: Array<{groupID: number, name: string, icon: string, background: string}>) => {
+    deleteGroups: async (groups: Array<Group_T>) => {
         console.log('delete groups api')
         let response = await instanse.put('/groups/delete', {groups: groups})
         return response

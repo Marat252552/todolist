@@ -1,3 +1,4 @@
+import { toJS } from 'mobx'
 import { Card_T } from '../../Shared/Types/types'
 import Card from '../Card'
 import styles from './lib/styles.module.css'
@@ -5,9 +6,10 @@ import { Props_T } from './lib/types'
 
 
 const CurrentCards = (props: Props_T) => {
+    console.log(toJS(props.cards.incompletedCards[1]))
     return <div className={styles.mainContainer} >
         {/* Невыполненные карточки */}
-        {props.cards.incompletedCards.map((card: Card_T) => {
+        {props.cards.incompletedCards[0] && props.cards.incompletedCards.map((card: Card_T) => {
             return <Card key={card._id} setid={props.setid} showDrawer={props.showDrawer} card={card} />
         })}
         {/* Выполненные карточки */}
@@ -16,7 +18,7 @@ const CurrentCards = (props: Props_T) => {
             :
             undefined
         }
-        {props.cards.completedCards.map((card: Card_T) => {
+        {props.cards.completedCards[0] && props.cards.completedCards.map((card: Card_T) => {
             return <Card key={card._id} setid={props.setid} showDrawer={props.showDrawer} card={card} />
         })}
     </div>

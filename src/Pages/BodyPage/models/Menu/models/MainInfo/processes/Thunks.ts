@@ -11,9 +11,9 @@ export const PushData_Thunk = async () => {
                 let response = await GroupsAPI.addGroups(GroupsState.createdGroups)
                 console.log(response)
                 let unifyCards = new Promise((resolve, reject) => {
-                    response.data.forEach((data: {groupID: number, initialGroupID: number}, index: any, array: any) => {
-                        CardsState.unifyCardsGroupsIDs(data.initialGroupID, data.groupID)
-                        GroupsState.unifyGroupsIDs(data.initialGroupID, data.groupID)
+                    response.data.forEach((data: {_id: string, initialGroupID: string}, index: any, array: any) => {
+                        CardsState.unifyCardsGroupsIDs(data.initialGroupID, data._id)
+                        GroupsState.unifyGroupsIDs(data.initialGroupID, data._id)
                         if(index === array.length -1) {resolve(undefined)}
                     })
                 })
@@ -31,7 +31,7 @@ export const PushData_Thunk = async () => {
             if (CardsState.addedCards[0]) {
                 let response = await CardsAPI.addCards(CardsState.addedCards)
                 let unifyCards = new Promise((resolve, reject) => {
-                    response.data.forEach((data: {initialCardID: number, cardID: number}, index: any, array: any) => {
+                    response.data.forEach((data: {initialCardID: string, cardID: string}, index: any, array: any) => {
                         CardsState.unifyCardsIDs(data.initialCardID, data.cardID)
                         if(index === array.length -1) {resolve(undefined)}
                     })

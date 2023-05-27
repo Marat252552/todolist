@@ -8,67 +8,64 @@ const Actions: Actions_T = {
         let updatedCard = { ...card }
         updatedCard.groupsIDs = [...updatedCard.groupsIDs, groupID]
         try {
-            await ChangeCard_Thunk(updatedCard._id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
+            await ChangeCard_Thunk(updatedCard._id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed)
         } catch (e: any) {
             console.log(e)
         }
     },
-    deleteGroup: async (card, groupID) => {
+    deleteGroup: async (card, _id) => {
         let updatedCard = { ...card }
-        updatedCard.groupsIDs = updatedCard.groupsIDs.filter((ID: number) => { return ID !== groupID })
+        updatedCard.groupsIDs = updatedCard.groupsIDs.filter((ID: string) => { return ID !== _id })
         try {
-            await ChangeCard_Thunk(updatedCard._id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
+            await ChangeCard_Thunk(updatedCard._id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed)
         } catch (e: any) {
             console.log(e)
         }
     },
-    completeCard: async (card, SetMessageError) => {
+    completeCard: async (card) => {
         let updatedCard = { ...card }
         updatedCard.is_completed = true
         try {
-            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
+            await ChangeCard_Thunk(updatedCard._id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed)
         } catch (e: any) {
-            SetMessageError(e.message)
+            console.log(e)
         }
     },
-    incompleteCard: async (card, SetMessageError) => {
+    incompleteCard: async (card) => {
         let updatedCard = { ...card }
         updatedCard.is_completed = false
         try {
-            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
+            await ChangeCard_Thunk(updatedCard._id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed)
         } catch (e: any) {
-            SetMessageError(e.message)
+            console.log(e)
         }
     },
-    deleteCard: async (id, SetMessageError, helper) => {
+    deleteCard: async (_id) => {
         try {
-            await DeleteCard_Thunk(id)
-            if (!helper) { return } helper()
+            await DeleteCard_Thunk(_id)
         } catch (e: any) {
-            SetMessageError(e.message)
+            console.log(e)
         }
     },
-    addCard: async (content, SetMessageError, helper) => {
+    addCard: async (content) => {
         try {
-            if(GroupsState.currentCardGroup.groupID === 5) {
-                await AddCard_Thunk(Date.now(), content, [GroupsState.currentCardGroup.groupID], false)
-                helper()
+            if(GroupsState.currentCardGroup._id === '5') {
+                await AddCard_Thunk(Date.now().toString(), content, [GroupsState.currentCardGroup._id], false)
             } else {
-                await AddCard_Thunk(Date.now(), content, [5, GroupsState.currentCardGroup.groupID], false)
-                helper()
+                await AddCard_Thunk(Date.now().toString(), content, ['5', GroupsState.currentCardGroup._id], false)
             }
         } catch (e: any) {
-            SetMessageError(e.message)
+            console.log(e)
         }
 
     },
-    changeCardText: async (card, content, SetMessageError) => {
+    changeCardText: async (card, content) => {
         let updatedCard = { ...card }
         updatedCard.content = content
         try {
-            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
+            await ChangeCard_Thunk(updatedCard._id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed)
         } catch (e: any) {
-            SetMessageError(e.message)
+            console.log(e)
         }
     },
     createGroup: async (groupID, name, icon, background, SetMessageError) => {

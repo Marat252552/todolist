@@ -1,43 +1,45 @@
 import { makeAutoObservable, toJS } from "mobx"
+import { Group_T } from "../../Shared/Types/types"
 
 
 
 class GroupsState {
-    currentCardGroup = { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' }
+    currentCardGroup = { _id: '1', name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' }
     menuCardGroups = [
-        { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
-        { groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red' },
-        { groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'blue' },
-        { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'orange' },
-        { groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'blue' },
+        { _id: '1', name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
+        { _id: '2', name: 'Важно', icon: 'StarOutlined', background: 'red' },
+        { _id: '3', name: 'Запланировано', icon: 'CalendarOutlined', background: 'blue' },
+        { _id: '4', name: 'Назначено мне', icon: 'UserOutlined', background: 'orange' },
+        { _id: '5', name: 'Задачи', icon: 'HomeOutlined', background: 'blue' },
     ]
-    createdGroups = [] as Array<{groupID: number, name: string, icon: string, background: string}>
-    updatedGroups = [] as Array<{groupID: number, name: string, icon: string, background: string}>
-    deletedGroups = [] as Array<{groupID: number, name: string, icon: string, background: string}>
+    createdGroups = [] as Array<Group_T>
+    updatedGroups = [] as Array<Group_T>
+    deletedGroups = [] as Array<Group_T>
     allCardGroups = [
-        { groupID: 1, name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
-        { groupID: 2, name: 'Важно', icon: 'StarOutlined', background: 'red' },
-        { groupID: 3, name: 'Запланировано', icon: 'CalendarOutlined', background: 'blue' },
-        { groupID: 4, name: 'Назначено мне', icon: 'UserOutlined', background: 'orange' },
-        { groupID: 5, name: 'Задачи', icon: 'HomeOutlined', background: 'blue' },
-    ] as Array<{groupID: number, name: string, icon: string, background: string}>
+        { _id: '1', name: 'Мой день', icon: 'DeploymentUnitOutlined', background: 'green' },
+        { _id: '2', name: 'Важно', icon: 'StarOutlined', background: 'red' },
+        { _id: '3', name: 'Запланировано', icon: 'CalendarOutlined', background: 'blue' },
+        { _id: '4', name: 'Назначено мне', icon: 'UserOutlined', background: 'orange' },
+        { _id: '5', name: 'Задачи', icon: 'HomeOutlined', background: 'blue' },
+    ] as Array<Group_T>
     constructor() {
         makeAutoObservable(this)
     }
-    setGroup(groupID: number, name: string, icon: string, background: string) {
-        let group = {groupID, name, icon, background}
+    setGroup(_id: string, name: string, icon: string, background: string) {
+        let group = {_id, name, icon, background}
         console.log(toJS(this.allCardGroups) )
         this.allCardGroups = this.allCardGroups.filter(group => {
-            return group.groupID !== groupID
+            return group._id !== _id
         })
         this.allCardGroups.push(group)
         console.log(toJS(this.allCardGroups) )
     }
-    changeCurrentCardGroupID(groupID: number) {
+    changeCurrentCardGroupID(_id: string) {
         let cardGroup = this.allCardGroups.filter(cardGroup => {
-            return cardGroup.groupID === groupID
+            return cardGroup._id === _id
         })[0]
         this.currentCardGroup = cardGroup
+        console.log(toJS(cardGroup) )
     }
     clearAllGroups() {
         this.allCardGroups = []
@@ -47,28 +49,28 @@ class GroupsState {
         if (controller === 5) { this.deletedGroups = [] }
         if (controller === 6) { this.updatedGroups = [] }
     }
-    createNewGroup(groupID: number, name: string, icon: string, background: string) {
-        let newGroup = {groupID, name, icon, background}
+    createNewGroup(_id: string, name: string, icon: string, background: string) {
+        let newGroup = {_id, name, icon, background}
         this.createdGroups.push(newGroup)
         this.allCardGroups.push(newGroup)
     }
-    deleteCardGroup(groupID: number, name: string, icon: string, background: string) {
-        let deletedGroup = {groupID, name, icon, background}
-        this.createdGroups = this.createdGroups.filter(group => groupID !== group.groupID)
-        this.allCardGroups = this.allCardGroups.filter(group => groupID !== group.groupID)
+    deleteCardGroup(_id: string, name: string, icon: string, background: string) {
+        let deletedGroup = {_id, name, icon, background}
+        this.createdGroups = this.createdGroups.filter(group => _id !== group._id)
+        this.allCardGroups = this.allCardGroups.filter(group => _id !== group._id)
         this.deletedGroups.push(deletedGroup)
     }
-    updateCardGroup(groupID: number, name: string, icon: string, background: string) {
-        let updatedCardGroup = {groupID, name, icon, background}
+    updateCardGroup(_id: string, name: string, icon: string, background: string) {
+        let updatedCardGroup = {_id, name, icon, background}
         this.allCardGroups = this.allCardGroups.map(cardGroup => {
-            if(cardGroup.groupID === groupID) {
+            if(cardGroup._id === _id) {
                 return updatedCardGroup
             } else {
                 return cardGroup
             }
         })
         this.createdGroups = this.createdGroups.map(cardGroup => {
-            if(cardGroup.groupID === groupID) {
+            if(cardGroup._id === _id) {
                 return updatedCardGroup
             } else {
                 return cardGroup
@@ -77,9 +79,9 @@ class GroupsState {
         this.updatedGroups.push(updatedCardGroup)
         console.log(toJS(this.updatedGroups) )
     }
-    unifyGroupsIDs(initialGroupID: number, groupID: number) {
+    unifyGroupsIDs(initialGroupID: string, groupID: string) {
         let newUpdatedGroups = this.updatedGroups.map(cardGroup => {
-            if(cardGroup.groupID === initialGroupID) {
+            if(cardGroup._id === initialGroupID) {
                 return {...cardGroup, groupID: groupID}
             } else {
                 return {...cardGroup}

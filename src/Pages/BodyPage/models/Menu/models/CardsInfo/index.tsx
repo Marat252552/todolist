@@ -30,7 +30,7 @@ const MakeMenuCardGroup = (props: MakeMenuCardGroupPropsType) => {
         <button
             // Переключает на текущую группу
             onClick={() => {
-                SwitchCardGroup_Thunk(props.groupID)
+                SwitchCardGroup_Thunk(props._id)
             }} className={styles.button}>
             <div className={styles.buttonIcon}>{iconConditions(props.icon)}</div>
             <div className={styles.buttonText}>{props.name}</div>
@@ -58,7 +58,7 @@ const MakeCardGroup = (props: MakeMenuCardGroupPropsType) => {
             cardGroup: props.name,
         },
         onSubmit: async (values: any, { resetForm }: any) => {
-            Actions.updateCardGroup(props.groupID, values.cardGroup, props.icon, props.background, props.SetMessageError)
+            Actions.updateCardGroup(props._id, values.cardGroup, props.icon, props.background, props.SetMessageError)
             setUpdating(false)
         },
     })
@@ -68,7 +68,7 @@ const MakeCardGroup = (props: MakeMenuCardGroupPropsType) => {
             content={
                 <div>
                     <Button onClick={() => {
-                        Actions.deleteCardGroup(props.groupID, props.name, props.icon, props.background, props.SetMessageError)
+                        Actions.deleteCardGroup(props._id, props.name, props.icon, props.background, props.SetMessageError)
                     }}>Удалить колоду</Button>
                     <Button onClick={() => {
                         setUpdating(true)
@@ -83,7 +83,7 @@ const MakeCardGroup = (props: MakeMenuCardGroupPropsType) => {
             {(updating) ?
                 // Форма изменения названия группы
                 <button onClick={() => {
-                    SwitchCardGroup_Thunk(props.groupID)
+                    SwitchCardGroup_Thunk(props._id)
                 }} className={styles.button}>
                     <div className={styles.buttonIcon}>{iconConditions(props.icon)}</div>
                     <div className={styles.buttonText}>
@@ -114,7 +114,7 @@ const MakeCardGroup = (props: MakeMenuCardGroupPropsType) => {
                     onContextMenu={() => { setOpen(true) }}
                     // Переключает на текущую группу
                     onClick={() => {
-                        SwitchCardGroup_Thunk(props.groupID)
+                        SwitchCardGroup_Thunk(props._id)
                     }} className={styles.button}>
                     <div className={styles.buttonIcon}>{iconConditions(props.icon)}</div>
                     <div className={styles.buttonText}>{props.name}</div>
@@ -138,20 +138,20 @@ const CardsInfo = observer((props: { SetMessageError: (value: any) => void }) =>
             <p>Создание группы</p>
         </Drawer>
         {GroupsState.menuCardGroups.map(group => {
-            return <MakeMenuCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
+            return <MakeMenuCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group._id} name={group.name} _id={group._id} icon={group.icon} />
         })}
         <div className={styles.line}></div>
         <div className={styles.scroll}>
             {GroupsState.allCardGroups.map(group => {
-                if (group.groupID !== 1 && group.groupID !== 2 && group.groupID !== 3 && group.groupID !== 4 && group.groupID !== 5)
-                    return <MakeCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group.groupID} name={group.name} groupID={group.groupID} icon={group.icon} />
+                if (group._id !== '1' && group._id !== '2' && group._id !== '3' && group._id !== '4' && group._id !== '5')
+                    return <MakeCardGroup SetMessageError={props.SetMessageError} background={group.background} key={group._id} name={group.name} _id={group._id} icon={group.icon} />
             })}
         </div>
 
         <Button onClick={() => {
             // setOpen(true)
-            let groupID = Math.random()
-            Actions.createGroup(groupID, 'Новая группа', 'UnorderedListOutlined', 'blue', props.SetMessageError)
+            let _id = Math.random().toString()
+            Actions.createGroup(_id, 'Новая группа', 'UnorderedListOutlined', 'blue', props.SetMessageError)
         }}>Создать группу</Button>
     </div>
 })

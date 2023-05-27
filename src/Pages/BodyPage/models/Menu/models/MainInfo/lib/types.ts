@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import { U_T } from "../../../../../../../Shared/Types/typessss";
+import { Card_T } from "../../../../../../../Shared/Types/types";
 
 export type SetPhotoAPI_T = (formData: any) => Promise<AxiosResponse<any, any>>
 export type DeleteUserAPI_T = () => Promise<{status: number, data: {message: string}}>
@@ -11,7 +12,7 @@ export type CardsAPI_T = {
     updateCards: updateCardsAPI_T
 }
 
-export type addCardsAPI_T = (cards: Array<U_T["cardType"]>) => Promise<{status: number, data: Array<{initialCardID: number, cardID: number}>}>
+export type addCardsAPI_T = (cards: Array<Card_T>) => Promise<{status: number, data: Array<{initialCardID: string, cardID: string}>}>
 
-export type deleteCardsAPI_T = (cards: Array<U_T["cardType"]>) => Promise<{status: number}>
-export type updateCardsAPI_T = (cards: Array<U_T["cardType"]>) => Promise<{status: number}>
+export type deleteCardsAPI_T = (cards: Array<Card_T>) => Promise<{status: number}>
+export type updateCardsAPI_T = (cards: Array<Card_T>) => Promise<{status: number}>

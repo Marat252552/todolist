@@ -14,10 +14,10 @@ import ButtonImportant from "../../UI/ButtonImportant"
 const Card = observer((props: Props_T) => {
     // Массив со всеми группами карточки
     let requiredGroupsArray = props.card.groupsIDs.filter(groupID => {
-        return groupID !== GroupsState.currentCardGroup.groupID
-    }).map(groupID => {
+        return groupID !== GroupsState.currentCardGroup._id
+    }).map(groupIDD => {
         try {
-            return GroupsState.allCardGroups.filter(group => { return groupID === group.groupID })[0]
+            return GroupsState.allCardGroups.filter(group => { return groupIDD === group._id })[0]
         } catch (e) {
             return undefined
         }

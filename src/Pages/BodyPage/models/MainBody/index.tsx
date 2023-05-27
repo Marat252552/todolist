@@ -15,6 +15,7 @@ import ButtonDrawerDeleteCard from '../../../../UI/ButtonDrawerDeleteCard';
 import CurrentCards from '../../../../Widgets/CurrentCards';
 import { Card_T } from '../../../../Shared/Types/types';
 import NewCardForm from '../../../../Widgets/NewCardForm';
+import { toJS } from 'mobx';
 
 
 let DrawerComponent = (props: { observableid: string, DrawerF: { showDrawer: (card: Card_T) => void; close: () => void; },  open: boolean }) => {
@@ -48,9 +49,10 @@ const MainBody = observer((props: { searchInput: string, setError: (value: strin
         completedCards: []
     } as any)
     useEffect(() => {
+        console.log('all cards', toJS(CardsState.currentCards) )
         let search = props.searchInput
         // Массив с невыполненным карточками
-        let incompletedCards = CardsState.currentCards.filter((card: U_T["cardType"]) => {
+        let incompletedCards = CardsState.currentCards.filter((card: Card_T) => {
             if(search === '' && card.is_completed === false ) {
                 return card
             } else if(search !== '' && card.content.includes(search) && card.is_completed === false) {
@@ -58,7 +60,7 @@ const MainBody = observer((props: { searchInput: string, setError: (value: strin
             }
         })
         // Массив с выполненным карточками
-        let completedCards = CardsState.currentCards.filter((card: U_T["cardType"]) => {
+        let completedCards = CardsState.currentCards.filter((card: Card_T) => {
             if(search === '' && card.is_completed === true ) {
                 return card
             } else if(search !== '' && card.content.includes(search) && card.is_completed === true) {

@@ -8,7 +8,7 @@ const CompletedCardInfo = (props: Props_T) => {
     return <div className={styles.mainContainer}>
         <p style={{ textDecoration: 'Line-through' }}>{props.content}</p>
         <span className={styles.groupName}>
-            {props.requiredGroupsArray.map(group => {
+            {props.requiredGroupsArray[0] && props.requiredGroupsArray.map(group => {
                 if (group.name !== 'Важно') {
                     return <span key={group.groupID}>{group.name} </span>
                 }

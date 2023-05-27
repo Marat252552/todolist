@@ -1,7 +1,6 @@
 export type MakeMenuCardGroupPropsType = {
-    key: number,
     name: string,
-    groupID: number,
+    _id: string,
     icon: string,
     background: string,
     SetMessageError: (value: any) => void

@@ -13,9 +13,10 @@ const FormikForm = () => {
         initialValues: {
             cardValue: '',
         },
-        onSubmit: async (values: {cardValue: string}) => {
+        onSubmit: async (values: {cardValue: string}, {resetForm}) => {
             let content = values.cardValue
             Actions.addCard(content)
+            resetForm()
         },
     })
     return <FormikProvider value={formik}>
@@ -23,8 +24,8 @@ const FormikForm = () => {
             <Field
                 className={styles.input}
                 placeholder='Добавить карточку'
-                id="card"
-                name='card'
+                id="cardValue"
+                name='cardValue'
                 type='text'
                 onChange={formik.handleChange}
                 value={formik.values.cardValue}
