@@ -4,22 +4,22 @@ import { AddCard_Thunk, ChangeCard_Thunk, CreateGroup_Thunk, DeleteCardGroup_Thu
 import { Actions_T } from "./types"
 
 const Actions: Actions_T = {
-    addGroup: async (card, groupID, SetMessageError) => {
+    addGroup: async (card, groupID) => {
         let updatedCard = { ...card }
         updatedCard.groupsIDs = [...updatedCard.groupsIDs, groupID]
         try {
-            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
+            await ChangeCard_Thunk(updatedCard._id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
         } catch (e: any) {
-            SetMessageError(e.message)
+            console.log(e)
         }
     },
-    deleteGroup: async (card, groupID, SetMessageError) => {
+    deleteGroup: async (card, groupID) => {
         let updatedCard = { ...card }
         updatedCard.groupsIDs = updatedCard.groupsIDs.filter((ID: number) => { return ID !== groupID })
         try {
-            await ChangeCard_Thunk(updatedCard.id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
+            await ChangeCard_Thunk(updatedCard._id, updatedCard.content, updatedCard.groupsIDs, updatedCard.is_completed, SetMessageError)
         } catch (e: any) {
-            SetMessageError(e.message)
+            console.log(e)
         }
     },
     completeCard: async (card, SetMessageError) => {

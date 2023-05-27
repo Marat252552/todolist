@@ -2,12 +2,13 @@ import { makeAutoObservable, toJS } from "mobx"
 import { U_T } from "../../Shared/Types/typessss"
 import LocalStorage from "./LocalStorage"
 import GroupsState from "./GroupsState"
+import { Card_T } from "../../Shared/Types/types"
 
 class CardsState {
-    addedCards = [] as Array<U_T["cardType"]>
-    changedCards = [] as Array<U_T["cardType"]>
-    deletedCards = [] as Array<U_T["cardType"]>
-    allCards = [] as Array<U_T["cardType"]>
+    addedCards = [] as Array<Card_T>
+    changedCards = [] as Array<Card_T>
+    deletedCards = [] as Array<Card_T>
+    allCards = [] as Array<Card_T>
     currentCards = [] as any
     constructor() {
         makeAutoObservable(this)
@@ -16,29 +17,29 @@ class CardsState {
         this.allCards = []
         this.currentCards = []
     }
-    setCard(id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) {
-        let card = { id, content, groupsIDs, is_completed }
+    setCard(_id: string, content: string, groupsIDs: Array<number>, is_completed: boolean) {
+        let card = { _id, content, groupsIDs, is_completed }
         this.allCards.push(card)
     }
-    unifyCardsIDs(initialCardID: number, cardID: number) {
-        let newChangedCards = this.changedCards.map((card: U_T["cardType"]) => {
-            console.log(card.id, initialCardID)
-            if(card.id === initialCardID) {
+    unifyCardsIDs(initialCardID: string, cardID: string) {
+        let newChangedCards = this.changedCards.map((card: Card_T) => {
+            console.log(card._id, initialCardID)
+            if(card._id === initialCardID) {
                 console.log({...card, id: cardID})
                 return {...card, id: cardID}
             } else {
                 return card
             }
         })
-        let newDeletedCards = this.deletedCards.map((card: U_T["cardType"]) => {
-            if(card.id === initialCardID) {
+        let newDeletedCards = this.deletedCards.map((card: Card_T) => {
+            if(card._id === initialCardID) {
                 return {...card, id: cardID}
             } else {
                 return card
             }
         })
-        let newAllCards = this.allCards.map((card: U_T["cardType"]) => {
-            if(card.id === initialCardID) {
+        let newAllCards = this.allCards.map((card: Card_T) => {
+            if(card._id === initialCardID) {
                 return {...card, id: cardID}
             } else {
                 return card
@@ -54,28 +55,28 @@ class CardsState {
         })
         this.currentCards = newCurrentCards
     }
-    addNewCard(id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) {
-        let card = { id, content, groupsIDs, is_completed }
+    addNewCard(_id: string, content: string, groupsIDs: Array<number>, is_completed: boolean) {
+        let card = { _id, content, groupsIDs, is_completed }
         this.allCards.push(card)
         this.addedCards.push(card)
     }
-    changeCard(id: number, content: string, groupsIDs: Array<number>, is_completed: boolean) {
-        let changedCard = { id, content, groupsIDs, is_completed }
-        this.addedCards = this.addedCards.map(card => (card.id === changedCard.id)? changedCard : card)
+    changeCard(_id: string, content: string, groupsIDs: Array<number>, is_completed: boolean) {
+        let changedCard = { _id, content, groupsIDs, is_completed }
+        this.addedCards = this.addedCards.map(card => (card._id === changedCard._id)? changedCard : card)
         this.changedCards.push(changedCard)
-        this.allCards = this.allCards.map(card => (card.id === changedCard.id)? changedCard : card )
+        this.allCards = this.allCards.map(card => (card._id === changedCard._id)? changedCard : card )
         console.log(toJS(this.allCards) )
     }
-    deleteCard(id: number) {
+    deleteCard(_id: string) {
         let newAllCards = [
             ...this.allCards
         ]
-        let deletedCard = this.allCards.find(card => card.id === id) as any
+        let deletedCard = this.allCards.find(card => card._id === _id) as any
         newAllCards = newAllCards.filter(card => {
-            return card.id !== deletedCard.id 
+            return card._id !== deletedCard.id 
         })
-        let newAddedCards = this.addedCards.filter(card => card.id !== id)
-        let newChangedCards = this.changedCards.filter(card => card.id !== id)
+        let newAddedCards = this.addedCards.filter(card => card._id !== _id)
+        let newChangedCards = this.changedCards.filter(card => card._id !== _id)
         this.allCards = newAllCards
         this.deletedCards.push(deletedCard)
         this.addedCards = newAddedCards
@@ -87,22 +88,22 @@ class CardsState {
         if (controller === 3) { this.deletedCards = [] }
     }
     unifyCardsGroupsIDs(initialGroupID: number, groupID: number) {
-        let newAddedCards = this.addedCards.map((card: U_T["cardType"]) => {
+        let newAddedCards = this.addedCards.map((card: Card_T) => {
             let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
             unifiedCardGroups.push(groupID)
             return {...card, groupsIDs: unifiedCardGroups}
         })
-        let newChangedCards = this.changedCards.map((card: U_T["cardType"]) => {
+        let newChangedCards = this.changedCards.map((card: Card_T) => {
             let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
             unifiedCardGroups.push(groupID)
             return {...card, groupsIDs: unifiedCardGroups}
         })
-        let newDeletedCards = this.deletedCards.map((card: U_T["cardType"]) => {
+        let newDeletedCards = this.deletedCards.map((card: Card_T) => {
             let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
             unifiedCardGroups.push(groupID)
             return {...card, groupsIDs: unifiedCardGroups}
         })
-        let newAllCards = this.allCards.map((card: U_T["cardType"]) => {
+        let newAllCards = this.allCards.map((card: Card_T) => {
             let unifiedCardGroups = card.groupsIDs.filter(oldGroupID => {return oldGroupID !== initialGroupID})
             unifiedCardGroups.push(groupID)
             console.log(unifiedCardGroups)
