@@ -152,7 +152,7 @@ const CardsInfo = observer((props: { SetMessageError: (value: any) => void }) =>
             // setOpen(true)
             let _id = Math.random().toString()
             Actions.createGroup(_id, 'Новая группа', 'UnorderedListOutlined', 'blue', props.SetMessageError)
-        }}>Создать группу</Button>
+        }} style={{width: '100%'}}>Создать группу</Button>
     </div>
 })
 

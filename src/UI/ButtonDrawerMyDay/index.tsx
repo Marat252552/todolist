@@ -13,10 +13,10 @@ const DrawerMyDay = (props: Props_T) => {
     if (!card) {
         return <div></div>
     }
-    if (card!.groupsIDs.find(el => el === 1)) {
-        return <Button style={{ width: '100%' }} icon={<DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)' }} />} type="default" onClick={() => { Actions.deleteGroup(card!, 1) }}>Убрать из представления "Мой день"</Button>
+    if (card!.groupsIDs.find(el => el === '1')) {
+        return <Button icon={<DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)',  width: '100%' }} />} type="default" onClick={() => { Actions.deleteGroup(card!, '1') }}>Убрать из представления "Мой день"</Button>
     } else {
-        return <Button style={{ width: '100%' }} icon={<DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)' }} />} type="default" onClick={() => { Actions.addGroup(card!, 1) }}>Добавить в представление "Мой день"</Button>
+        return <Button icon={<DeploymentUnitOutlined style={{ fontSize: '18px', color: 'rgb(149, 188, 206)', width: '100%' }} />} type="default" onClick={() => { Actions.addGroup(card!, '1') }}>Добавить в представление "Мой день"</Button>
     }
 }
 

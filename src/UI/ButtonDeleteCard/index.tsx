@@ -6,7 +6,7 @@ const ButtonDeleteCard = (props: { _id: string}) => {
     return <Button
         danger
         type='primary'
-        style={{ width: '100px' }}
+        style={{ width: '100%' }}
         onClick={async () => {
             Actions.deleteCard(props._id)
         }}>

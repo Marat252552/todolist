@@ -6,16 +6,16 @@ import { Card_T } from "../../Shared/Types/types"
 
 const ButtonImportant = (props: { card: Card_T }) => {
     return <div>
-        {(props.card.groupsIDs.find(el => el === 2) !== undefined) ?
+        {(props.card.groupsIDs.find(el => el === '2') !== undefined) ?
             <Button className={styles.starButton} onClick={(e) => {
-                Actions.deleteGroup(props.card, 2)
+                Actions.deleteGroup(props.card, '2')
                 e.stopPropagation()
             }} shape="circle">
                 <StarFilled />
             </Button>
             :
             <Button className={styles.starButton} onClick={(e) => {
-                Actions.addGroup(props.card, 2)
+                Actions.addGroup(props.card, '2')
                 e.stopPropagation()
             }} shape="circle">
                 <StarOutlined />

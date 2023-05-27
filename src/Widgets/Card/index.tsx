@@ -29,8 +29,8 @@ const Card = observer((props: Props_T) => {
         <div className={styles.mainContainer}>
         <Popover
                 placement="bottomLeft"
-                style={{ padding: '0', width: '40px' }}
-                content={<div>
+                style={{ padding: '0' }}
+                content={<div style={{width: '300px'}}>
                     <ButtonDeleteCard _id={props.card._id} />
                     <ButtonMyDay card={props.card} groupsIDs={props.card.groupsIDs} />
                 </div>
