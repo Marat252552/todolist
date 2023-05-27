@@ -1,6 +1,4 @@
 import styles from './lib/styles.module.css'
-import { U_T } from '../../../../Shared/Types/typessss';
-import LocalStorage from '../../../../App/state/LocalStorage';
 import { observer } from "mobx-react-lite";
 import { message, Drawer, Button } from 'antd';
 import { useState, useEffect } from 'react';

@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { U_T } from "../../../../../../../Shared/Types/typessss";
 import { Card_T } from "../../../../../../../Shared/Types/types";
 
 export type SetPhotoAPI_T = (formData: any) => Promise<AxiosResponse<any, any>>

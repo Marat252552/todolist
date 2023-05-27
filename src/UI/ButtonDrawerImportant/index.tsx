@@ -14,16 +14,16 @@ const DrawerImportant = (props: { observableid: string}) => {
         return <div></div>
     }
     return <div>
-        {(card!.groupsIDs.find(el => el === 2) !== undefined) ?
+        {(card!.groupsIDs.find(el => el === '2') !== undefined) ?
             <Button className={styles.starButton} onClick={(e) => {
-                Actions.deleteGroup(card!, 2)
+                Actions.deleteGroup(card!, '2')
                 e.stopPropagation()
             }} shape="circle">
                 <StarFilled />
             </Button>
             :
             <Button className={styles.starButton} onClick={(e) => {
-                Actions.addGroup(card!, 2)
+                Actions.addGroup(card!, '2')
                 e.stopPropagation()
             }} shape="circle">
                 <StarOutlined />

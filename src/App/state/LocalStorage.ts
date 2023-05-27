@@ -1,6 +1,4 @@
-import { U_T } from "../../Shared/Types/typessss"
 import { makeAutoObservable } from "mobx"
-import { toJS } from 'mobx'
 
 class LocalStorage {
     AccessToken = ''

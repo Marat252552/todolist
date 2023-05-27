@@ -1,4 +1,4 @@
-import { T_cT, U_T } from './../../../../../Shared/Types/typessss';
+import { Card_T } from "../../../../../Shared/Types/types"
 
 
 
@@ -8,7 +8,7 @@ import { T_cT, U_T } from './../../../../../Shared/Types/typessss';
 
 export type MakeCardPropsType = {
     key: number,
-    card: U_T["cardType"],
+    card: Card_T,
     showDrawer: any,
     setid: any
 }
@@ -22,6 +22,6 @@ export type NewCardFormType = {
 }
 
 export type ChangeCardFormType = {
-    card: U_T["cardType"],
+    card: Card_T,
     setError: (value: any) => void
 }

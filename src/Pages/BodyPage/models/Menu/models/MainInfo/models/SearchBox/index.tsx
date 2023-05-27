@@ -1,9 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons'
 import { Input } from 'antd'
 import { useFormik } from 'formik'
-import LocalStorage from '../../../../../../../../App/state/LocalStorage'
 import styles from './lib/styles.module.css'
-import { SearchBoxPropsType } from './lib/types'
 
 const SearchBox = (props: {setSearchInput: any}) => {
     const formik = useFormik({

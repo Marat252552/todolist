@@ -1,10 +1,3 @@
-import { AC_cT, AC_T, T_cT } from '../../../Shared/Types/typessss';
-export type AuthPagePropsType = {
-    isAuthorized: boolean,
-    Login_AC: AC_cT["LoginAC_cT"],
-    login_Thunk: T_cT["loginThunk_cT"]
-}
-
 type Result_T = {
     status: number,
     data: {
@@ -12,7 +5,7 @@ type Result_T = {
         lastName: string,
         email: string,
         imgSRC: string,
-        isActivated: number,
+        isActivated: boolean,
         AccessToken: string
     }
 }

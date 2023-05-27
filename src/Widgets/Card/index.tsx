@@ -41,9 +41,9 @@ const Card = observer((props: Props_T) => {
                 }}>
                     <CheckBox card={props.card} stopPropagation={false} />
                     {(props.card.is_completed) ?
-                        <CompletedCardInfo requiredGroupsArray={requiredGroupsArray!} content={props.card.content} />
+                        <CompletedCardInfo requiredGroupsArray={requiredGroupsArray! as any} content={props.card.content} />
                         :
-                        <CardInfo requiredGroupsArray={requiredGroupsArray!} content={props.card.content} />
+                        <CardInfo requiredGroupsArray={requiredGroupsArray! as any} content={props.card.content} />
                     }
                     <ButtonImportant card={props.card} />
                 </div>

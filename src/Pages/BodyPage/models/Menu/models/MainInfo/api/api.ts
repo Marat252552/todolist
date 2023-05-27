@@ -1,6 +1,5 @@
 import { instanse } from "../../../../../../../Shared/Api/Api"
 import { Card_T, Group_T } from "../../../../../../../Shared/Types/types"
-import { U_T } from "../../../../../../../Shared/Types/typessss"
 import { CardsAPI_T, DeleteUserAPI_T, LogoutAPI_T, SetPhotoAPI_T } from "../lib/types"
 
 export const SetPhotoAPI: SetPhotoAPI_T = async (formData: any) => {

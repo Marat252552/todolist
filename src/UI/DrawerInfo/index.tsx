@@ -14,9 +14,9 @@ const DrawerCardInfo = (props: Props_T) => {
         return <div></div>
     }
     let requiredGroupsArray = card!.groupsIDs.filter(groupID => {
-        return groupID !== GroupsState.currentCardGroup.groupID
+        return groupID !== GroupsState.currentCardGroup._id
     }).map(groupID => {
-        return GroupsState.allCardGroups.filter(group => { return groupID === group.groupID })[0].name
+        return GroupsState.allCardGroups.filter(group => { return groupID === group._id })[0].name
     })
     return <div className={styles.cardInfo}>
         <DrawerChangeCardForm card={card} />
