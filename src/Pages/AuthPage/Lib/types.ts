@@ -10,4 +10,4 @@ type Result_T = {
     }
 }
 
-export type LoginAPI_T = (login: string, password: string, remember: boolean, captchaToken: string) => Promise<Result_T>
+export type LoginAPI_T = (login: string, password: string, remember: boolean) => Promise<Result_T>

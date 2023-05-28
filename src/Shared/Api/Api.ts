@@ -1,16 +1,18 @@
 import LocalStorage from "../../App/state/LocalStorage";
 import axios from "axios";
 import { LoggedAPI_T } from "../Types/types"; 
+import { toJS } from "mobx";
 
 export const instanse = axios.create({
     withCredentials: true,
-    baseURL: 'https://todolist-back-gcva.onrender.com/',
+    baseURL: 'http://localhost:3000',
     headers: {
         'Content-Type': 'application/json'
     }
 })
 // Interceptor, устанавливающий в headers каждого запроса AccessToken
 instanse.interceptors.request.use((config: any) => {
+    console.log(toJS(LocalStorage.AccessToken))
     config.headers.Authorization = `Bearer ${LocalStorage.AccessToken}`
     return config
 })

@@ -15,9 +15,6 @@ const Register = observer((props: {setError: (value: string) => void}) => {
     }, [])
     // Форма регистрации
     const RegisterFormAnt = () => {
-        // Результат капчи
-        let [captchaToken, setCaptchaToken] = useState('')
-        let [isCaptchaSuccessful, setIsCaptchaSuccess] = useState(false)
         // Ошибка почты - такая почта уже используется
         let [emailError, setEmailError] = useState('')
         // Ошибка логина - такой логин уже существует
@@ -25,11 +22,6 @@ const Register = observer((props: {setError: (value: string) => void}) => {
         // Загрузка после отправки формы
         let [loading, setLoading] = useState(false)
         const [form] = Form.useForm();
-        // Callback капчи
-        const onChange = (value: string) => {
-            setIsCaptchaSuccess(true)
-            setCaptchaToken(value)
-        }
         // Далее настройки формы
         const formItemLayout = {
             labelCol: {
@@ -56,7 +48,7 @@ const Register = observer((props: {setError: (value: string) => void}) => {
         const onFinish = async (v: any) => {
             setLoading(true)
             try {
-                let res = await AuthAPI.SignIn(v.login, v.password, v.email, v.birthdate, v.name, v.lastName, v.phone, v.gender, captchaToken)
+                let res = await AuthAPI.SignIn(v.login, v.password, v.email, v.birthdate, v.name, v.lastName, v.phone, v.gender)
                 if (res.status === 201) {
                     LoggedController(props.setError)
                 }
@@ -250,17 +242,9 @@ const Register = observer((props: {setError: (value: string) => void}) => {
                     </Checkbox>
                 </Form.Item>
 
-                {/* Капча */}
-                <div style={{display: 'flex', justifyContent: 'center'}}>
-                    <ReCAPTCHA
-                        sitekey='6LcGzPokAAAAALlIR_f1wcHP9FuMWSIghMN4OKu_'
-                        onChange={(value: any) => {onChange(value)}}
-                    />
-                </div>
-
                 {/* Кнопка "создать аккаунт" */}
                 <Form.Item {...tailFormItemLayout}>
-                    <Button disabled={!isCaptchaSuccessful} type="primary" htmlType="submit" loading={loading}>
+                    <Button type="primary" htmlType="submit" loading={loading}>
                         Создать аккаунт
                     </Button>
                 </Form.Item>

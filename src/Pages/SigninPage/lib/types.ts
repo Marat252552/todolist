@@ -21,7 +21,7 @@ export type UsersAPI_T = {
 
 
 
-export type SignInAPI_T = (login: string, password: string, email: string, birtdate: any, name: string, lastName: string, phoneNumber: string, gender: number, captchaToken: string) => Promise<Result_T>
+export type SignInAPI_T = (login: string, password: string, email: string, birtdate: any, name: string, lastName: string, phoneNumber: string, gender: number) => Promise<Result_T>
 
 
 export type checkduplAPI_T = (value: string) => Promise<{status: number, data: {message: string}}>

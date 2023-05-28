@@ -16,6 +16,7 @@ export const ChangeCard_Thunk = (_id: string, content: string, groupsIDs: Array<
     return ChangeCard
 }
 export const DeleteCard_Thunk = async (_id: string) => {
+    console.log(_id)
     let DeleteCard = new Promise((resolve, reject) => {
         if(!LocalStorage.isActivated) {
             reject(new Error('Почта не подтверждена. Доступны не все функции'))

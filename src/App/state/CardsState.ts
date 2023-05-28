@@ -17,6 +17,7 @@ class CardsState {
     }
     setCard(_id: string, content: string, groupsIDs: Array<string>, is_completed: boolean) {
         let card = { _id, content, groupsIDs, is_completed }
+        if(this.allCards.find(el => {return el._id === _id})) return
         this.allCards.push(card)
     }
     unifyCardsIDs(initialCardID: string, cardID: string) {
@@ -52,12 +53,13 @@ class CardsState {
             return card.groupsIDs.includes(GroupsState.currentCardGroup._id)
         })
         this.currentCards = newCurrentCards
+        console.log(toJS(this.currentCards))
     }
     addNewCard(_id: string, content: string, groupsIDs: Array<string>, is_completed: boolean) {
+        console.log('adding card')
         let card = { _id, content, groupsIDs, is_completed }
         this.allCards.push(card)
         this.addedCards.push(card)
-        console.log(toJS(this.allCards))
     }
     changeCard(_id: string, content: string, groupsIDs: Array<string>, is_completed: boolean) {
         let changedCard = { _id, content, groupsIDs, is_completed }

@@ -10,16 +10,13 @@ import { Login } from "./Api/api"
 
 const LoginForm = (props: {setError: (value: string) => void}) => {
     const navigate = useNavigate()
-    // Значение капчи
-    let [captchaToken, setCaptchaToken] = useState('')
-    let [isCaptchaSuccessful, setIsCaptchaSuccess] = useState(false)
     // Загрузка кнопки "войти" после отправки формы
     let [loading, setLoading] = useState(false)
     // Callback, который вызывается на отправку формы
     const onFinish = async (values: any) => {
         setLoading(true)
         try {
-            let res = await Login(values.login, values.password, values.remember, captchaToken)
+            let res = await Login(values.login, values.password, values.remember)
             if (res.status === 200) {
                 LocalStorage.setUserData(res.data.name, res.data.lastName, res.data.email, res.data.imgSRC)
                 LocalStorage.setToken(res.data.AccessToken)
@@ -36,11 +33,6 @@ const LoginForm = (props: {setError: (value: string) => void}) => {
             setLoading(false)
         }
     };
-    // Callback, который вызывает выполнение капчи
-    const onChange = (value: string) => {
-        setIsCaptchaSuccess(true)
-        setCaptchaToken(value)
-    }
     return <div style={{ background: 'white', padding: '30px 50px 0 50px', borderRadius: '20px' }}>
         <Form
             name="normal_login"
@@ -79,15 +71,9 @@ const LoginForm = (props: {setError: (value: string) => void}) => {
                 </a>
             </Form.Item>
 
-            {/* Капча */}
-            <ReCAPTCHA
-                sitekey={sitekey}
-                onChange={(value: any) => { onChange(value) }}
-            />
-
             {/* Кнопка "войти" */}
             <Form.Item>
-                <Button disabled={!isCaptchaSuccessful} type="primary" htmlType="submit" loading={loading} className={styles.loginFormButton}>
+                <Button type="primary" htmlType="submit" loading={loading} className={styles.loginFormButton}>
                     Войти
                 </Button>
                 Или <a onClick={() => { navigate('/register') }}>создать аккаунт</a>
