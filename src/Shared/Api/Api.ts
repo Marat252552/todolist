@@ -5,7 +5,7 @@ import { toJS } from "mobx";
 
 export const instanse = axios.create({
     withCredentials: true,
-    baseURL: 'https://todolist-back-gcva.onrender.com',
+    baseURL: import.meta.env.VITE_BACKEND_URL,
     headers: {
         'Content-Type': 'application/json'
     }

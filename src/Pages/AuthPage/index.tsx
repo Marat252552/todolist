@@ -3,6 +3,7 @@ import styles from './Lib/styles.module.css'
 import { LoggedController } from "../../Shared/Features/features"
 import LoginForm from "./Models/LoginForm"
 
+
 const AuthPage = (props: {setError: (value: string) => void}) => {
     // Проверка авторизации
     useEffect(() => {
