@@ -106,10 +106,6 @@ const Register = observer((props: {setError: (value: string) => void}) => {
                     help={(emailError) ? 'Данный email уже используется' : ''}
                     rules={[
                         {
-                            type: 'email',
-                            message: 'Указанный адрес недействителен',
-                        },
-                        {
                             required: true,
                             message: 'Пожалуйста, введите адрес вашей почты',
                         },
@@ -117,6 +113,7 @@ const Register = observer((props: {setError: (value: string) => void}) => {
                 >
                     <Input />
                 </Form.Item>
+                {emailError && <div>Неверно введен email</div>}
 
                 {/* Имя */}
                 <Form.Item
@@ -224,8 +221,8 @@ const Register = observer((props: {setError: (value: string) => void}) => {
                     label="Аватарка"
                 >
                     <Input type="file" style={{ width: '100%' }} />
-                </Form.Item> */}
-                {/* Условия соглашения */}
+                </Form.Item>  */}
+                {/* Условия соглашения
                 <Form.Item
                     name="agreement"
                     valuePropName="checked"
